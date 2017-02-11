@@ -44,17 +44,22 @@ public abstract class Equipment {
         return getInterface(getGateway());
     }
 
-    public void initialize(int size, Class< ? extends Interface> p, Equipment equipment){
+    public void initialize(int size, Class< ? extends Interface> p, Equipment equipment, Boolean passiveInterfaces){
         for (int i=0;i<size;i++){
             try {
                 Interface equipmentInterface = p.newInstance();
                 equipmentInterface.setEquipment(equipment);
+                equipmentInterface.setPassive(passiveInterfaces);
 
                 interfaces.add(equipmentInterface);
             } catch (InstantiationException | IllegalAccessException e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void initialize(int size, Class< ? extends Interface> p, Equipment equipment) {
+        initialize(size, p, equipment, false);
     }
 
     protected ArrayList<Interface> getInterfaces() {

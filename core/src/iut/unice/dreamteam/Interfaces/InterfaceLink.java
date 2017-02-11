@@ -10,21 +10,12 @@ public class InterfaceLink {
         this.b = interfaceB;
     }
 
-    public void sendPacket(Packet p) {
-        if (p.getMacLayer().getDestination().equals(a.getMacAddress())){
-            a.receivePacket(p);
-        }
-        else {
+    public void sendPacket(Interface i, Packet p) {
+        if (i.getMacAddress().equals(a.getMacAddress())){
             b.receivePacket(p);
         }
-    }
-
-    public String getDestination(Interface anInterface) {
-        if (anInterface.getMacAddress().equals(a.getMacAddress())){
-            return b.getMacAddress();
-        }
         else {
-            return a.getMacAddress();
+            a.receivePacket(p);
         }
     }
 }

@@ -21,7 +21,7 @@ public class Switch extends Equipment implements IncomingPacketInterface {
 
     public void getEquipmentTable() {
         for (Interface i : getInterfaces()) {
-            String macAddress = i.getLink().getDestination(i);
+            String macAddress = "";
 
             if(!equipments.contains(macAddress))
                 equipments.add(macAddress);

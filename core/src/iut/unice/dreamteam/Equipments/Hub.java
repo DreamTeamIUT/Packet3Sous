@@ -1,5 +1,6 @@
 package iut.unice.dreamteam.Equipments;
 
+import iut.unice.dreamteam.Debug;
 import iut.unice.dreamteam.Interfaces.IncomingPacketInterface;
 import iut.unice.dreamteam.Interfaces.Interface;
 import iut.unice.dreamteam.Interfaces.Packet;
@@ -9,13 +10,13 @@ import java.util.ArrayList;
 
 
 public class Hub extends Equipment implements IncomingPacketInterface {
-    private static final int INTERFACE_NUMBER = 24;
+    private static final int INTERFACE_NUMBER = 2;
     private ArrayList<Interface> interfaces;
 
     public Hub(String name) {
         super(name);
 
-        initialize(INTERFACE_NUMBER, WiredInterface.class, this);
+        initialize(INTERFACE_NUMBER, WiredInterface.class, this, true);
         setIncomingPacketInterface(this);
     }
 
@@ -42,6 +43,11 @@ public class Hub extends Equipment implements IncomingPacketInterface {
 
     @Override
     public void onReceive(Interface i, Packet p) {
+        Debug.log("On the Hub !");
 
+        for (Interface iface : getInterfaces()){
+            if (!iface.getMacAddress().equals(i.getMacAddress()))
+                iface.sendPacket(p);
+        }
     }
 }

@@ -2,6 +2,7 @@ package iut.unice.dreamteam;
 
 import iut.unice.dreamteam.Equipments.Computer;
 import iut.unice.dreamteam.Equipments.Equipment;
+import iut.unice.dreamteam.Equipments.Hub;
 import iut.unice.dreamteam.Equipments.Router;
 import iut.unice.dreamteam.Interfaces.Packet;
 import iut.unice.dreamteam.NetworkLayers.ApplicationLayer;
@@ -31,6 +32,7 @@ public class Main extends Application {
         //launch(args);
 
         final Network n = new Network();
+
         Equipment e = new Computer("PC 01");
 //        e.initialize(1, WiredInterface.class, e);
         e.setGateway("192.168.0.254");
@@ -40,26 +42,29 @@ public class Main extends Application {
         Equipment ea = new Computer("PC 02");
 //        ea.initialize(1, WiredInterface.class, ea);
         ea.setGateway("192.168.0.254");
-        ea.getInterface(0).setIp("192.168.2.5");
+        ea.getInterface(0).setIp("192.168.0.5");
         ea.getInterface(0).setMask("255.255.255.0");
 
 
-        Router router = new Router("Router 01");
+       /* Router router = new Router("Router 01");
         router.getInterface(0).setIp("192.168.0.254");
         router.getInterface(0).setMask("255.255.255.0");
 
         router.getInterface(1).setIp("192.168.2.254");
-        router.getInterface(1).setMask("255.255.255.0");
+        router.getInterface(1).setMask("255.255.255.0");*/
+
+       Hub hub = new Hub("Hub 01");
 
 
-        n.addEquipment(router);
+        //n.addEquipment(router);
+        n.addEquipment(hub);
         n.addEquipment(e);
         n.addEquipment(ea);
 
 
 
-        Network.linkInterfaces(e.getInterface(0), router.getInterface(0));
-        Network.linkInterfaces(router.getInterface(1), ea.getInterface(0));
+        Network.linkInterfaces(e.getInterface(0), hub.getInterface(0));
+        Network.linkInterfaces( ea.getInterface(0), hub.getInterface(1));
 
         Packet p = new Packet();
         IpLayer ip = new IpLayer();

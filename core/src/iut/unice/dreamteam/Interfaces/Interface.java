@@ -30,6 +30,7 @@ public class Interface {
     private PacketsManager packetsManager;
 
     private ARP arp;
+    private Boolean passive;
 
     public Interface() {
         this.macAddress = this.randomMACAddress();
@@ -39,6 +40,15 @@ public class Interface {
         this.packetsManager = new PacketsManager();
 
         this.arp = new ARP();
+        this.passive = false;
+    }
+
+    public Boolean isPassive() {
+        return this.passive;
+    }
+
+    public void setPassive(Boolean passive){
+        this.passive = passive;
     }
 
     private String randomMACAddress() {
@@ -108,7 +118,7 @@ public class Interface {
     public void receivePacket(Packet p) {
         Debug.equipment(getEquipment(), "receive packet " + p.getPacketId());
 
-        if(arp.isProtocol(p)) {
+        if(arp.isProtocol(p) && !isPassive()) {
             Packet packet = arp.processPacket(this, p);
 
             if(packet != null)
@@ -208,7 +218,7 @@ public class Interface {
 
                 packetOnEquipment.getPacketProperties().setSent();
 
-                link.sendPacket(packetOnEquipment.getPacket());
+                link.sendPacket(this, packetOnEquipment.getPacket());
 
                 return;
             }
