@@ -18,7 +18,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("ressources/sample.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/sample.fxml"));
         primaryStage.setTitle("Hello World");
         primaryStage.setScene(new Scene(root, 300, 275));
         primaryStage.show();
@@ -26,18 +26,16 @@ public class Main extends Application {
 
 
     public static void main(String[] args) {
-        //launch(args);
+        launch(args);
 
         final Network n = new Network();
 
         Equipment e = new Computer("PC 01");
-//        e.initialize(1, WiredInterface.class, e);
         e.setGateway("192.168.0.254");
         e.getInterface(0).setIp("192.168.0.2");
         e.getInterface(0).setMask("255.255.255.0");
 
         Equipment ea = new Computer("PC 02");
-//        ea.initialize(1, WiredInterface.class, ea);
         ea.setGateway("192.168.0.254");
         ea.getInterface(0).setIp("192.168.0.5");
         ea.getInterface(0).setMask("255.255.255.0");
@@ -89,6 +87,7 @@ public class Main extends Application {
                 n.updateEquipments();
             }
         }, 0, 5000);
+
     }
 }
 
