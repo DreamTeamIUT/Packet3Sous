@@ -1,9 +1,6 @@
 package iut.unice.dreamteam;
 
-import iut.unice.dreamteam.Equipments.Computer;
-import iut.unice.dreamteam.Equipments.Equipment;
-import iut.unice.dreamteam.Equipments.Hub;
-import iut.unice.dreamteam.Equipments.Router;
+import iut.unice.dreamteam.Equipments.*;
 import iut.unice.dreamteam.Interfaces.Packet;
 import iut.unice.dreamteam.NetworkLayers.ApplicationLayer;
 import iut.unice.dreamteam.NetworkLayers.IpLayer;
@@ -53,7 +50,8 @@ public class Main extends Application {
         router.getInterface(1).setIp("192.168.2.254");
         router.getInterface(1).setMask("255.255.255.0");*/
 
-       Hub hub = new Hub("Hub 01");
+       //Hub hub = new Hub("Hub 01");
+       Switch hub = new Switch("Switch 01");
 
 
         //n.addEquipment(router);

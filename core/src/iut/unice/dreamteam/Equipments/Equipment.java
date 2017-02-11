@@ -50,6 +50,7 @@ public abstract class Equipment {
                 Interface equipmentInterface = p.newInstance();
                 equipmentInterface.setEquipment(equipment);
                 equipmentInterface.setPassive(passiveInterfaces);
+                equipmentInterface.setUp(true);
 
                 interfaces.add(equipmentInterface);
             } catch (InstantiationException | IllegalAccessException e) {

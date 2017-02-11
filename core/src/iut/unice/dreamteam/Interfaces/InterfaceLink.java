@@ -18,4 +18,9 @@ public class InterfaceLink {
             a.receivePacket(p);
         }
     }
+
+    public void brakeLink() {
+        a.setLink(null);
+        b.setLink(null);
+    }
 }

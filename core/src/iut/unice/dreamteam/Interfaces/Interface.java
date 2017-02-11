@@ -11,9 +11,6 @@ import java.util.Random;
 
 
 public class Interface {
-    private static final Boolean STATE_UP = true;
-    private static final Boolean STATE_DOWN = false;
-
     private String ip;
     private String mask;
 
@@ -21,9 +18,6 @@ public class Interface {
 
     private float speed;
     private Boolean state;
-
-    private Boolean connected;
-    private Boolean launchedQueue;
 
     private InterfaceLink link;
     private Equipment equipment;
@@ -35,7 +29,7 @@ public class Interface {
     public Interface() {
         this.macAddress = this.randomMACAddress();
 
-        this.launchedQueue = false;
+        this.state = false;
 
         this.packetsManager = new PacketsManager();
 
@@ -71,11 +65,11 @@ public class Interface {
         return sb.toString();
     }
 
-    public Boolean isDown() {
+    public Boolean isUp() {
         return state;
     }
 
-    public void setState(Boolean state) {
+    public void setUp(Boolean state) {
         this.state = state;
     }
 
@@ -99,16 +93,16 @@ public class Interface {
         this.ip = ip;
     }
 
-    public Boolean getConnected() {
-        return connected;
-    }
-
-    public void setConnected(Boolean connected) {
-        this.connected = connected;
+    public Boolean isConnected() {
+        return this.link != null;
     }
 
     public void setLink(InterfaceLink link) {
         this.link = link;
+    }
+
+    public void removeLink() {
+        this.link.brakeLink();
     }
 
     public InterfaceLink getLink() {
@@ -218,7 +212,8 @@ public class Interface {
 
                 packetOnEquipment.getPacketProperties().setSent();
 
-                link.sendPacket(this, packetOnEquipment.getPacket());
+                if(isUp() && isConnected())
+                    link.sendPacket(this, packetOnEquipment.getPacket());
 
                 return;
             }

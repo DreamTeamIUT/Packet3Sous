@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 
 public class Hub extends Equipment implements IncomingPacketInterface {
-    private static final int INTERFACE_NUMBER = 2;
+    private static final int INTERFACE_NUMBER = 10;
     private ArrayList<Interface> interfaces;
 
     public Hub(String name) {

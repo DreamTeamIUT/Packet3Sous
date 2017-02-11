@@ -1,31 +1,29 @@
 package iut.unice.dreamteam.Equipments;
 
+import iut.unice.dreamteam.Debug;
 import iut.unice.dreamteam.Interfaces.IncomingPacketInterface;
 import iut.unice.dreamteam.Interfaces.Interface;
 import iut.unice.dreamteam.Interfaces.Packet;
 import iut.unice.dreamteam.Interfaces.WiredInterface;
+import iut.unice.dreamteam.Network;
+import iut.unice.dreamteam.NetworkLayers.MacLayer;
 import iut.unice.dreamteam.Protocols.ApplicationProtocol;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 public class Switch extends Equipment implements IncomingPacketInterface {
-    private ArrayList<String> equipments;
+    private HashMap<String, Interface> macTable;
 
     public Switch(String name) {
         super(name);
 
-        initialize(24, WiredInterface.class, this);
+        initialize(24, WiredInterface.class, this, true);
         setIncomingPacketInterface(this);
-    }
 
-    public void getEquipmentTable() {
-        for (Interface i : getInterfaces()) {
-            String macAddress = "";
+        macTable = new HashMap<>();
 
-            if(!equipments.contains(macAddress))
-                equipments.add(macAddress);
-        }
     }
 
     @Override
@@ -45,6 +43,28 @@ public class Switch extends Equipment implements IncomingPacketInterface {
 
     @Override
     public void onReceive(Interface i, Packet p) {
+        Debug.log("For the switch !");
+        updateTable(i, p);
+
+        if (macTable.containsKey(p.getMacLayer().getDestination())){
+            macTable.get(p.getMacLayer().getDestination()).sendPacket(p);
+        }
+        else {
+            for (Interface iface : getInterfaces()){
+                if (!iface.getMacAddress().equals(i.getMacAddress()))
+                    iface.sendPacket(p);
+            }
+        }
+
+    }
+
+    private void updateTable(Interface i, Packet p) {
+        if (macTable.containsKey(p.getMacLayer().getSource())){
+            macTable.remove(p.getMacLayer().getSource());
+        }
+
+        if (!MacLayer.isBroadcastAddress(p.getMacLayer().getSource()))
+            macTable.put(p.getMacLayer().getSource(), i);
 
     }
 }
