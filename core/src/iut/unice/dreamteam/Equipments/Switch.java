@@ -1,15 +1,12 @@
 package iut.unice.dreamteam.Equipments;
 
-import iut.unice.dreamteam.Debug;
+import iut.unice.dreamteam.Utils.Debug;
 import iut.unice.dreamteam.Interfaces.IncomingPacketInterface;
 import iut.unice.dreamteam.Interfaces.Interface;
 import iut.unice.dreamteam.Interfaces.Packet;
 import iut.unice.dreamteam.Interfaces.WiredInterface;
-import iut.unice.dreamteam.Network;
 import iut.unice.dreamteam.NetworkLayers.MacLayer;
-import iut.unice.dreamteam.Protocols.ApplicationProtocol;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 

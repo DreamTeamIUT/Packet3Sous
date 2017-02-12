@@ -1,4 +1,4 @@
-package iut.unice.dreamteam;
+package iut.unice.dreamteam.Utils;
 
 import iut.unice.dreamteam.Equipments.Equipment;
 import iut.unice.dreamteam.Interfaces.Packet;

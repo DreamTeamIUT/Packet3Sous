@@ -1,6 +1,6 @@
 package iut.unice.dreamteam.Equipments;
 
-import iut.unice.dreamteam.Debug;
+import iut.unice.dreamteam.Utils.Debug;
 import iut.unice.dreamteam.Interfaces.IncomingPacketInterface;
 import iut.unice.dreamteam.Interfaces.Interface;
 import iut.unice.dreamteam.Interfaces.Packet;

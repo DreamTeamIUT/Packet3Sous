@@ -1,6 +1,6 @@
 package iut.unice.dreamteam.Interfaces;
 
-import iut.unice.dreamteam.Debug;
+import iut.unice.dreamteam.Utils.Debug;
 import iut.unice.dreamteam.Equipments.Equipment;
 import iut.unice.dreamteam.Network;
 import iut.unice.dreamteam.NetworkLayers.MacLayer;
