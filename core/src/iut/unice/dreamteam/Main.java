@@ -1,10 +1,23 @@
 package iut.unice.dreamteam;
 
+import iut.unice.dreamteam.Equipments.Computer;
+import iut.unice.dreamteam.Equipments.Equipment;
+import iut.unice.dreamteam.Equipments.Router;
+import iut.unice.dreamteam.Equipments.Switch;
+import iut.unice.dreamteam.Interfaces.Packet;
+import iut.unice.dreamteam.NetworkLayers.ApplicationLayer;
+import iut.unice.dreamteam.NetworkLayers.IpLayer;
+import iut.unice.dreamteam.Protocols.ICMP;
+import iut.unice.dreamteam.Utils.Debug;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.json.JSONObject;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Main extends Application {
 
@@ -18,9 +31,9 @@ public class Main extends Application {
 
 
     public static void main(String[] args) {
-        launch(args);
+        //launch(args);
 
-      /*  final Network n = new Network();
+        final Network n = new Network();
 
         Equipment e = new Computer("PC 01");
         e.setGateway("192.168.0.254");
@@ -33,12 +46,12 @@ public class Main extends Application {
         ea.getInterface(0).setMask("255.255.255.0");
 
 
-       *//* Router router = new Router("Router 01");
+        Router router = new Router("Router 01");
         router.getInterface(0).setIp("192.168.0.254");
         router.getInterface(0).setMask("255.255.255.0");
 
         router.getInterface(1).setIp("192.168.2.254");
-        router.getInterface(1).setMask("255.255.255.0");*//*
+        router.getInterface(1).setMask("255.255.255.0");
 
        //Hub hub = new Hub("Hub 01");
        Switch hub = new Switch("Switch 01");
@@ -54,6 +67,7 @@ public class Main extends Application {
         Network.linkInterfaces(e.getInterface(0), hub.getInterface(0));
         Network.linkInterfaces( ea.getInterface(0), hub.getInterface(1));
 
+        /*
         Packet p = new Packet();
         IpLayer ip = new IpLayer();
 
@@ -62,13 +76,16 @@ public class Main extends Application {
         p.setIpLayer(ip);
 
         JSONObject protocolObject = new JSONObject();
-        protocolObject.put("name", "TEST");
+        protocolObject.put("name", "ICMP");
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("protocol", protocolObject);
         jsonObject.put("data", "NONE");
 
         p.setApplicationLayer(new ApplicationLayer(jsonObject));
+        */
+
+        Packet p = new ICMP().initiate(e.getInterface(0), new JSONObject().put("ip-address", ea.getInterface(0).getIp()));
 
         e.sendPacket(p);
 
@@ -79,7 +96,6 @@ public class Main extends Application {
                 n.updateEquipments();
             }
         }, 0, 5000);
-*/
     }
 }
 
