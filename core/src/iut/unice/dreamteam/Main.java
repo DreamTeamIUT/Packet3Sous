@@ -18,13 +18,18 @@ import iut.unice.dreamteam.NetworkLayers.IpLayer;
 import iut.unice.dreamteam.NetworkLayers.TransportLayer;
 import iut.unice.dreamteam.Protocols.TCP;
 import iut.unice.dreamteam.Utils.Debug;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 import org.json.JSONObject;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class Main /*extends Application*/ {
-    /*
+public class Main extends Application {
+
     @Override
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/mainUi.fxml"));
@@ -32,10 +37,10 @@ public class Main /*extends Application*/ {
         primaryStage.setScene(new Scene(root, 300, 275));
         primaryStage.show();
     }
-    */
+
 
     public static void main(String[] args) {
-        //launch(args);
+        launch(args);
 
         final Network n = new Network();
 
