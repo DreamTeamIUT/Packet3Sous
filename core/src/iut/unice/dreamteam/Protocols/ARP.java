@@ -80,7 +80,7 @@ public class ARP extends ApplicationProtocol {
                         packetOnEquipment.getPacket().setMacLayer(new MacLayer(i.getMacAddress(), packet.getMacLayer().getSource()));
                         packetOnEquipment.getPacketProperties().setWaitingId(null);
                     }
-                    else if (packet.getIpLayer().getSource().equals(i.getEquipment().getGateway()) && !Network.isInSameNetwork(packetOnEquipment.getPacket().getIpLayer().getDestination(), i.getIp(), i.getMask())) {
+                    else if (packet.getIpLayer().getSource().equals(i.getGateway()) && !Network.isInSameNetwork(packetOnEquipment.getPacket().getIpLayer().getDestination(), i.getIp(), i.getMask())) {
                         Debug.log("updating packet 2 " + packetOnEquipment.getPacket().getApplicationLayer().getContent());
 
                         packetOnEquipment.getPacket().setMacLayer(new MacLayer(i.getMacAddress(), packet.getMacLayer().getSource()));

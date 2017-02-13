@@ -1,5 +1,6 @@
 package iut.unice.dreamteam.Equipments;
 
+import com.sun.xml.internal.bind.v2.runtime.reflect.Lister;
 import iut.unice.dreamteam.Interfaces.IncomingPacketInterface;
 import iut.unice.dreamteam.Interfaces.Interface;
 import iut.unice.dreamteam.Network;
@@ -7,6 +8,7 @@ import iut.unice.dreamteam.Interfaces.Packet;
 import iut.unice.dreamteam.NetworkLayers.MacLayer;
 import iut.unice.dreamteam.Protocols.ApplicationProtocol;
 import iut.unice.dreamteam.Protocols.ApplicationProtocols;
+import iut.unice.dreamteam.Protocols.TransportProtocol;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,12 +16,16 @@ import java.util.HashMap;
 
 public abstract class Equipment {
     private String name;
-    private String gateway;
+    private Interface defaultGateway;
     private ArrayList<Interface> interfaces;
     private ArrayList<String> supportedProtocols;
     private HashMap<String, String> arpAssociation;
 
     private IncomingPacketInterface incomingPacketInterface;
+
+    private Boolean multipleRoutes;
+
+    private HashMap<Integer, TransportProtocol> usedPorts;
 
     public Equipment(String name){
         this.name = name;
@@ -30,6 +36,10 @@ public abstract class Equipment {
         this.supportedProtocols.add("ARP");
 
         this.arpAssociation = new HashMap<>();
+
+        this.multipleRoutes = false;
+
+        usedPorts = new HashMap<>();
     }
 
     public Interface getInterface(int i){
@@ -41,7 +51,8 @@ public abstract class Equipment {
             if (Network.isInSameNetwork(i.getIp(), ip, i.getMask()))
                 return i;
         }
-        return getInterface(getGateway());
+
+        return getDefaultGateway();
     }
 
     public void initialize(int size, Class< ? extends Interface> p, Equipment equipment, Boolean passiveInterfaces){
@@ -51,6 +62,9 @@ public abstract class Equipment {
                 equipmentInterface.setEquipment(equipment);
                 equipmentInterface.setPassive(passiveInterfaces);
                 equipmentInterface.setUp(true);
+
+                if(defaultGateway == null)
+                    defaultGateway = equipmentInterface;
 
                 interfaces.add(equipmentInterface);
             } catch (InstantiationException | IllegalAccessException e) {
@@ -133,27 +147,16 @@ public abstract class Equipment {
     }
 
     public void sendPacket(Packet packet) {
-        //if(!isSendingPacket()) {
-
-            //TIMEOUT
-            System.out.println("sending packet from eth" + interfaces.indexOf(getInterface(packet.getIpLayer().getDestination())) + " to " + packet.getIpLayer().getDestination());
-            getInterface(packet.getIpLayer().getDestination()).sendPacket(packet);
-            //packets.remove(packet);
-
-            //if(packets.size() > 0)
-                //sendPacket(packets.get(0));
-            //END TIMEOUT
-        //}
-        //else
-            //packets.add(packet);
+        System.out.println("sending packet from eth" + interfaces.indexOf(getInterface(packet.getIpLayer().getDestination())) + " to " + packet.getIpLayer().getDestination());
+        getInterface(packet.getIpLayer().getDestination()).sendPacket(packet);
     }
 
-    public String getGateway() {
-        return gateway;
+    public Interface getDefaultGateway() {
+        return defaultGateway;
     }
 
-    public void setGateway(String gateway) {
-        this.gateway = gateway;
+    public void setDefaultGateway(Interface defaultGateway) {
+        this.defaultGateway = defaultGateway;
     }
 
     public String getName() {
@@ -167,5 +170,35 @@ public abstract class Equipment {
     public void updateInterfaces() {
         for (Interface i : this.interfaces)
             i.launchQueue();
+    }
+
+    public Boolean hasMultipleRoutes() {
+        return multipleRoutes;
+    }
+
+    public void setMultipleRoutes(Boolean multipleRoutes) {
+        this.multipleRoutes = multipleRoutes;
+    }
+
+    public String gatewayByRoutes(Interface i) {
+        return null;
+    }
+
+    public Boolean usedPort(int port) {
+        return usedPorts.containsKey(port);
+    }
+
+    public Boolean newConnection(int port, TransportProtocol transportProtocol) {
+        if (!usedPort(port)) {
+            usedPorts.put(port, transportProtocol);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public void applyTransportProtocol(Packet packet) {
+
     }
 }

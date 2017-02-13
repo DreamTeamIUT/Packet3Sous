@@ -13,6 +13,7 @@ import java.util.Random;
 public class Interface {
     private String ip;
     private String mask;
+    private String gateway;
 
     private String macAddress;
 
@@ -146,11 +147,11 @@ public class Interface {
                 }
             }
             else {
-                if(getEquipment().existArpAssociation(getEquipment().getGateway())) {
-                    packet.setMacLayer(new MacLayer(getMacAddress(), getEquipment().getMacArpAssociations(getEquipment().getGateway())));
+                if(getEquipment().existArpAssociation(getGateway())) {
+                    packet.setMacLayer(new MacLayer(getMacAddress(), getEquipment().getMacArpAssociations(getGateway())));
                 }
                 else {
-                    Packet arpPacket = arp.initiate(this, new JSONObject().put("ip-address", getEquipment().getGateway()));
+                    Packet arpPacket = arp.initiate(this, new JSONObject().put("ip-address", getGateway()));
 
                     if(arpPacket != null) {
                         Debug.equipment(getEquipment(), "new packet in queue");
@@ -230,5 +231,16 @@ public class Interface {
 
     public PacketsManager getPacketsManager() {
         return packetsManager;
+    }
+
+    public String getGateway() {
+        if(getEquipment().hasMultipleRoutes())
+            return getEquipment().gatewayByRoutes(this);
+
+        return gateway;
+    }
+
+    public void setGateway(String gateway) {
+        this.gateway = gateway;
     }
 }

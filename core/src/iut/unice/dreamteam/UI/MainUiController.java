@@ -1,5 +1,6 @@
 package iut.unice.dreamteam.UI;
 
+/*
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -11,9 +12,10 @@ import javafx.scene.paint.Color;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+*/
 
-public class MainUiController implements Initializable{
-
+public class MainUiController /*implements Initializable*/{
+    /*
     @FXML
     private Canvas mainCanvas;
     @FXML
@@ -54,4 +56,5 @@ public class MainUiController implements Initializable{
         gc.setFill(Color.BLACK);
         gc.fillRect(0, 0, mainCanvas.getWidth(), mainCanvas.getHeight());
     }
+    */
 }
