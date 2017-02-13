@@ -13,6 +13,7 @@ public class ApplicationProtocols {
     {
         applicationProtocolArrayList = new ArrayList<>();
         applicationProtocolArrayList.add(new ARP());
+        applicationProtocolArrayList.add(new ICMP());
     }
 
     public static ApplicationProtocols getInstance() {

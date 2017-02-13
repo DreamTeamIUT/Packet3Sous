@@ -18,7 +18,7 @@ public class Computer extends Equipment implements IncomingPacketInterface {
         initialize(1, WiredInterface.class, this);
         setIncomingPacketInterface(this);
 
-        addProtocols(new ArrayList<>(Arrays.asList("FTP", "HTTP")));
+        addProtocols(new ArrayList<>(Arrays.asList("FTP", "HTTP", "ICMP")));
     }
 
     @Override
