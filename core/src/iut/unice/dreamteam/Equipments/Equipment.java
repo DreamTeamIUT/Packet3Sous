@@ -9,6 +9,7 @@ import iut.unice.dreamteam.NetworkLayers.MacLayer;
 import iut.unice.dreamteam.Protocols.ApplicationProtocol;
 import iut.unice.dreamteam.Protocols.ApplicationProtocols;
 import iut.unice.dreamteam.Protocols.TransportProtocol;
+import iut.unice.dreamteam.Utils.Debug;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -189,6 +190,8 @@ public abstract class Equipment {
     }
 
     public Boolean newConnection(int port, TransportProtocol transportProtocol) {
+        Debug.log("new connection");
+
         if (!usedPort(port)) {
             usedPorts.put(port, transportProtocol);
 
