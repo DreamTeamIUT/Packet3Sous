@@ -3,13 +3,20 @@ package iut.unice.dreamteam;
 import iut.unice.dreamteam.Equipments.Equipment;
 import iut.unice.dreamteam.Interfaces.Interface;
 import iut.unice.dreamteam.Interfaces.InterfaceLink;
-import iut.unice.dreamteam.Interfaces.Packet;
 
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 
 public class Network {
+
+    private static final String IPADDRESS_PATTERN =
+            "^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
+                    "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
+                    "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
+                    "([01]?\\d\\d?|2[0-4]\\d|25[0-5])$";
+
 
     private ArrayList<Equipment> equipments;
 
@@ -63,5 +70,9 @@ public class Network {
     public void updateEquipments() {
         for (Equipment equipment : this.equipments)
             equipment.updateInterfaces();
+    }
+
+    public static Boolean isValidIpFormat(String ip) {
+        return Pattern.compile(IPADDRESS_PATTERN).matcher(ip).matches();
     }
 }
