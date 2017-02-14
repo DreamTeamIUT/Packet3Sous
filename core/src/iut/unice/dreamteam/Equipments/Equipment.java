@@ -1,10 +1,9 @@
 package iut.unice.dreamteam.Equipments;
 
-import com.sun.xml.internal.bind.v2.runtime.reflect.Lister;
 import iut.unice.dreamteam.Interfaces.IncomingPacketInterface;
 import iut.unice.dreamteam.Interfaces.Interface;
-import iut.unice.dreamteam.Network;
 import iut.unice.dreamteam.Interfaces.Packet;
+import iut.unice.dreamteam.Network;
 import iut.unice.dreamteam.NetworkLayers.MacLayer;
 import iut.unice.dreamteam.Protocols.ApplicationProtocol;
 import iut.unice.dreamteam.Protocols.ApplicationProtocols;
@@ -203,5 +202,17 @@ public abstract class Equipment {
 
     public void applyTransportProtocol(Packet packet) {
 
+    }
+
+    public void clearInterfaces(){
+        for (Interface i : interfaces){
+            if (i.getLink() != null)
+                i.getLink().brakeLink();
+        }
+        interfaces.clear();
+    }
+
+    public boolean addInterface(Interface i){
+        return getInterfaces().add(i);
     }
 }

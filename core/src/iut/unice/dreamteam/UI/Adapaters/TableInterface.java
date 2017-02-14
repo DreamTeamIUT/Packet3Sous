@@ -1,5 +1,7 @@
 package iut.unice.dreamteam.UI.Adapaters;
 
+import iut.unice.dreamteam.Interfaces.Interface;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 /**
@@ -10,6 +12,7 @@ public class TableInterface {
     private SimpleStringProperty mask;
     private SimpleStringProperty name;
     private SimpleStringProperty type;
+    private SimpleBooleanProperty passive;
 
     public TableInterface() {
     }
@@ -21,11 +24,12 @@ public class TableInterface {
         this.type = new SimpleStringProperty("wired");
     }
 
-    public TableInterface(String text, String text1, String value, String text2) {
+    public TableInterface(String text, String text1, String value, String text2, boolean selected) {
         this.ip = new SimpleStringProperty(text);
         this.mask = new SimpleStringProperty(text1);
         this.name = new SimpleStringProperty(text2);
         this.type = new SimpleStringProperty(value);
+        this.passive = new SimpleBooleanProperty(selected);
     }
 
     public String getIp() {
@@ -66,5 +70,23 @@ public class TableInterface {
 
     public void setType(String type) {
         this.type.set(type);
+    }
+
+    public static Interface convertToInterface(TableInterface i) {
+        Interface iface = new Interface();
+        iface.setUp(false);
+        iface.setPassive(i.isPassive());
+        iface.setMask(i.getMask());
+        iface.setIp(i.getIp());
+
+        return iface;
+    }
+
+    public boolean isPassive() {
+        return passive.get();
+    }
+
+    public void setPassive(boolean passive) {
+        this.passive.set(passive);
     }
 }

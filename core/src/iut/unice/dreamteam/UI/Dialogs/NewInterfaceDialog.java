@@ -42,6 +42,8 @@ public class NewInterfaceDialog extends Stage implements Initializable {
     @FXML
     CheckBox repeat;
     @FXML
+    CheckBox passiveInt;
+    @FXML
     GridPane basicInfo;
 
 
@@ -88,6 +90,8 @@ public class NewInterfaceDialog extends Stage implements Initializable {
                 }
             }
         });
+
+        numberRepeat.setDisable(true);
     }
 
     private void setupCheckbox() {
@@ -112,12 +116,37 @@ public class NewInterfaceDialog extends Stage implements Initializable {
                 }
             }
         });
+
+        passiveInt.selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                passiveInt.setSelected(newValue);
+                if (newValue) {
+                    ip.setText("");
+                    ip.setDisable(true);
+                    mask.setDisable(true);
+                    mask.setText("");
+                    numberRepeat.setText("1");
+
+                } else {
+                    numberRepeat.setDisable(true);
+                    ip.setText("");
+                    ip.setDisable(false);
+                    mask.setDisable(false);
+                    mask.setText("");
+                    numberRepeat.setText("1");
+                }
+            }
+        });
+
+        passiveInt.setSelected(false);
+        repeat.setSelected(false);
     }
 
     public void validateDialog() {
         if ((ip.getText().equals("") || Network.isValidIpFormat(ip.getText())) && (mask.getText().equals("") || Network.isValidIpFormat(mask.getText()))) {
             for (int i = 0; i < Integer.parseInt(numberRepeat.getText()); i++) {
-                tableInterfaces.add(new TableInterface(ip.getText(), mask.getText(), types.getValue(), "eth" + (this.currentInterfaceNumber + i)));
+                tableInterfaces.add(new TableInterface(ip.getText(), mask.getText(), types.getValue(), "eth" + (this.currentInterfaceNumber + i), passiveInt.isSelected()));
             }
             this.close();
         } else {

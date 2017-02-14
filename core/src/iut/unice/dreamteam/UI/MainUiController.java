@@ -1,5 +1,6 @@
 package iut.unice.dreamteam.UI;
 
+import iut.unice.dreamteam.Equipments.Equipment;
 import iut.unice.dreamteam.Network;
 import iut.unice.dreamteam.UI.Dialogs.NewEquipmentDialog;
 import iut.unice.dreamteam.Utils.Debug;
@@ -16,6 +17,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.util.Callback;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 
@@ -31,6 +33,7 @@ public class MainUiController implements Initializable {
     private CanvasDrawer canvasDrawer;
     private Network network;
     private ObservableList<String> deviceObservableList;
+    private ArrayList<DrawableEquipment> drawableEquipments;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -59,12 +62,24 @@ public class MainUiController implements Initializable {
             @Override
             public void handle(DragEvent event) {
                 Dragboard db = event.getDragboard();
+                Debug.log("droped on x:" + event.getSceneX() + " y:" + event.getSceneY());
+
                 if (db.hasString()) {
                     Debug.log(db.getString());
                     event.setDropCompleted(true);
 
                     NewEquipmentDialog dialog = new NewEquipmentDialog(db.getString());
                     dialog.showAndWait();
+
+                    Equipment result = dialog.getResult();
+                    if (result != null){
+                        Debug.log("Added new Equipment drawable");
+                        network.addEquipment(result);
+                        drawableEquipments.add(new DrawableEquipment(result)
+                                .setX((float) event.getSceneX())
+                                .setY((float) event.getSceneY())
+                        );
+                    }
 
 
                 }

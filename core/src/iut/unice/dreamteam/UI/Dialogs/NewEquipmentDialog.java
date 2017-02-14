@@ -1,6 +1,8 @@
 package iut.unice.dreamteam.UI.Dialogs;
 
-import iut.unice.dreamteam.Equipments.*;
+import iut.unice.dreamteam.Equipments.Equipment;
+import iut.unice.dreamteam.Interfaces.Interface;
+import iut.unice.dreamteam.Network;
 import iut.unice.dreamteam.UI.Adapaters.TableInterface;
 import iut.unice.dreamteam.Utils.Debug;
 import javafx.beans.value.ChangeListener;
@@ -12,10 +14,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -26,6 +25,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.regex.Pattern;
 
 /**
  * Created by Guillaume on 13/02/2017.
@@ -140,33 +140,37 @@ public class NewEquipmentDialog extends Stage implements Initializable {
     }
 
     public void cancelDialog() {
+        this.result = null;
         this.close();
     }
 
     public void validateDialog() {
         //If all is ok
-        this.result = getEquipmentFromString(this.equipmentName);
+        if (!Pattern.compile("\\w{3,}").matcher(configEquipmentName.getText().replace(" ", "")).matches())
+        {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error !");
+            alert.setHeaderText(null);
+            alert.setContentText("The equipment name must be longer than 3 characters...");
+
+            alert.showAndWait();
+            return;
+        }
+
+        this.result = Network.getEquipmentFromString(this.equipmentName);
         this.result.setName(configEquipmentName.getText());
+        this.result.clearInterfaces();
+        for (TableInterface i: list){
+            Interface iface = TableInterface.convertToInterface(i);
+            iface.setEquipment(this.result);
+            this.result.addInterface(iface);
+        }
+
+        this.close();
     }
 
     public Equipment getResult() {
-        return null;
-    }
-
-    public static Equipment getEquipmentFromString(String name) {
-        switch (name) {
-            case "Router":
-                return new Router("");
-            case "Switch":
-                return new Switch("");
-            case "Hub":
-                return new Hub("");
-            case "Computer":
-                return new Computer("");
-            case "Access Point":
-                return new AccessPoint("");
-        }
-        return null;
+        return this.result;
     }
 
     private void updateTable() {
