@@ -39,8 +39,8 @@
                            <children>
                               <ToolBar prefHeight="30.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                                  <items>
-                                    <Button mnemonicParsing="false" text="Start" />
-                                    <Button mnemonicParsing="false" text="Stop" />
+                                    <Button fx:id="startBtn" mnemonicParsing="false" onAction="#startRender" text="Start" />
+                                    <Button fx:id="stopBtn" mnemonicParsing="false" onAction="#stopRender" text="Stop" />
                                     <Button mnemonicParsing="false" text="&lt;" />
                                     <Slider />
                                     <Button mnemonicParsing="false" text="&gt;" />

@@ -145,7 +145,6 @@ public class NewEquipmentDialog extends Stage implements Initializable {
     }
 
     public void validateDialog() {
-        //If all is ok
         if (!Pattern.compile("\\w{3,}").matcher(configEquipmentName.getText().replace(" ", "")).matches())
         {
             Alert alert = new Alert(Alert.AlertType.ERROR);

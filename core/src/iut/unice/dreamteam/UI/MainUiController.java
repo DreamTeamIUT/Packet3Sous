@@ -10,6 +10,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.input.*;
@@ -29,6 +30,10 @@ public class MainUiController implements Initializable {
     private AnchorPane mainPane;
     @FXML
     private javafx.scene.control.ListView<String> deviceList;
+    @FXML
+    private Button startBtn;
+    @FXML
+    private Button stopBtn;
 
     private CanvasDrawer canvasDrawer;
     private Network network;
@@ -39,7 +44,8 @@ public class MainUiController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         System.out.println("Test");
         network = new Network();
-        canvasDrawer = new CanvasDrawer(mainPane, network, mainCanvas);
+        drawableEquipments =  new ArrayList<>();
+        canvasDrawer = new CanvasDrawer(mainPane, drawableEquipments, network, mainCanvas);
 
         addItemToListView();
 
@@ -79,6 +85,7 @@ public class MainUiController implements Initializable {
                                 .setX((float) event.getSceneX())
                                 .setY((float) event.getSceneY())
                         );
+                        canvasDrawer.update();
                     }
 
 
@@ -120,4 +127,11 @@ public class MainUiController implements Initializable {
 
     }
 
+    public void startRender(){
+        canvasDrawer.startRender();
+    }
+
+    public void stopRender(){
+        canvasDrawer.stopRender();
+    }
 }

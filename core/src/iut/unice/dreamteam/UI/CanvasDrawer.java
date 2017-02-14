@@ -1,6 +1,7 @@
 package iut.unice.dreamteam.UI;
 
 import iut.unice.dreamteam.Network;
+import javafx.animation.AnimationTimer;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.canvas.Canvas;
@@ -8,20 +9,22 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.ArrayList;
 
 /**
  * Created by Guillaume on 13/02/2017.
  */
 public class CanvasDrawer {
+    private final ArrayList<DrawableEquipment> elementsToDraw;
     private Network network;
     private final Canvas canvas;
     public GraphicsContext gc;
-    private Timer timer;
+    private AnimationTimer timer;
+    private long startNanoTime;
 
-    public CanvasDrawer(AnchorPane mainPane, Network n, Canvas c) {
-        this.network = n;
+    public CanvasDrawer(AnchorPane mainPane, ArrayList<DrawableEquipment> n, Network network, Canvas c) {
+        this.network = network;
+        this.elementsToDraw = n;
         this.canvas = c;
 
         gc = c.getGraphicsContext2D();
@@ -45,30 +48,36 @@ public class CanvasDrawer {
     }
 
     private void draw() {
-        System.out.println("draw ");
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         gc.setFill(Color.WHITE);
         gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
+
+        for (DrawableEquipment e: this.elementsToDraw){
+           gc.drawImage(e.getEquipmentDrawable(), e.getX(), e.getY());
+        }
 
     }
 
     public void stopRender() {
         if (timer != null)
         {
-            timer.cancel();
-            timer.purge();
+            timer.stop();
         }
     }
 
     public void startRender() {
-        timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
+        startNanoTime = System.nanoTime();
+        timer = new AnimationTimer()
+        {
+            public void handle(long currentNanoTime)
+            {
+                double t = (currentNanoTime - startNanoTime) / 1000000000.0;
+
                 draw();
             }
-        }, 0, 120);
+        };
+        timer.start();
     }
 
     public Network getNetwork() {
@@ -77,5 +86,9 @@ public class CanvasDrawer {
 
     public void setNetwork(Network network) {
         this.network = network;
+    }
+
+    public void update() {
+        draw();
     }
 }

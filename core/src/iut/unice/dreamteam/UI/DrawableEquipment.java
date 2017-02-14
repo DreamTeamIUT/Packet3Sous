@@ -1,18 +1,24 @@
 package iut.unice.dreamteam.UI;
 
-import iut.unice.dreamteam.Equipments.*;
+import iut.unice.dreamteam.Equipments.Equipment;
 import javafx.scene.image.Image;
+import javafx.scene.shape.Circle;
 
 /**
  * Created by Guillaume on 14/02/2017.
  */
-public class DrawableEquipment {
+public class DrawableEquipment extends Circle{
+
+
     private Equipment equipment;
     private float x;
     private float y;
+    private Image drawable;
 
     public DrawableEquipment(Equipment e) {
         this.equipment = e;
+        this.drawable = DrawableLoader.getInstance().getEquipmentDrawable(this.equipment);
+
     }
 
     public Equipment getEquipment() {
@@ -37,23 +43,7 @@ public class DrawableEquipment {
         return this;
     }
 
-    public static Image getEquipmentDrawable(Equipment e) {
-        if (e instanceof Router)
-            return new Image(e.getClass().getResource("/devices/Router.png").toString());
-
-        else if (e instanceof Switch)
-            return new Image(e.getClass().getResource("/devices/Switch.png").toString());
-
-        else if (e instanceof AccessPoint)
-            return new Image(e.getClass().getResource("/devices/Access Point.png").toString());
-
-        else if (e instanceof Hub)
-            return new Image(e.getClass().getResource("/devices/Hub.png").toString());
-
-        else if (e instanceof Computer)
-            return new Image(e.getClass().getResource("/devices/Computer.png").toString());
-
-        return null;
-
+    public Image getEquipmentDrawable() {
+        return this.drawable;
     }
 }
