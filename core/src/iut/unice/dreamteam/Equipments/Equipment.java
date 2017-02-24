@@ -77,7 +77,7 @@ public abstract class Equipment {
         initialize(size, p, equipment, false);
     }
 
-    protected ArrayList<Interface> getInterfaces() {
+    public ArrayList<Interface> getInterfaces() {
         return interfaces;
     }
 

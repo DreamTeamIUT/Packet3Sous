@@ -11,10 +11,9 @@ public class InterfaceLink {
     }
 
     public void sendPacket(Interface i, Packet p) {
-        if (i.getMacAddress().equals(a.getMacAddress())){
+        if (i.getMacAddress().equals(a.getMacAddress())) {
             b.receivePacket(p);
-        }
-        else {
+        } else {
             a.receivePacket(p);
         }
     }
@@ -22,5 +21,9 @@ public class InterfaceLink {
     public void brakeLink() {
         a.setLink(null);
         b.setLink(null);
+    }
+
+    public Interface getOpositInterface(Interface i) {
+        return i.getMacAddress().equals(a.getMacAddress())? b :a;
     }
 }

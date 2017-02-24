@@ -1,5 +1,6 @@
 package iut.unice.dreamteam.UI;
 
+import iut.unice.dreamteam.ApplicationStates;
 import iut.unice.dreamteam.Equipments.Equipment;
 import iut.unice.dreamteam.Network;
 import iut.unice.dreamteam.UI.Dialogs.NewEquipmentDialog;
@@ -9,10 +10,13 @@ import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.canvas.Canvas;
+import javafx.scene.Cursor;
+import javafx.scene.ImageCursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.image.Image;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Callback;
@@ -24,10 +28,14 @@ import java.util.ResourceBundle;
 
 public class MainUiController implements Initializable {
 
+    /* @FXML
+     private Canvas mainCanvas;*/
     @FXML
-    private Canvas mainCanvas;
+    private ToggleButton connectEquipment;
     @FXML
     private AnchorPane mainPane;
+    @FXML
+    private AnchorPane canvasPane;
     @FXML
     private javafx.scene.control.ListView<String> deviceList;
     @FXML
@@ -44,17 +52,32 @@ public class MainUiController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         System.out.println("Test");
         network = new Network();
-        drawableEquipments =  new ArrayList<>();
-        canvasDrawer = new CanvasDrawer(mainPane, drawableEquipments, network, mainCanvas);
+        drawableEquipments = new ArrayList<>();
+        canvasDrawer = new CanvasDrawer(canvasPane, drawableEquipments, network);
+
+        ApplicationStates.getInstance().addStateChangedListener(new ApplicationStates.StateChangeListener() {
+            @Override
+            public void stateChanged(int newState) {
+                switch (newState) {
+                    case ApplicationStates.CONNECT:
+                        connectEquipment.setText("Cancel");
+                        canvasPane.setCursor(new ImageCursor(new Image(getClass().getResource("/cursors/connect.png").toExternalForm())));
+                        break;
+                    case ApplicationStates.NONE:
+                        connectEquipment.setText("Connect");
+                        canvasPane.setCursor(Cursor.DEFAULT);
+                        break;
+                }
+            }
+        });
 
         addItemToListView();
-
         enableDragAndDrop();
 
     }
 
     private void enableDragAndDrop() {
-        mainCanvas.setOnDragOver(new EventHandler<DragEvent>() {
+        canvasPane.setOnDragOver(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
                 Dragboard db = event.getDragboard();
@@ -64,7 +87,7 @@ public class MainUiController implements Initializable {
             }
         });
 
-        mainCanvas.setOnDragDropped(new EventHandler<DragEvent>() {
+        canvasPane.setOnDragDropped(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
                 Dragboard db = event.getDragboard();
@@ -78,12 +101,12 @@ public class MainUiController implements Initializable {
                     dialog.showAndWait();
 
                     Equipment result = dialog.getResult();
-                    if (result != null){
+                    if (result != null) {
                         Debug.log("Added new Equipment drawable");
                         network.addEquipment(result);
                         drawableEquipments.add(new DrawableEquipment(result)
-                                .setX((float) event.getSceneX())
-                                .setY((float) event.getSceneY())
+                                .setX((float) event.getX())
+                                .setY((float) event.getY())
                         );
                         canvasDrawer.update();
                     }
@@ -127,11 +150,19 @@ public class MainUiController implements Initializable {
 
     }
 
-    public void startRender(){
+    public void startRender() {
         canvasDrawer.startRender();
     }
 
-    public void stopRender(){
+    public void stopRender() {
         canvasDrawer.stopRender();
+    }
+
+    public void makeLink() {
+        if (connectEquipment.isSelected())
+            ApplicationStates.getInstance().setState(ApplicationStates.CONNECT);
+        else
+            ApplicationStates.getInstance().setState(ApplicationStates.NONE);
+
     }
 }

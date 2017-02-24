@@ -35,6 +35,7 @@ public class Main extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/mainUi.fxml"));
         primaryStage.setTitle("Hello World");
         primaryStage.setScene(new Scene(root, 300, 275));
+        primaryStage.getScene().getStylesheets().add(getClass().getResource("/css/titleMenuItem.css").toExternalForm());
         primaryStage.show();
     }
 

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="iut.unice.dreamteam.UI.MainUiController">
@@ -44,13 +43,10 @@
                                     <Button mnemonicParsing="false" text="&lt;" />
                                     <Slider />
                                     <Button mnemonicParsing="false" text="&gt;" />
+                                    <ToggleButton fx:id="connectEquipment" mnemonicParsing="false" onAction="#makeLink" text="Connect" />
                                  </items>
                               </ToolBar>
-                              <AnchorPane prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
-                                 <children>
-                                    <Canvas fx:id="mainCanvas" height="338.0" width="475.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                                 </children>
-                              </AnchorPane>
+                              <AnchorPane fx:id="canvasPane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #fff;" VBox.vgrow="ALWAYS" />
                            </children>
                         </VBox>
                      </children>

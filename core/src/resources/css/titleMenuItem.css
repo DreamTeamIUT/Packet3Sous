@@ -1,0 +1,10 @@
+.menu-title{
+    -fx-background-color: white;
+    -fx-opacity: 1.0;
+}
+
+.menu-title .label {
+    -fx-opacity: 1.0;
+    -fx-text-fill: black;
+    -fx-font-weight : bold;
+}

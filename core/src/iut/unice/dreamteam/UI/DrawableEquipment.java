@@ -16,10 +16,11 @@ public class DrawableEquipment extends Circle{
     private Image drawable;
 
     public DrawableEquipment(Equipment e) {
+        super();
         this.equipment = e;
         this.drawable = DrawableLoader.getInstance().getEquipmentDrawable(this.equipment);
-
     }
+
 
     public Equipment getEquipment() {
         return equipment;
@@ -41,6 +42,14 @@ public class DrawableEquipment extends Circle{
     public DrawableEquipment setY(float y) {
         this.y = y;
         return this;
+    }
+
+    public double getCenterPointX(){
+        return (float) ((getEquipmentDrawable().getWidth()/2) + getX());
+    }
+
+    public double getCenterPointY(){
+        return (float) ((getEquipmentDrawable().getHeight()/2) + getY());
     }
 
     public Image getEquipmentDrawable() {
