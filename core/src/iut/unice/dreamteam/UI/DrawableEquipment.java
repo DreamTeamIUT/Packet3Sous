@@ -55,4 +55,6 @@ public class DrawableEquipment extends Circle{
     public Image getEquipmentDrawable() {
         return this.drawable;
     }
+
+
 }

@@ -164,6 +164,8 @@ public class CanvasDrawer {
                         DrawableEquipment dEa = elementsToDraw.get(posEa);
                         DrawableEquipment dEb = elementsToDraw.get(posEb);
 
+                        //LinkPoint point = dEa.getLinkPointForInterface(i);
+
                         Line link = new Line(dEa.getCenterPointX(), dEa.getCenterPointY(), dEb.getCenterPointX(), dEb.getCenterPointY());
                         link.setStrokeWidth(1.5);
                         this.mainPane.getChildren().add(link);

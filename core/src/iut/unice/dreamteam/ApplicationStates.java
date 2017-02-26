@@ -21,6 +21,7 @@ public class ApplicationStates {
 
     public ApplicationStates(){
         this.currentState = NONE;
+        stateChangeListeners = new ArrayList<>();
     }
 
     public void setState(int state){
