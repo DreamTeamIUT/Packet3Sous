@@ -4,15 +4,10 @@ import iut.unice.dreamteam.ApplicationStates;
 import iut.unice.dreamteam.Equipments.Equipment;
 import iut.unice.dreamteam.Interfaces.Interface;
 import iut.unice.dreamteam.Network;
-import iut.unice.dreamteam.UI.ContextMenus.DeviceContextMenu;
-import iut.unice.dreamteam.UI.ContextMenus.InterfaceContextMenu;
 import iut.unice.dreamteam.Utils.Debug;
 import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.ContextMenuEvent;
-import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Line;
@@ -108,8 +103,8 @@ public class CanvasDrawer {
         for (DrawableEquipment drawableEquipment : elementsToDraw)
             equipments.add(drawableEquipment.getEquipment());
 
-        mainPane.getChildren().clear();
-        mainPane.getChildren().add(tempLine);
+       // mainPane.getChildren().clear();
+       // mainPane.getChildren().add(tempLine);
 
         drawLinks();
 
@@ -120,34 +115,8 @@ public class CanvasDrawer {
 
     private void drawEquipements() {
         for (final DrawableEquipment e : elementsToDraw) {
-            final ImageView i = new ImageView(e.getEquipmentDrawable());
-            i.setPreserveRatio(true);
-
-            AnchorPane.setLeftAnchor(i, (double) e.getX());
-            AnchorPane.setTopAnchor(i, (double) e.getY());
-
-            i.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
-                    if (event.getButton().equals(MouseButton.PRIMARY) && ApplicationStates.getInstance().is(ApplicationStates.CONNECT)) {
-                        Debug.log("Create context...");
-                        InterfaceContextMenu menu = new InterfaceContextMenu(e.getEquipment(), CanvasDrawer.this);
-                        menu.show(i, event.getScreenX(), event.getScreenY());
-                    } else if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
-                        Debug.log("Double click !");
-                    }
-                }
-            });
-
-            i.setOnContextMenuRequested(new EventHandler<ContextMenuEvent>() {
-                @Override
-                public void handle(ContextMenuEvent event) {
-                    DeviceContextMenu menu = new DeviceContextMenu(e.getEquipment());
-                    menu.show(i, event.getScreenX(), event.getScreenY());
-                }
-            });
-
-            mainPane.getChildren().add(i);
+            if (!mainPane.getChildren().contains(e))
+                mainPane.getChildren().add(e);
 
         }
     }

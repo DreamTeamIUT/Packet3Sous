@@ -116,7 +116,7 @@ public class Main extends Application {
                 Debug.log("loop");
                 n.updateEquipments();
             }
-        }, 0, 5000);
+        }, 0, 100);
     }
 }
 

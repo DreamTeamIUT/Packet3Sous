@@ -107,6 +107,12 @@ public class MainUiController implements Initializable {
                         drawableEquipments.add(new DrawableEquipment(result)
                                 .setX((float) event.getX())
                                 .setY((float) event.getY())
+                                .setUpdateListener(new OnUpdateListener() {
+                                    @Override
+                                    public void onUpdate() {
+                                        canvasDrawer.update();
+                                    }
+                                })
                         );
                         canvasDrawer.update();
                     }

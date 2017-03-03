@@ -8,6 +8,7 @@ import java.util.ArrayList;
 public class ApplicationStates {
     public static final int NONE = 93;
     public static final int CONNECT = 928;
+
     private static ApplicationStates applicationStates;
     private int currentState;
     private Object data;
