@@ -5,6 +5,7 @@ import iut.unice.dreamteam.Equipments.Equipment;
 import iut.unice.dreamteam.UI.ContextMenus.DeviceContextMenu;
 import iut.unice.dreamteam.UI.ContextMenus.InterfaceContextMenu;
 import iut.unice.dreamteam.Utils.Debug;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -16,13 +17,14 @@ import javafx.scene.layout.AnchorPane;
 /**
  * Created by Guillaume on 14/02/2017.
  */
-public class DrawableEquipment extends ImageView{
+public class DrawableEquipment extends ImageView {
 
 
     private Equipment equipment;
     private OnUpdateListener updateListenner;
     private double mouseX;
     private double mouseY;
+    private OnActionListener actionsListener;
 
     public DrawableEquipment(Equipment e) {
         super(DrawableLoader.getInstance().getEquipmentDrawable(e));
@@ -54,6 +56,23 @@ public class DrawableEquipment extends ImageView{
             @Override
             public void handle(ContextMenuEvent event) {
                 DeviceContextMenu menu = new DeviceContextMenu(getEquipment());
+                menu.setDeleteAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        if (actionsListener != null)
+                            actionsListener.onDelete(DrawableEquipment.this);
+                    }
+                });
+
+                menu.setDuplicateAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+
+                        if (actionsListener != null)
+                            actionsListener.onDuplicate(DrawableEquipment.this);
+                    }
+                });
+
                 menu.show(DrawableEquipment.this, event.getScreenX(), event.getScreenY());
             }
         });
@@ -61,26 +80,26 @@ public class DrawableEquipment extends ImageView{
         setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                mouseX = event.getSceneX() ;
-                mouseY = event.getSceneY() ;
+                mouseX = event.getSceneX();
+                mouseY = event.getSceneY();
             }
         });
 
         setOnMouseDragged(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                double deltaX = event.getSceneX() - mouseX ;
-                double deltaY = event.getSceneY() - mouseY ;
+                double deltaX = event.getSceneX() - mouseX;
+                double deltaY = event.getSceneY() - mouseY;
 
                 double nx = getX() + deltaX;
                 double ny = getY() + deltaY;
 
-                setTo((float)nx, (float)ny);
+                setTo((float) nx, (float) ny);
 
                 //relocate(nx, ny);
 
-                mouseX = event.getSceneX() ;
-                mouseY = event.getSceneY() ;
+                mouseX = event.getSceneX();
+                mouseY = event.getSceneY();
 
                 updateListenner.onUpdate();
             }
@@ -104,19 +123,19 @@ public class DrawableEquipment extends ImageView{
         return this;
     }
 
-    public double getCenterPointX(){
-        return (float) ((getEquipmentDrawable().getWidth()/2) + getX());
+    public double getCenterPointX() {
+        return (float) ((getEquipmentDrawable().getWidth() / 2) + getX());
     }
 
-    public double getCenterPointY(){
-        return (float) ((getEquipmentDrawable().getHeight()/2) + getY());
+    public double getCenterPointY() {
+        return (float) ((getEquipmentDrawable().getHeight() / 2) + getY());
     }
 
     public Image getEquipmentDrawable() {
         return this.getImage();
     }
 
-    public DrawableEquipment setUpdateListener(OnUpdateListener listener){
+    public DrawableEquipment setUpdateListener(OnUpdateListener listener) {
         this.updateListenner = listener;
         return this;
     }
@@ -127,5 +146,10 @@ public class DrawableEquipment extends ImageView{
 
         setX(x);
         setY(y);
+    }
+
+    public DrawableEquipment setActionsListener(OnActionListener actionsListener) {
+        this.actionsListener = actionsListener;
+        return this;
     }
 }

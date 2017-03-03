@@ -102,19 +102,7 @@ public class MainUiController implements Initializable {
 
                     Equipment result = dialog.getResult();
                     if (result != null) {
-                        Debug.log("Added new Equipment drawable");
-                        network.addEquipment(result);
-                        drawableEquipments.add(new DrawableEquipment(result)
-                                .setX((float) event.getX())
-                                .setY((float) event.getY())
-                                .setUpdateListener(new OnUpdateListener() {
-                                    @Override
-                                    public void onUpdate() {
-                                        canvasDrawer.update();
-                                    }
-                                })
-                        );
-                        canvasDrawer.update();
+                        addEquipmentToUI(result, (float) event.getX(), (float) event.getY());
                     }
 
 
@@ -122,6 +110,39 @@ public class MainUiController implements Initializable {
                 event.setDropCompleted(false);
             }
         });
+    }
+
+    private void addEquipmentToUI(Equipment result, float x, float y) {
+        Debug.log("Added new Equipment drawable");
+        network.addEquipment(result);
+        drawableEquipments.add(new DrawableEquipment(result)
+                .setX(x)
+                .setY(y)
+                .setUpdateListener(new OnUpdateListener() {
+                    @Override
+                    public void onUpdate() {
+                        canvasDrawer.update();
+                    }
+                })
+                .setActionsListener(new OnActionListener() {
+                    @Override
+                    public void onDelete(DrawableEquipment drawableEquipment) {
+                        drawableEquipments.remove(drawableEquipment);
+                        network.removeEquipment(drawableEquipment.getEquipment());
+                        canvasPane.getChildren().remove(drawableEquipment);
+                        canvasDrawer.update();
+                    }
+
+                    @Override
+                    public void onDuplicate(DrawableEquipment drawableEquipment) {
+                        Equipment e = Equipment.clone(drawableEquipment.getEquipment());
+                        if (e != null)
+                            addEquipmentToUI(e, (float) drawableEquipment.getX() + 2 * (float) drawableEquipment.getEquipmentDrawable().getWidth(),
+                                    (float) drawableEquipment.getY() + 2 * (float) drawableEquipment.getEquipmentDrawable().getHeight());
+                    }
+                })
+        );
+        canvasDrawer.update();
     }
 
     private void addItemToListView() {

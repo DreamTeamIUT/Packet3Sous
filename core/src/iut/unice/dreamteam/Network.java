@@ -91,4 +91,13 @@ public class Network {
         }
         return null;
     }
+
+    public void removeEquipment(Equipment equipment) {
+        for (Interface i : equipment.getInterfaces()){
+            if (i.getLink() != null )
+                i.getLink().brakeLink();
+        }
+
+        this.equipments.remove(equipment);
+    }
 }

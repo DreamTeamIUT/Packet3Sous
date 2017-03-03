@@ -11,49 +11,68 @@ import javafx.scene.control.MenuItem;
  */
 public class DeviceContextMenu extends CustomContextMenu {
     private final Equipment equipement;
+    private MenuItem editItem;
+    private MenuItem deleteItem;
+    private MenuItem duplicateItem;
+    private MenuItem propertiesItem;
 
     public DeviceContextMenu(Equipment equipment) {
         super(equipment.getName());
-
         this.equipement = equipment;
         addMenuItems();
     }
 
+    public void setEditAction(EventHandler<ActionEvent> event){
+        editItem.setOnAction(event);
+    }
+
+    public void setDeleteAction(EventHandler<ActionEvent> event){
+        deleteItem.setOnAction(event);
+    }
+
+    public void setDuplicateAction(EventHandler<ActionEvent> event){
+        duplicateItem.setOnAction(event);
+    }
+
+    public void setPropertiesAction(EventHandler<ActionEvent> event){
+        propertiesItem.setOnAction(event);
+    }
+
     private void addMenuItems() {
 
-        MenuItem edit = new MenuItem("Edit");
-        edit.setOnAction(new EventHandler<ActionEvent>() {
+        editItem = new MenuItem("Edit");
+        editItem.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                Debug.log("Edit menu");
+                Debug.log("Edit " + equipement.getName());
             }
         });
 
-        MenuItem delete = new MenuItem("Delete");
-        delete.setOnAction(new EventHandler<ActionEvent>() {
+        deleteItem = new MenuItem("Delete");
+        deleteItem.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                Debug.log("Delete Element");
+                Debug.log("Delete " + equipement.getName());
             }
         });
 
-        MenuItem duplicate = new MenuItem("Duplicate");
-        duplicate.setOnAction(new EventHandler<ActionEvent>() {
+        duplicateItem = new MenuItem("Duplicate");
+        duplicateItem.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 Debug.log("Deplicate !");
             }
         });
 
-        MenuItem properties = new MenuItem("Properties");
-        properties.setOnAction(new EventHandler<ActionEvent>() {
+        propertiesItem = new MenuItem("Properties");
+        propertiesItem.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 Debug.log("Properties");
             }
         });
 
-        getItems().addAll(edit, duplicate, delete, properties);
+        getItems().addAll(editItem, duplicateItem, deleteItem, propertiesItem);
     }
 
 

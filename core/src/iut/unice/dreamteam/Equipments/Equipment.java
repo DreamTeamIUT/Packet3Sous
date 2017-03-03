@@ -10,6 +10,7 @@ import iut.unice.dreamteam.Protocols.ApplicationProtocols;
 import iut.unice.dreamteam.Protocols.TransportProtocol;
 import iut.unice.dreamteam.Utils.Debug;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -27,7 +28,7 @@ public abstract class Equipment {
 
     private HashMap<Integer, TransportProtocol> usedPorts;
 
-    public Equipment(String name){
+    public Equipment(String name) {
         this.name = name;
 
         this.interfaces = new ArrayList<>();
@@ -42,12 +43,12 @@ public abstract class Equipment {
         usedPorts = new HashMap<>();
     }
 
-    public Interface getInterface(int i){
+    public Interface getInterface(int i) {
         return interfaces.get(i);
     }
 
     public Interface getInterface(String ip) {
-        for (Interface i: interfaces){
+        for (Interface i : interfaces) {
             if (Network.isInSameNetwork(i.getIp(), ip, i.getMask()))
                 return i;
         }
@@ -55,15 +56,15 @@ public abstract class Equipment {
         return getDefaultGateway();
     }
 
-    public void initialize(int size, Class< ? extends Interface> p, Equipment equipment, Boolean passiveInterfaces){
-        for (int i=0;i<size;i++){
+    public void initialize(int size, Class<? extends Interface> p, Equipment equipment, Boolean passiveInterfaces) {
+        for (int i = 0; i < size; i++) {
             try {
                 Interface equipmentInterface = p.newInstance();
                 equipmentInterface.setEquipment(equipment);
                 equipmentInterface.setPassive(passiveInterfaces);
                 equipmentInterface.setUp(true);
 
-                if(defaultGateway == null)
+                if (defaultGateway == null)
                     defaultGateway = equipmentInterface;
 
                 interfaces.add(equipmentInterface);
@@ -73,7 +74,7 @@ public abstract class Equipment {
         }
     }
 
-    public void initialize(int size, Class< ? extends Interface> p, Equipment equipment) {
+    public void initialize(int size, Class<? extends Interface> p, Equipment equipment) {
         initialize(size, p, equipment, false);
     }
 
@@ -88,28 +89,25 @@ public abstract class Equipment {
         if (MacLayer.isBroadcastAddress(p.getMacLayer().getSource())) {
             System.out.println("broadcast packet");
 
-            if(this.incomingPacketInterface != null)
+            if (this.incomingPacketInterface != null)
                 this.incomingPacketInterface.onBroadcast(i, p);
-        }
-        else {
+        } else {
             if (i.getMacAddress().equals(p.getMacLayer().getDestination())) {
                 if (i.getIp().equals(p.getIpLayer().getDestination())) {
                     System.out.println("destined packet");
 
-                    if(this.incomingPacketInterface != null)
+                    if (this.incomingPacketInterface != null)
                         this.incomingPacketInterface.onUnicast(i, p);
-                }
-                else {
+                } else {
                     System.out.println("forward packet");
 
-                    if(this.incomingPacketInterface != null)
+                    if (this.incomingPacketInterface != null)
                         this.incomingPacketInterface.onForward(i, p);
                 }
-            }
-            else {
+            } else {
                 System.out.println("packet not for us.");
 
-                if(this.incomingPacketInterface != null)
+                if (this.incomingPacketInterface != null)
                     this.incomingPacketInterface.onReceive(i, p);
             }
         }
@@ -122,10 +120,10 @@ public abstract class Equipment {
     public void analyzeProtocol(Interface i, Packet p) {
         ApplicationProtocol applicationProtocol = ApplicationProtocols.getInstance().find(p.getApplicationLayer().getContent(), supportedProtocols);
 
-        if(applicationProtocol != null) {
+        if (applicationProtocol != null) {
             Packet packet = applicationProtocol.processPacket(i, p);
 
-            if(packet != null)
+            if (packet != null)
                 sendPacket(packet);
         }
     }
@@ -204,15 +202,45 @@ public abstract class Equipment {
 
     }
 
-    public void clearInterfaces(){
-        for (Interface i : interfaces){
+    public void clearInterfaces() {
+        for (Interface i : interfaces) {
             if (i.getLink() != null)
                 i.getLink().brakeLink();
         }
         interfaces.clear();
     }
 
-    public boolean addInterface(Interface i){
+    public boolean addInterface(Interface i) {
         return getInterfaces().add(i);
+    }
+
+    public static Equipment clone(Equipment e) {
+        Equipment equipment;
+        try {
+            equipment = e.getClass().getDeclaredConstructor(String.class).newInstance(e.getName() + " cpy");
+
+
+            equipment.getInterfaces().clear();
+
+            for (Interface i : e.getInterfaces()) {
+                Debug.log("Clone iface");
+                Interface toAdd = Interface.clone(i);
+                toAdd.setEquipment(equipment);
+                equipment.addInterface(toAdd);
+
+                if (e.getInterfaces().indexOf(e.getDefaultGateway()) == equipment.getInterfaces().size() - 1)
+                {
+                    Debug.log("Set Gateway !");
+                    equipment.setDefaultGateway(toAdd);
+                }
+            }
+
+            return equipment;
+
+        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e1) {
+            e1.printStackTrace();
+        }
+
+        return null;
     }
 }

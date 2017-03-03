@@ -1,10 +1,10 @@
 package iut.unice.dreamteam.Interfaces;
 
-import iut.unice.dreamteam.Utils.Debug;
 import iut.unice.dreamteam.Equipments.Equipment;
 import iut.unice.dreamteam.Network;
 import iut.unice.dreamteam.NetworkLayers.MacLayer;
 import iut.unice.dreamteam.Protocols.ARP;
+import iut.unice.dreamteam.Utils.Debug;
 import org.json.JSONObject;
 
 import java.util.Random;
@@ -242,5 +242,16 @@ public class Interface {
 
     public void setGateway(String gateway) {
         this.gateway = gateway;
+    }
+
+    public static Interface clone(Interface i){
+        Interface newInterface = new Interface();
+
+        newInterface.setPassive(i.isPassive());
+        newInterface.setIp(i.getIp());
+        newInterface.setMask(i.getMask());
+        newInterface.setGateway(i.getGateway());
+
+        return newInterface;
     }
 }
