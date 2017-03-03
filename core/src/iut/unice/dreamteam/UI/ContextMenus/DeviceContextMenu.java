@@ -1,6 +1,7 @@
 package iut.unice.dreamteam.UI.ContextMenus;
 
 import iut.unice.dreamteam.Equipments.Equipment;
+import iut.unice.dreamteam.UI.Dialogs.EquipmentDialog;
 import iut.unice.dreamteam.Utils.Debug;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -45,6 +46,9 @@ public class DeviceContextMenu extends CustomContextMenu {
             @Override
             public void handle(ActionEvent event) {
                 Debug.log("Edit " + equipement.getName());
+                EquipmentDialog dialog  = new EquipmentDialog(equipement);
+
+                dialog.showAndWait();
             }
         });
 

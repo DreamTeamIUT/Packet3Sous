@@ -4,6 +4,8 @@ import iut.unice.dreamteam.ApplicationStates;
 import iut.unice.dreamteam.Equipments.Equipment;
 import iut.unice.dreamteam.UI.ContextMenus.DeviceContextMenu;
 import iut.unice.dreamteam.UI.ContextMenus.InterfaceContextMenu;
+import iut.unice.dreamteam.UI.Listeners.OnActionListener;
+import iut.unice.dreamteam.UI.Listeners.OnUpdateListener;
 import iut.unice.dreamteam.Utils.Debug;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;

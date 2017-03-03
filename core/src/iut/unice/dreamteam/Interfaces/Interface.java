@@ -11,6 +11,8 @@ import java.util.Random;
 
 
 public class Interface {
+    public static final String INTERFACE_TYPE_WIRED = "Wired";
+    public static final String INTERFACE_TYPE_WIRELESS = "Wireless";
     private String ip;
     private String mask;
     private String gateway;

@@ -1,6 +1,8 @@
 package iut.unice.dreamteam.UI.Adapaters;
 
 import iut.unice.dreamteam.Interfaces.Interface;
+import iut.unice.dreamteam.Interfaces.WiredInterface;
+import iut.unice.dreamteam.Interfaces.WirelessInterface;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 
@@ -8,6 +10,7 @@ import javafx.beans.property.SimpleStringProperty;
  * Created by Guillaume on 13/02/2017.
  */
 public class TableInterface {
+    private Interface iface;
     private SimpleStringProperty ip;
     private SimpleStringProperty mask;
     private SimpleStringProperty name;
@@ -17,11 +20,21 @@ public class TableInterface {
     public TableInterface() {
     }
 
+    public TableInterface(Interface i, int index){
+        this.ip = new SimpleStringProperty(i.getIp());
+        this.mask = new SimpleStringProperty(i.getMask());
+        this.name = new SimpleStringProperty("eth" + index);
+        this.type = new SimpleStringProperty((i instanceof WiredInterface)?Interface.INTERFACE_TYPE_WIRED : Interface.INTERFACE_TYPE_WIRELESS);
+        this.passive = new SimpleBooleanProperty(i.isPassive());
+
+        this.iface = i;
+    }
+
     public TableInterface(String ip, String mask, String type) {
         this.ip = new SimpleStringProperty(ip);
         this.mask = new SimpleStringProperty(mask);
         this.name = new SimpleStringProperty("eth");
-        this.type = new SimpleStringProperty("wired");
+        this.type = new SimpleStringProperty(Interface.INTERFACE_TYPE_WIRED);
     }
 
     public TableInterface(String text, String text1, String value, String text2, boolean selected) {
@@ -38,6 +51,7 @@ public class TableInterface {
 
     public void setIp(String s) {
         ip.set(s);
+        iface.setIp(s);
     }
 
     public String getMask() {
@@ -46,6 +60,7 @@ public class TableInterface {
 
     public void setMask(String s) {
         mask.set(s);
+        iface.setMask(s);
     }
 
     public String getName() {
@@ -72,12 +87,16 @@ public class TableInterface {
         this.type.set(type);
     }
 
-    public static Interface convertToInterface(TableInterface i) {
-        Interface iface = new Interface();
-        iface.setUp(false);
-        iface.setPassive(i.isPassive());
-        iface.setMask(i.getMask());
-        iface.setIp(i.getIp());
+    private static Interface getInterface(String type) {
+        Interface iface;
+        switch (type) {
+            case Interface.INTERFACE_TYPE_WIRELESS:
+                iface = new WirelessInterface();
+                break;
+            case Interface.INTERFACE_TYPE_WIRED:
+            default:
+                iface = new WiredInterface();
+        }
 
         return iface;
     }
@@ -88,5 +107,20 @@ public class TableInterface {
 
     public void setPassive(boolean passive) {
         this.passive.set(passive);
+        iface.setPassive(passive);
+    }
+
+    public Interface getInterface() {
+        if (iface != null)
+            return iface;
+
+        this.iface = getInterface(this.getType());
+
+        iface.setMask(getMask());
+        iface.setIp(getIp());
+        iface.setPassive(isPassive());
+        iface.setUp(true);
+
+        return iface;
     }
 }

@@ -1,5 +1,6 @@
 package iut.unice.dreamteam.UI.Dialogs;
 
+import iut.unice.dreamteam.Interfaces.Interface;
 import iut.unice.dreamteam.Network;
 import iut.unice.dreamteam.UI.Adapaters.TableInterface;
 import javafx.beans.value.ChangeListener;
@@ -22,7 +23,7 @@ import java.util.ResourceBundle;
 /**
  * Created by Guillaume on 13/02/2017.
  */
-public class NewInterfaceDialog extends Stage implements Initializable {
+public class InterfaceDialog extends Stage implements Initializable {
 
     private final int currentInterfaceNumber;
     @FXML
@@ -49,12 +50,12 @@ public class NewInterfaceDialog extends Stage implements Initializable {
 
     private ArrayList<TableInterface> tableInterfaces;
 
-    public NewInterfaceDialog(int currentInterfaceNumber) {
+    public InterfaceDialog(int currentInterfaceNumber) {
         setTitle("Add a new interface");
         this.currentInterfaceNumber = currentInterfaceNumber;
         this.tableInterfaces = new ArrayList<>();
 
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/newInterfaceDialog.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/interfaceDialog.fxml"));
         fxmlLoader.setController(this);
 
         try {
@@ -70,8 +71,8 @@ public class NewInterfaceDialog extends Stage implements Initializable {
         name.setText("eth" + this.currentInterfaceNumber);
 
         types.setItems(FXCollections.observableList(new ArrayList<String>() {{
-            add("Wired");
-            add("Wireless");
+            add(Interface.INTERFACE_TYPE_WIRED);
+            add(Interface.INTERFACE_TYPE_WIRELESS);
         }}));
 
         types.getSelectionModel().select(0);

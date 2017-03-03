@@ -1,4 +1,6 @@
-package iut.unice.dreamteam.UI;
+package iut.unice.dreamteam.UI.Listeners;
+
+import iut.unice.dreamteam.UI.DrawableEquipment;
 
 /**
  * Created by Guillaume on 03/03/2017.

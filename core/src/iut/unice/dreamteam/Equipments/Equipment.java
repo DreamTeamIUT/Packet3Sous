@@ -56,6 +56,16 @@ public abstract class Equipment {
         return getDefaultGateway();
     }
 
+    public void removeInterface(Interface i){
+        if (i == null)
+            return;
+
+        if (i.getLink() != null)
+            i.getLink().brakeLink();
+
+        interfaces.remove(i);
+    }
+
     public void initialize(int size, Class<? extends Interface> p, Equipment equipment, Boolean passiveInterfaces) {
         for (int i = 0; i < size; i++) {
             try {
@@ -241,6 +251,22 @@ public abstract class Equipment {
             e1.printStackTrace();
         }
 
+        return null;
+    }
+
+    public static Equipment fromString(String name) {
+        switch (name) {
+            case "Router":
+                return new Router("");
+            case "Switch":
+                return new Switch("");
+            case "Hub":
+                return new Hub("");
+            case "Computer":
+                return new Computer("");
+            case "Access Point":
+                return new AccessPoint("");
+        }
         return null;
     }
 }

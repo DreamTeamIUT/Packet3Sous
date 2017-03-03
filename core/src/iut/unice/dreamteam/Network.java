@@ -1,6 +1,6 @@
 package iut.unice.dreamteam;
 
-import iut.unice.dreamteam.Equipments.*;
+import iut.unice.dreamteam.Equipments.Equipment;
 import iut.unice.dreamteam.Interfaces.Interface;
 import iut.unice.dreamteam.Interfaces.InterfaceLink;
 
@@ -74,22 +74,6 @@ public class Network {
 
     public static Boolean isValidIpFormat(String ip) {
         return Pattern.compile(IPADDRESS_PATTERN).matcher(ip).matches();
-    }
-
-    public static Equipment getEquipmentFromString(String name) {
-        switch (name) {
-            case "Router":
-                return new Router("");
-            case "Switch":
-                return new Switch("");
-            case "Hub":
-                return new Hub("");
-            case "Computer":
-                return new Computer("");
-            case "Access Point":
-                return new AccessPoint("");
-        }
-        return null;
     }
 
     public void removeEquipment(Equipment equipment) {
