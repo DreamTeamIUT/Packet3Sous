@@ -28,26 +28,28 @@ public class CanvasDrawer {
     private long startNanoTime;
 
     private Line tempLine;
+    private ArrayList<Line> links;
 
     public CanvasDrawer(final AnchorPane mainPane, ArrayList<DrawableEquipment> n, Network network) {
         this.network = network;
         this.elementsToDraw = n;
 
         equipments = new ArrayList<>();
+        links = new ArrayList<>();
         this.mainPane = mainPane;
 
         tempLine = new Line();
         tempLine.setVisible(false);
         tempLine.setStrokeWidth(1.5);
+        mainPane.getChildren().add(tempLine);
 
         update();
 
         mainPane.setOnMouseMoved(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                if (ApplicationStates.getInstance().is(ApplicationStates.CONNECT))
-                {
-                    if (ApplicationStates.getInstance().getData() != null){
+                if (ApplicationStates.getInstance().is(ApplicationStates.CONNECT)) {
+                    if (ApplicationStates.getInstance().getData() != null) {
                         DrawableEquipment drawableEquipment = elementsToDraw.get(equipments.indexOf(((Interface) ApplicationStates.getInstance().getData()).getEquipment()));
                         tempLine.setStartX(drawableEquipment.getCenterPointX());
                         tempLine.setStartY(drawableEquipment.getCenterPointY());
@@ -56,12 +58,10 @@ public class CanvasDrawer {
                         tempLine.setEndY(event.getY());
 
                         tempLine.setVisible(true);
-                    }
-                    else {
+                    } else {
                         tempLine.setVisible(false);
                     }
-                }
-                else {
+                } else {
                     tempLine.setVisible(false);
                 }
             }
@@ -103,42 +103,58 @@ public class CanvasDrawer {
         for (DrawableEquipment drawableEquipment : elementsToDraw)
             equipments.add(drawableEquipment.getEquipment());
 
-       // mainPane.getChildren().clear();
-       // mainPane.getChildren().add(tempLine);
 
+        updateLinks();
+
+        draw();
+    }
+
+    public void draw() {
         drawLinks();
-
         drawEquipements();
-
-        //draw();
     }
 
     private void drawEquipements() {
         for (final DrawableEquipment e : elementsToDraw) {
-            if (!mainPane.getChildren().contains(e))
+            if (!mainPane.getChildren().contains(e)){
                 mainPane.getChildren().add(e);
+            }
+
+            e.toFront();
 
         }
     }
 
     private void drawLinks() {
+        for (Line l : links) {
+            if (!mainPane.getChildren().contains(l))
+                mainPane.getChildren().add(l);
+        }
+    }
+
+    private void updateLinks() {
+        for (Line l : links)
+            mainPane.getChildren().remove(l);
+
+        links.clear();
 
         for (Equipment e : equipments) {
             for (Interface i : e.getInterfaces()) {
-                    if (i.getLink() != null) {
-                        Interface op = i.getLink().getOpositInterface(i);
-                        int posEa = equipments.indexOf(e);
-                        int posEb = equipments.indexOf(op.getEquipment());
+                if (i.getLink() != null) {
+                    Interface op = i.getLink().getOpositInterface(i);
+                    int posEa = equipments.indexOf(e);
+                    int posEb = equipments.indexOf(op.getEquipment());
 
-                        DrawableEquipment dEa = elementsToDraw.get(posEa);
-                        DrawableEquipment dEb = elementsToDraw.get(posEb);
+                    DrawableEquipment dEa = elementsToDraw.get(posEa);
+                    DrawableEquipment dEb = elementsToDraw.get(posEb);
 
-                        //LinkPoint point = dEa.getLinkPointForInterface(i);
+                    //LinkPoint point = dEa.getLinkPointForInterface(i);
 
-                        Line link = new Line(dEa.getCenterPointX(), dEa.getCenterPointY(), dEb.getCenterPointX(), dEb.getCenterPointY());
-                        link.setStrokeWidth(1.5);
-                        this.mainPane.getChildren().add(link);
-                    }
+                    Line link = new Line(dEa.getCenterPointX(), dEa.getCenterPointY(), dEb.getCenterPointX(), dEb.getCenterPointY());
+                    link.setStrokeWidth(1.5);
+
+                    this.links.add(link);
+                }
             }
 
         }
