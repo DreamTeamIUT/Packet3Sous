@@ -23,9 +23,10 @@ import java.util.ResourceBundle;
 /**
  * Created by Guillaume on 13/02/2017.
  */
-public class InterfaceDialog extends Stage implements Initializable {
+public class NewInterfaceDialog extends Stage implements Initializable {
 
-    private final int currentInterfaceNumber;
+    private int currentInterfaceNumber;
+    private TableInterface item;
     @FXML
     TextField ip;
     @FXML
@@ -50,12 +51,12 @@ public class InterfaceDialog extends Stage implements Initializable {
 
     private ArrayList<TableInterface> tableInterfaces;
 
-    public InterfaceDialog(int currentInterfaceNumber) {
+    public NewInterfaceDialog(int currentInterfaceNumber) {
         setTitle("Add a new interface");
         this.currentInterfaceNumber = currentInterfaceNumber;
         this.tableInterfaces = new ArrayList<>();
 
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/interfaceDialog.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/newInterfaceDialog.fxml"));
         fxmlLoader.setController(this);
 
         try {
@@ -68,6 +69,7 @@ public class InterfaceDialog extends Stage implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
         name.setText("eth" + this.currentInterfaceNumber);
 
         types.setItems(FXCollections.observableList(new ArrayList<String>() {{

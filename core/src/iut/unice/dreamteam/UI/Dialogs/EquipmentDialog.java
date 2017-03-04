@@ -8,6 +8,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -17,6 +18,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -162,6 +164,17 @@ public class EquipmentDialog extends Stage implements Initializable {
             }
         });
 
+        interfaceTable.setOnMousePressed(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
+                    Debug.log("Ok open interface editor !");
+                    EditInterfaceDialog dialog = new EditInterfaceDialog(interfaceTable.getSelectionModel().getSelectedItem());
+                    dialog.show();
+                }
+            }
+        });
+
 
         updateTable();
     }
@@ -180,7 +193,7 @@ public class EquipmentDialog extends Stage implements Initializable {
     public void addInterface() {
         Debug.log("addClicked");
 
-        InterfaceDialog dialog = new InterfaceDialog(list.size());
+        NewInterfaceDialog dialog = new NewInterfaceDialog(list.size());
         dialog.showAndWait();
 
         ArrayList<TableInterface> interfaceToInsert = dialog.getResult();
