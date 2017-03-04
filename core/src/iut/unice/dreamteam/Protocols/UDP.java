@@ -10,15 +10,9 @@ public class UDP extends TransportProtocol {
         super("UDP");
     }
 
-    public static int getRandomPort(Equipment equipment) {
-        int port = 1;
+    public UDP(int port) {
+        super("UDP");
 
-        while (equipment.usedPort(port))
-            port++;
-
-        if(port <= 65535)
-            return port;
-
-        return -1;
+        setPort(port);
     }
 }

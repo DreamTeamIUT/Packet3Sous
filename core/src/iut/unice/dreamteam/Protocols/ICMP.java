@@ -18,6 +18,8 @@ public class ICMP extends ApplicationProtocol {
 
     public ICMP() {
         super("ICMP");
+
+        setUDP(501);
     }
 
     @Override

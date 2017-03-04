@@ -13,6 +13,8 @@ import org.json.JSONObject;
 public class FTP extends ApplicationProtocol {
     public FTP() {
         super("FTP");
+
+        setTCP(21);
     }
 
     @Override

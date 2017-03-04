@@ -16,6 +16,7 @@ import iut.unice.dreamteam.Interfaces.Packet;
 import iut.unice.dreamteam.NetworkLayers.ApplicationLayer;
 import iut.unice.dreamteam.NetworkLayers.IpLayer;
 import iut.unice.dreamteam.NetworkLayers.TransportLayer;
+import iut.unice.dreamteam.Protocols.ICMP;
 import iut.unice.dreamteam.Protocols.TCP;
 import iut.unice.dreamteam.Utils.Debug;
 import javafx.application.Application;
@@ -41,7 +42,7 @@ public class Main extends Application {
 
 
     public static void main(String[] args) {
-        launch(args);
+        //launch(args);
 
         final Network n = new Network();
 
@@ -53,12 +54,18 @@ public class Main extends Application {
 
         computer1.setDefaultGateway(computer1.getInterface(0));
 
+        computer1.startService("ICMP", true);
+        computer1.startService("ICMP");
+
         Equipment computer2 = new Computer("PC 02");
         computer2.getInterface(0).setIp("192.168.10.5");
         computer2.getInterface(0).setMask("255.255.255.0");
         computer2.getInterface(0).setGateway("192.168.10.254");
 
         computer2.setDefaultGateway(computer2.getInterface(0));
+
+        computer2.startService("ICMP", true);
+        computer2.startService("ICMP");
 
 
         Router router1 = new Router("Router 01");
@@ -76,6 +83,8 @@ public class Main extends Application {
 
         router2.getInterface(1).setIp("192.168.10.254");
         router2.getInterface(1).setMask("255.255.255.0");
+
+        router2.addRoute("192.168.0.0", "255.255.255.0", "192.168.2.254");
 
         Switch switchEquipment = new Switch("Switch 01");
 
@@ -108,7 +117,16 @@ public class Main extends Application {
 
         p.setApplicationLayer(new ApplicationLayer(jsonObject));
 
-        computer1.sendPacket(p);
+        Packet packet = new ICMP().initiate(computer1.getInterface(0), new JSONObject().put("ip-address", computer2.getInterface(0).getIp()));
+
+        //computer1.sendPacket(packet);
+
+        Debug.log("exist ICMP service : " + computer1.existService("icmp-client"));
+
+        if (computer1.existService("icmp-client")) {
+            computer1.getService("icmp-client").initiateProtocol(computer1, computer1.getInterface(0), new JSONObject().put("ip-address", computer2.getInterface(0).getIp()));
+        }
+
 
         new Timer().scheduleAtFixedRate(new TimerTask() {
             @Override

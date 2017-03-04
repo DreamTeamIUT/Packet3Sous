@@ -15,7 +15,7 @@ public class ARP extends ApplicationProtocol {
     public ARP() {
         super("ARP");
 
-        setWaitForAnswer(true);
+        setUDP(500);
     }
 
     @Override
