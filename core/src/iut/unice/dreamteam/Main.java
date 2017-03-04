@@ -18,6 +18,7 @@ import iut.unice.dreamteam.NetworkLayers.IpLayer;
 import iut.unice.dreamteam.NetworkLayers.TransportLayer;
 import iut.unice.dreamteam.Protocols.ICMP;
 import iut.unice.dreamteam.Protocols.TCP;
+import iut.unice.dreamteam.Utils.Debug;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
