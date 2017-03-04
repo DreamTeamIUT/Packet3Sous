@@ -57,7 +57,7 @@ public class Packet {
         return "-------- Packet " + getPacketId()
                 + "\nMAC : " + ((getMacLayer() != null) ? ("source : " + getMacLayer().getSource() + ", destination : " + getMacLayer().getDestination()) : "empty")
                 + "\nIP : source : " + getIpLayer().getSource() + ", destination :  " + getIpLayer().getDestination()
-                + "\nTRANSPORT : " + ((getTransportLayer() != null) ? getTransportLayer().toString() : "empty")
+                + "\nTRANSPORT : " + ((getTransportLayer() != null) ? ("protocol : " + getTransportLayer().getTransportProtocol().getName() + ", source : " + getTransportLayer().getSourcePort() + ", destination : " + getTransportLayer().getDestinationPort()) : "empty")
                 + "\nAPPLICATION : " + ((getApplicationLayer() != null) ? getApplicationLayer().getContent().toString() : "empty")
                 + "\n--------";
     }

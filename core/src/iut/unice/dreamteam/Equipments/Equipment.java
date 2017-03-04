@@ -7,8 +7,10 @@ import iut.unice.dreamteam.Network;
 import iut.unice.dreamteam.NetworkLayers.MacLayer;
 import iut.unice.dreamteam.Protocols.ApplicationProtocol;
 import iut.unice.dreamteam.Protocols.ApplicationProtocols;
+import iut.unice.dreamteam.Protocols.ApplicationService;
 import iut.unice.dreamteam.Protocols.TransportProtocol;
 import iut.unice.dreamteam.Utils.Debug;
+import org.json.JSONObject;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -19,16 +21,19 @@ public abstract class Equipment {
     private String name;
     private Interface defaultGateway;
     private ArrayList<Interface> interfaces;
+
     private ArrayList<String> supportedProtocols;
+    private ArrayList<ApplicationService> applicationServices;
+
     private HashMap<String, String> arpAssociation;
 
     private IncomingPacketInterface incomingPacketInterface;
 
     private Boolean multipleRoutes;
 
-    private HashMap<Integer, TransportProtocol> usedPorts;
+    //private HashMap<Integer, TransportProtocol> usedPorts;
 
-    public Equipment(String name) {
+    public Equipment(String name){
         this.name = name;
 
         this.interfaces = new ArrayList<>();
@@ -36,19 +41,24 @@ public abstract class Equipment {
         this.supportedProtocols = new ArrayList<>();
         this.supportedProtocols.add("ARP");
 
+        this.applicationServices = new ArrayList<>();
+        //this.applicationServices.add(new ApplicationService());
+
         this.arpAssociation = new HashMap<>();
 
         this.multipleRoutes = false;
 
-        usedPorts = new HashMap<>();
+        //usedPorts = new HashMap<>();
+
+        //startService("ARP", true);
     }
 
-    public Interface getInterface(int i) {
+    public Interface getInterface(int i){
         return interfaces.get(i);
     }
 
     public Interface getInterface(String ip) {
-        for (Interface i : interfaces) {
+        for (Interface i: interfaces){
             if (Network.isInSameNetwork(i.getIp(), ip, i.getMask()))
                 return i;
         }
@@ -74,7 +84,7 @@ public abstract class Equipment {
                 equipmentInterface.setPassive(passiveInterfaces);
                 equipmentInterface.setUp(true);
 
-                if (defaultGateway == null)
+                if(defaultGateway == null)
                     defaultGateway = equipmentInterface;
 
                 interfaces.add(equipmentInterface);
@@ -84,7 +94,7 @@ public abstract class Equipment {
         }
     }
 
-    public void initialize(int size, Class<? extends Interface> p, Equipment equipment) {
+    public void initialize(int size, Class< ? extends Interface> p, Equipment equipment) {
         initialize(size, p, equipment, false);
     }
 
@@ -99,25 +109,28 @@ public abstract class Equipment {
         if (MacLayer.isBroadcastAddress(p.getMacLayer().getSource())) {
             System.out.println("broadcast packet");
 
-            if (this.incomingPacketInterface != null)
+            if(this.incomingPacketInterface != null)
                 this.incomingPacketInterface.onBroadcast(i, p);
-        } else {
+        }
+        else {
             if (i.getMacAddress().equals(p.getMacLayer().getDestination())) {
                 if (i.getIp().equals(p.getIpLayer().getDestination())) {
                     System.out.println("destined packet");
 
-                    if (this.incomingPacketInterface != null)
+                    if(this.incomingPacketInterface != null)
                         this.incomingPacketInterface.onUnicast(i, p);
-                } else {
+                }
+                else {
                     System.out.println("forward packet");
 
-                    if (this.incomingPacketInterface != null)
+                    if(this.incomingPacketInterface != null)
                         this.incomingPacketInterface.onForward(i, p);
                 }
-            } else {
+            }
+            else {
                 System.out.println("packet not for us.");
 
-                if (this.incomingPacketInterface != null)
+                if(this.incomingPacketInterface != null)
                     this.incomingPacketInterface.onReceive(i, p);
             }
         }
@@ -128,14 +141,76 @@ public abstract class Equipment {
     }
 
     public void analyzeProtocol(Interface i, Packet p) {
+        /*
         ApplicationProtocol applicationProtocol = ApplicationProtocols.getInstance().find(p.getApplicationLayer().getContent(), supportedProtocols);
 
-        if (applicationProtocol != null) {
+        if(applicationProtocol != null) {
             Packet packet = applicationProtocol.processPacket(i, p);
 
-            if (packet != null)
+            if(packet != null)
                 sendPacket(packet);
         }
+        */
+
+        ApplicationService applicationService = findService(ApplicationProtocols.getInstance().find(p.getApplicationLayer().getContent(), supportedProtocols), p);
+
+        if (applicationService != null)
+            applicationService.newPacket(this, i, p);
+        else
+            Debug.log("SERVICE : not exist");
+    }
+
+    private ApplicationService findService(ApplicationProtocol applicationProtocol, Packet packet) {
+        if (applicationProtocol != null) {
+            for (ApplicationService applicationService : this.applicationServices) {
+                if (applicationService.getApplicationProtocol().getName().equals(applicationProtocol.getName()) && applicationService.isStarted() && applicationService.getUsedPort() == packet.getTransportLayer().getDestinationPort())
+                    return applicationService;
+            }
+        }
+
+        return null;
+    }
+
+    public Boolean startService(String protocolName, Boolean isServer, Integer wantedPort) {
+        if (!existService(protocolName.toLowerCase() + "-" + (isServer ? "server" : "client"))) {
+            ApplicationProtocol applicationProtocol = ApplicationProtocols.getInstance().getProtocol(protocolName, supportedProtocols);
+
+            if(applicationProtocol != null) {
+                applicationServices.add(ApplicationService.start(this, applicationProtocol, isServer, wantedPort));
+
+                return true;
+            }
+        }
+
+        Debug.log("error starting service : " + protocolName);
+
+        return false;
+    }
+
+    public Boolean startService(String protocolName, Boolean isServer) {
+        return startService(protocolName, isServer, -1);
+    }
+
+    public Boolean startService(String protocolName) {
+        return startService(protocolName, false, -1);
+    }
+
+    public Boolean existService(String serviceName) {
+        for (ApplicationService applicationService : this.applicationServices) {
+            if (applicationService.getName().equals(serviceName))
+                return true;
+        }
+
+        return false;
+    }
+
+    public ApplicationService getService(String serviceName) {
+        for (ApplicationService applicationService : this.applicationServices) {
+            if (applicationService.getName().equals(serviceName))
+                return applicationService;
+        }
+
+        return null;
     }
 
     public void addProtocols(ArrayList<String> protocols) {
@@ -193,27 +268,16 @@ public abstract class Equipment {
     }
 
     public Boolean usedPort(int port) {
-        return usedPorts.containsKey(port);
-    }
-
-    public Boolean newConnection(int port, TransportProtocol transportProtocol) {
-        Debug.log("new connection");
-
-        if (!usedPort(port)) {
-            usedPorts.put(port, transportProtocol);
-
-            return true;
+        for (ApplicationService applicationService : this.applicationServices) {
+            if (port == applicationService.getUsedPort())
+                return true;
         }
 
         return false;
     }
 
-    public void applyTransportProtocol(Packet packet) {
-
-    }
-
-    public void clearInterfaces() {
-        for (Interface i : interfaces) {
+    public void clearInterfaces(){
+        for (Interface i : interfaces){
             if (i.getLink() != null)
                 i.getLink().brakeLink();
         }
