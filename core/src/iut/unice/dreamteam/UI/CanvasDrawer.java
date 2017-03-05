@@ -7,7 +7,6 @@ import iut.unice.dreamteam.Network;
 import iut.unice.dreamteam.Utils.Debug;
 import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Line;
@@ -22,8 +21,6 @@ public class CanvasDrawer {
     private final AnchorPane mainPane;
     private final ArrayList<Equipment> equipments;
     private Network network;
-    // private final Canvas canvas;
-    public GraphicsContext gc;
     private AnimationTimer timer;
     private long startNanoTime;
 
@@ -104,6 +101,7 @@ public class CanvasDrawer {
             equipments.add(drawableEquipment.getEquipment());
 
 
+
         updateLinks();
 
         draw();
@@ -122,6 +120,21 @@ public class CanvasDrawer {
 
             e.toFront();
 
+            drawPackets(e);
+
+        }
+    }
+
+    private void drawPackets(DrawableEquipment e){
+        for (DrawablePacket drawablePacket : e.getDrawablePackets()){
+            mainPane.getChildren().remove(drawablePacket);
+        }
+
+        e.update();
+
+        for (DrawablePacket drawablePacket : e.getDrawablePackets()){
+            mainPane.getChildren().add(drawablePacket);
+            drawablePacket.toFront();
         }
     }
 

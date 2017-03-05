@@ -8,9 +8,7 @@ import iut.unice.dreamteam.NetworkLayers.MacLayer;
 import iut.unice.dreamteam.Protocols.ApplicationProtocol;
 import iut.unice.dreamteam.Protocols.ApplicationProtocols;
 import iut.unice.dreamteam.Protocols.ApplicationService;
-import iut.unice.dreamteam.Protocols.TransportProtocol;
 import iut.unice.dreamteam.Utils.Debug;
-import org.json.JSONObject;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -42,11 +40,12 @@ public abstract class Equipment {
         this.supportedProtocols.add("ARP");
 
         this.applicationServices = new ArrayList<>();
-        //this.applicationServices.add(new ApplicationService());
 
         this.arpAssociation = new HashMap<>();
 
         this.multipleRoutes = false;
+
+
 
         //usedPorts = new HashMap<>();
 

@@ -2,6 +2,8 @@ package iut.unice.dreamteam.UI;
 
 import iut.unice.dreamteam.ApplicationStates;
 import iut.unice.dreamteam.Equipments.Equipment;
+import iut.unice.dreamteam.Interfaces.Interface;
+import iut.unice.dreamteam.Interfaces.PacketOnEquipment;
 import iut.unice.dreamteam.UI.ContextMenus.DeviceContextMenu;
 import iut.unice.dreamteam.UI.ContextMenus.InterfaceContextMenu;
 import iut.unice.dreamteam.UI.Listeners.OnActionListener;
@@ -16,6 +18,8 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 
+import java.util.ArrayList;
+
 /**
  * Created by Guillaume on 14/02/2017.
  */
@@ -28,10 +32,13 @@ public class DrawableEquipment extends ImageView {
     private double mouseY;
     private OnActionListener actionsListener;
 
+    private ArrayList<DrawablePacket> packets;
+
     public DrawableEquipment(Equipment e) {
         super(DrawableLoader.getInstance().getEquipmentDrawable(e));
         this.equipment = e;
 
+        packets = new ArrayList<>();
 
         setPreserveRatio(true);
 
@@ -109,6 +116,22 @@ public class DrawableEquipment extends ImageView {
 
     }
 
+    public void update() {
+        packets.clear();
+        Debug.log(equipment.getInterfaces() + " lol");
+        for (Interface element : equipment.getInterfaces()) {
+            for (PacketOnEquipment packetOnEquipment : element.getPacketsManager().getPackets()) {
+                Debug.log(packetOnEquipment.getPacket() + "");
+                DrawablePacket drawablePacket = new DrawablePacket(packetOnEquipment.getPacket());
+                drawablePacket.setTo((float) this.getX(), (float) this.getY());
+                packets.add(drawablePacket);
+            }
+        }
+    }
+
+    public  ArrayList<DrawablePacket> getDrawablePackets(){
+        return packets;
+    }
 
     public Equipment getEquipment() {
         return equipment;
