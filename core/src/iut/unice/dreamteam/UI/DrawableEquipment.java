@@ -65,6 +65,7 @@ public class DrawableEquipment extends ImageView {
             @Override
             public void handle(ContextMenuEvent event) {
                 DeviceContextMenu menu = new DeviceContextMenu(getEquipment());
+                menu.setUpdateListenner(updateListenner);
                 menu.setDeleteAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
@@ -103,9 +104,10 @@ public class DrawableEquipment extends ImageView {
                 double nx = getX() + deltaX;
                 double ny = getY() + deltaY;
 
-                setTo((float) nx, (float) ny);
+                if (nx <= 0 || ny<= 0 )
+                    return;
 
-                //relocate(nx, ny);
+                setTo((float) nx, (float) ny);
 
                 mouseX = event.getSceneX();
                 mouseY = event.getSceneY();
@@ -118,10 +120,8 @@ public class DrawableEquipment extends ImageView {
 
     public void update() {
         packets.clear();
-        Debug.log(equipment.getInterfaces() + " lol");
         for (Interface element : equipment.getInterfaces()) {
             for (PacketOnEquipment packetOnEquipment : element.getPacketsManager().getPackets()) {
-                Debug.log(packetOnEquipment.getPacket() + "");
                 DrawablePacket drawablePacket = new DrawablePacket(packetOnEquipment.getPacket());
                 drawablePacket.setTo((float) this.getX(), (float) this.getY());
                 packets.add(drawablePacket);

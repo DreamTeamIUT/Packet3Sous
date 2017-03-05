@@ -64,7 +64,7 @@ public class EquipmentCliDialog extends Stage implements Initializable {
             public void changed(ObservableValue<? extends String> ob, String o,
                                 String n) {
                 prompt.setPrefWidth(TextUtils.computeTextWidth(prompt.getFont(),
-                        prompt.getText(), 0.0D) + 20);
+                        prompt.getText(), 0.0D) + 15);
             }
         });
         prompt.setOnMouseClicked(new EventHandler<MouseEvent>() {

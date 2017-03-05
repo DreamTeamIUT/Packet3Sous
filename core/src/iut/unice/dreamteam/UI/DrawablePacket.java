@@ -1,6 +1,9 @@
 package iut.unice.dreamteam.UI;
 
 import iut.unice.dreamteam.Interfaces.Packet;
+import iut.unice.dreamteam.Utils.ColorUtils;
+import javafx.scene.effect.Light;
+import javafx.scene.effect.Lighting;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -14,7 +17,16 @@ public class DrawablePacket extends ImageView {
     DrawablePacket(Packet packet) {
         super();
         setPreserveRatio(true);
-        this.setImage(new Image(getClass().getResource("/packet/frame.png").toExternalForm()));
+        setImage(new Image(getClass().getResource("/packet/frame.png").toExternalForm()));
+
+        Lighting lighting = new Lighting();
+        lighting.setDiffuseConstant(1.0);
+        lighting.setSpecularConstant(0.0);
+        lighting.setSpecularExponent(0.0);
+        lighting.setSurfaceScale(0.0);
+        lighting.setLight(new Light.Distant(45, 45, ColorUtils.getRandomColor()));
+
+        setEffect(lighting);
 
         this.packet = packet;
     }
