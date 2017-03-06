@@ -182,6 +182,7 @@ public class MainUiController implements Initializable {
 
     public void startRender() {
         canvasDrawer.startRender();
+
     }
 
     public void stopRender() {
