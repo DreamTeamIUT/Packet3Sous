@@ -1,12 +1,7 @@
-package iut.unice.dreamteam.Programs;
-
-import iut.unice.dreamteam.Protocols.ApplicationProtocol;
+package iut.unice.dreamteam.Functionalities.Programs;
 
 import java.util.ArrayList;
 
-/**
- * Created by Dylan on 05/03/2017.
- */
 public class ApplicationPrograms {
     private static ApplicationPrograms applicationPrograms;
     private ArrayList<ApplicationProgram> applicationProgramArrayList;

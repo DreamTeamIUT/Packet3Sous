@@ -3,9 +3,6 @@ package iut.unice.dreamteam.Utils;
 import iut.unice.dreamteam.Equipments.Equipment;
 import iut.unice.dreamteam.Interfaces.Packet;
 
-/**
- * Created by Guillaume on 11/02/2017.
- */
 public class Debug {
     public static void equipment(Equipment equipment, String message) {
         System.out.println("EQUIPMENT " + equipment.getName() + " : " + message);

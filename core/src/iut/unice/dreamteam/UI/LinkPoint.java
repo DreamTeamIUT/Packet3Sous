@@ -1,8 +1,5 @@
 package iut.unice.dreamteam.UI;
 
-/**
- * Created by Guillaume on 26/02/2017.
- */
 public class LinkPoint {
     private float y;
     private float x;

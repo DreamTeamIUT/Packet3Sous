@@ -20,9 +20,6 @@ import javafx.scene.layout.AnchorPane;
 
 import java.util.ArrayList;
 
-/**
- * Created by Guillaume on 14/02/2017.
- */
 public class DrawableEquipment extends ImageView {
 
 

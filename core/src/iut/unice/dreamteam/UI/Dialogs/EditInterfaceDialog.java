@@ -20,9 +20,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-/**
- * Created by Guillaume on 13/02/2017.
- */
 public class EditInterfaceDialog extends Stage implements Initializable {
 
     private TableInterface item;

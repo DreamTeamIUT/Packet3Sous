@@ -4,9 +4,6 @@ import javafx.scene.paint.Color;
 
 import java.util.Random;
 
-/**
- * Created by Guillaume on 05/03/2017.
- */
 public class ColorUtils {
     public static Color getRandomColor(){
         Random rand = new Random();

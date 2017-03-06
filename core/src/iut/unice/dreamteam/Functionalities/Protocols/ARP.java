@@ -1,4 +1,4 @@
-package iut.unice.dreamteam.Protocols;
+package iut.unice.dreamteam.Functionalities.Protocols;
 
 import iut.unice.dreamteam.Utils.Debug;
 import iut.unice.dreamteam.Interfaces.Interface;

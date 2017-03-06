@@ -11,9 +11,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-/**
- * Created by Guillaume on 26/02/2017.
- */
 public class EquipmentApplicationDialog extends Stage implements Initializable {
 
 

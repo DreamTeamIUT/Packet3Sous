@@ -1,13 +1,9 @@
-package iut.unice.dreamteam.Protocols;
+package iut.unice.dreamteam.Functionalities.Protocols;
 
 
 import iut.unice.dreamteam.Interfaces.Packet;
 import iut.unice.dreamteam.NetworkLayers.ApplicationLayer;
-import iut.unice.dreamteam.NetworkLayers.IpLayer;
-import iut.unice.dreamteam.NetworkLayers.MacLayer;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
 
 public class TCP extends TransportProtocol {
     public TCP() {

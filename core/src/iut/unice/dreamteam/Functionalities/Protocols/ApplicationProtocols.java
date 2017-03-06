@@ -1,11 +1,10 @@
-package iut.unice.dreamteam.Protocols;
+package iut.unice.dreamteam.Functionalities.Protocols;
 
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.StringTokenizer;
 
 import org.json.*;
-
 
 public class ApplicationProtocols {
     private static ApplicationProtocols applicationProtocols;
@@ -29,7 +28,11 @@ public class ApplicationProtocols {
         if (jsonObject.has("protocol")) {
             for (ApplicationProtocol applicationProtocol : this.applicationProtocolArrayList) {
                 if(applicationProtocol.getName().equals(((JSONObject)jsonObject.get("protocol")).getString("name")) && supportedProtocols.contains(applicationProtocol.getName()))
-                    return applicationProtocol;
+                    try {
+                        return applicationProtocol.getClass().getConstructor().newInstance();
+                    } catch (InstantiationException | NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
             }
         }
 
@@ -47,5 +50,28 @@ public class ApplicationProtocols {
 
     public ArrayList<ApplicationProtocol> getProtocols() {
         return this.applicationProtocolArrayList;
+    }
+
+    public Boolean existCommand(String command) {
+        for (ApplicationProtocol applicationProtocol : ApplicationProtocols.getInstance().getProtocols()) {
+            if (applicationProtocol.hasCommand(command))
+                return true;
+        }
+
+        return false;
+    }
+
+    public ApplicationProtocol getProtocolFromCommand(String command) {
+        for (ApplicationProtocol applicationProtocol : ApplicationProtocols.getInstance().getProtocols()) {
+            if (applicationProtocol.hasCommand(command)) {
+                try {
+                    return applicationProtocol.getClass().getConstructor().newInstance();
+                } catch (InstantiationException | NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return null;
     }
 }

@@ -1,24 +1,39 @@
-package iut.unice.dreamteam.Protocols;
+package iut.unice.dreamteam.Functionalities.Protocols;
 
 
 import iut.unice.dreamteam.Equipments.Equipment;
+import iut.unice.dreamteam.Functionalities.CommandInterpreter;
 import iut.unice.dreamteam.Interfaces.Interface;
 import iut.unice.dreamteam.Interfaces.Packet;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
+import java.util.UUID;
 
 public abstract class ApplicationProtocol {
+    private String executionId;
     private String name;
     private TransportProtocol transportProtocol;
 
     private HashMap<String, CommandInterpreter.CommandExecution> commands;
 
+    private CommandInterpreter commandInterpreter;
+
     public ApplicationProtocol(String name) {
+        setExecutionId(UUID.randomUUID().toString());
         setName(name);
         setUDP();
+
+        commands = new HashMap<>();
+    }
+
+    public String getExecutionId() {
+        return executionId;
+    }
+
+    private void setExecutionId(String executionId) {
+        this.executionId = executionId;
     }
 
     public String getName() {
@@ -70,5 +85,17 @@ public abstract class ApplicationProtocol {
             return false;
 
         return this.commands.get(command).execute(equipment, command, arguments);
+    }
+
+    CommandInterpreter getCommandInterpreter() {
+        return commandInterpreter;
+    }
+
+    Boolean haveCommandInterpreter() {
+        return commandInterpreter != null;
+    }
+
+    public void setCommandInterpreter(CommandInterpreter commandInterpreter) {
+        this.commandInterpreter = commandInterpreter;
     }
 }

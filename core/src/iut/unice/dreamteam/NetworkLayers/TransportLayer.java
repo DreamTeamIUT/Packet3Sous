@@ -1,7 +1,6 @@
 package iut.unice.dreamteam.NetworkLayers;
 
-import iut.unice.dreamteam.NetworkLayers.GenericLayer;
-import iut.unice.dreamteam.Protocols.TransportProtocol;
+import iut.unice.dreamteam.Functionalities.Protocols.TransportProtocol;
 
 
 public class TransportLayer extends GenericLayer {

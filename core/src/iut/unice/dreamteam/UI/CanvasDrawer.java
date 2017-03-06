@@ -13,9 +13,6 @@ import javafx.scene.shape.Line;
 
 import java.util.ArrayList;
 
-/**
- * Created by Guillaume on 13/02/2017.
- */
 public class CanvasDrawer {
     private final ArrayList<DrawableEquipment> elementsToDraw;
     private final AnchorPane mainPane;

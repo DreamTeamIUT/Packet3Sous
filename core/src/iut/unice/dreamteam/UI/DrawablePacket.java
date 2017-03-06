@@ -8,9 +8,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 
-/**
- * Created by Romain on 05/03/2017.
- */
 public class DrawablePacket extends ImageView {
     private Packet packet;
 

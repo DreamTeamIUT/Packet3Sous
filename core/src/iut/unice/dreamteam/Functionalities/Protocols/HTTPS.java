@@ -1,4 +1,4 @@
-package iut.unice.dreamteam.Protocols;
+package iut.unice.dreamteam.Functionalities.Protocols;
 
 /**
  * Created by Romain on 13/02/2017.

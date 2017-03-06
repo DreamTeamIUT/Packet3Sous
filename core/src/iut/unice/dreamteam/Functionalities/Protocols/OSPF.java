@@ -1,4 +1,4 @@
-package iut.unice.dreamteam.Protocols;
+package iut.unice.dreamteam.Functionalities.Protocols;
 
 import iut.unice.dreamteam.Interfaces.Interface;
 import iut.unice.dreamteam.Interfaces.Packet;
@@ -7,9 +7,9 @@ import org.json.JSONObject;
 /**
  * Created by Romain on 13/02/2017.
  */
-public class HTTP extends ApplicationProtocol{
-    public HTTP() {
-        super("HTTP");
+public class OSPF extends ApplicationProtocol {
+    public OSPF() {
+        super("OSPF");
     }
 
     @Override

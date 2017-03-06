@@ -1,4 +1,4 @@
-package iut.unice.dreamteam.Protocols;
+package iut.unice.dreamteam.Functionalities.Protocols;
 
 import iut.unice.dreamteam.Equipments.Equipment;
 import iut.unice.dreamteam.Interfaces.Interface;
@@ -9,9 +9,6 @@ import iut.unice.dreamteam.NetworkLayers.TransportLayer;
 import iut.unice.dreamteam.Utils.Debug;
 import org.json.JSONObject;
 
-/**
- * Created by Dylan on 03/03/2017.
- */
 public class ApplicationService {
     private String name;
     private ApplicationProtocol applicationProtocol;

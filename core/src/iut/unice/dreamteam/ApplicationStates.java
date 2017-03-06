@@ -2,9 +2,6 @@ package iut.unice.dreamteam;
 
 import java.util.ArrayList;
 
-/**
- * Created by Guillaume on 24/02/2017.
- */
 public class ApplicationStates {
     public static final int NONE = 93;
     public static final int CONNECT = 928;

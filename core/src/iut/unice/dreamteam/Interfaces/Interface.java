@@ -3,7 +3,7 @@ package iut.unice.dreamteam.Interfaces;
 import iut.unice.dreamteam.Equipments.Equipment;
 import iut.unice.dreamteam.Network;
 import iut.unice.dreamteam.NetworkLayers.MacLayer;
-import iut.unice.dreamteam.Protocols.ARP;
+import iut.unice.dreamteam.Functionalities.Protocols.ARP;
 import iut.unice.dreamteam.Utils.Debug;
 import org.json.JSONObject;
 

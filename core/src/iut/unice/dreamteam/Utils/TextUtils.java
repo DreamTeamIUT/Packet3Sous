@@ -4,9 +4,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextBoundsType;
 
-/**
- * Created by Guillaume on 05/03/2017.
- */
 public class TextUtils {
     static final Text helper;
     static final double DEFAULT_WRAPPING_WIDTH;

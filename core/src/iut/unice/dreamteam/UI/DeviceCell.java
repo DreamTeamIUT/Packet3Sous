@@ -11,9 +11,6 @@ import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
 
-/**
- * Created by Guillaume on 13/02/2017.
- */
 public class DeviceCell extends ListCell<String> {
     @FXML
     private Label deviceName;

@@ -6,9 +6,6 @@ import iut.unice.dreamteam.Interfaces.WirelessInterface;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 
-/**
- * Created by Guillaume on 13/02/2017.
- */
 public class TableInterface {
     private Interface iface;
     private SimpleStringProperty ip;

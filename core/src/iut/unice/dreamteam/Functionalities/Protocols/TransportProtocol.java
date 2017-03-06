@@ -1,8 +1,7 @@
-package iut.unice.dreamteam.Protocols;
+package iut.unice.dreamteam.Functionalities.Protocols;
 
 
 import iut.unice.dreamteam.Equipments.Equipment;
-import iut.unice.dreamteam.Utils.Debug;
 
 public class TransportProtocol {
     private String name;

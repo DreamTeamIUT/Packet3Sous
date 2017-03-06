@@ -1,9 +1,5 @@
-package iut.unice.dreamteam.Protocols;
+package iut.unice.dreamteam.Functionalities.Protocols;
 
-
-import iut.unice.dreamteam.Equipments.Equipment;
-
-import java.util.Map;
 
 public class UDP extends TransportProtocol {
     public UDP() {

@@ -1,22 +1,16 @@
-package iut.unice.dreamteam.Protocols;
+package iut.unice.dreamteam.Functionalities.Protocols;
 
 import iut.unice.dreamteam.Equipments.Equipment;
+import iut.unice.dreamteam.Functionalities.CommandInterpreter;
 import iut.unice.dreamteam.Interfaces.Interface;
 import iut.unice.dreamteam.Interfaces.Packet;
-import iut.unice.dreamteam.Interfaces.PacketOnEquipment;
-import iut.unice.dreamteam.Network;
 import iut.unice.dreamteam.NetworkLayers.ApplicationLayer;
 import iut.unice.dreamteam.NetworkLayers.IpLayer;
-import iut.unice.dreamteam.NetworkLayers.MacLayer;
 import iut.unice.dreamteam.Utils.Debug;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
-/**
- * Created by Romain on 13/02/2017.
- */
 public class ICMP extends ApplicationProtocol {
 
     public ICMP() {
@@ -27,12 +21,21 @@ public class ICMP extends ApplicationProtocol {
         addCommand("ping", new CommandInterpreter.CommandExecution() {
             @Override
             public Boolean execute(Equipment equipment, String command, ArrayList<String> arguments) {
-                if (arguments.size() < 1)
+                if (arguments.size() < 1) {
+                    if(haveCommandInterpreter())
+                        getCommandInterpreter().resultFromCommand(ICMP.this, "Missing ip address");
+
                     return false;
+                }
 
-                Interface sourceInterface = (arguments.size() == 2 && arguments.get(1).contains("eth")) ? equipment.getInterface(arguments.get(1).substring(3, 1)) : equipment.getDefaultGateway();
+                if (equipment.existService("icmp-client")) {
+                    if(haveCommandInterpreter())
+                        getCommandInterpreter().resultFromCommand(ICMP.this, "Sending ICMP packet to " + arguments.get(0));
 
-                equipment.sendPacket(new ICMP().initiate(sourceInterface, new JSONObject().put("ip-address", arguments.get(0))));
+                    Interface sourceInterface = (arguments.size() == 2 && arguments.get(1).contains("eth")) ? equipment.getInterface(arguments.get(1).substring(3, 1)) : equipment.getDefaultGateway();
+
+                    equipment.getService("icmp-client").initiateProtocol(equipment, sourceInterface, new JSONObject().put("ip-address", arguments.get(0)));
+                }
 
                 return true;
             }

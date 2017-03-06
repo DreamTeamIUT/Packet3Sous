@@ -8,7 +8,6 @@ import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
-
 public class Network {
 
     private static final String IPADDRESS_PATTERN =

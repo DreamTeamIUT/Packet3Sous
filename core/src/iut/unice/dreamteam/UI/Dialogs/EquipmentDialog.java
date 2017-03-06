@@ -28,9 +28,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.regex.Pattern;
 
-/**
- * Created by Guillaume on 13/02/2017.
- */
 public class EquipmentDialog extends Stage implements Initializable {
 
     private String equipmentName;

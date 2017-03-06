@@ -5,9 +5,9 @@ import iut.unice.dreamteam.Interfaces.Interface;
 import iut.unice.dreamteam.Interfaces.Packet;
 import iut.unice.dreamteam.Network;
 import iut.unice.dreamteam.NetworkLayers.MacLayer;
-import iut.unice.dreamteam.Protocols.ApplicationProtocol;
-import iut.unice.dreamteam.Protocols.ApplicationProtocols;
-import iut.unice.dreamteam.Protocols.ApplicationService;
+import iut.unice.dreamteam.Functionalities.Protocols.ApplicationProtocol;
+import iut.unice.dreamteam.Functionalities.Protocols.ApplicationProtocols;
+import iut.unice.dreamteam.Functionalities.Protocols.ApplicationService;
 import iut.unice.dreamteam.Utils.Debug;
 
 import java.lang.reflect.InvocationTargetException;

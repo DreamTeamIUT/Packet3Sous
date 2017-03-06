@@ -4,9 +4,6 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 
-/**
- * Created by Guillaume on 24/02/2017.
- */
 public class CustomContextMenu extends ContextMenu{
     private static CustomContextMenu oldMenu;
     private MenuItem menuTitle;

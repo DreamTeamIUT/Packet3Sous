@@ -1,17 +1,21 @@
-package iut.unice.dreamteam.Protocols;
+package iut.unice.dreamteam.Functionalities;
 
 import iut.unice.dreamteam.Equipments.Equipment;
-import iut.unice.dreamteam.Programs.ApplicationProgram;
+import iut.unice.dreamteam.Functionalities.Protocols.ApplicationProtocol;
+import iut.unice.dreamteam.Functionalities.Protocols.ApplicationProtocols;
+import iut.unice.dreamteam.Utils.Debug;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-/**
- * Created by Dylan on 05/03/2017.
- */
 public class CommandInterpreter {
     private Equipment equipment;
-    private String currentProtocol;
+    private String executionId;
+
+    public CommandInterpreter(Equipment equipment) {
+        this.equipment = equipment;
+        this.executionId = null;
+    }
 
     public void executeCommand(String enteredCommand) {
         String[] parsedCommand = enteredCommand.split(" ");
@@ -24,20 +28,30 @@ public class CommandInterpreter {
 
         arguments.addAll(Arrays.asList(parsedCommand).subList(1, parsedCommand.length));
 
+        /*
         for (ApplicationProtocol applicationProtocol : ApplicationProtocols.getInstance().getProtocols()) {
             if (applicationProtocol.hasCommand(command)) {
-                currentProtocol = applicationProtocol.getName();
+                executionId = applicationProtocol.getExecutionId();
 
                 applicationProtocol.executeCommand(equipment, command, arguments);
 
                 return;
             }
+        }*/
+
+        if (ApplicationProtocols.getInstance().existCommand(command)) {
+            Debug.log("exist command : " + command);
+
+            ApplicationProtocol applicationProtocol = ApplicationProtocols.getInstance().getProtocolFromCommand(command);
+            applicationProtocol.executeCommand(equipment, command, arguments);
         }
     }
 
     public void resultFromCommand(ApplicationProtocol applicationProtocol, String text) {
-        if (!applicationProtocol.getName().equals(currentProtocol))
+        if (!applicationProtocol.getExecutionId().equals(executionId))
             return;
+
+        Debug.log("result from command : " + text);
 
         //DISPLAY TEXT
     }

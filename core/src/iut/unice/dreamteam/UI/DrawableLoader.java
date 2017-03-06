@@ -3,9 +3,6 @@ package iut.unice.dreamteam.UI;
 import iut.unice.dreamteam.Equipments.*;
 import javafx.scene.image.Image;
 
-/**
- * Created by Guillaume on 14/02/2017.
- */
 public class DrawableLoader {
     private Image routerImage;
     private Image hubImage;

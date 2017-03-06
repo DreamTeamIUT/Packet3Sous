@@ -1,6 +1,7 @@
 package iut.unice.dreamteam.UI.Dialogs;
 
 import iut.unice.dreamteam.Equipments.Equipment;
+import iut.unice.dreamteam.Functionalities.CommandInterpreter;
 import iut.unice.dreamteam.Utils.Debug;
 import iut.unice.dreamteam.Utils.TextUtils;
 import javafx.beans.value.ChangeListener;
@@ -23,11 +24,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-/**
- * Created by Guillaume on 05/03/2017.
- */
 public class EquipmentCliDialog extends Stage implements Initializable {
     private final Equipment equipment;
+
+    private CommandInterpreter commandInterpreter;
 
     @FXML
     TextArea result;
@@ -43,6 +43,9 @@ public class EquipmentCliDialog extends Stage implements Initializable {
 
         this.history = new ArrayList<>();
         this.equipment = e;
+
+        this.commandInterpreter = new CommandInterpreter(e);
+
         setTitle("Command line interface for " + e.getName());
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/cliDialog.fxml"));
@@ -85,6 +88,8 @@ public class EquipmentCliDialog extends Stage implements Initializable {
                     history.add(command.getText());
 
                     //TODO add the code to execute command.
+
+                    commandInterpreter.executeCommand(command.getText());
 
                     increment = 0;
                     command.setText("");

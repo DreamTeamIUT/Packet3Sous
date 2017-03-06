@@ -13,9 +13,6 @@ import org.json.JSONObject;
 
 import java.util.Optional;
 
-/**
- * Created by Guillaume on 24/02/2017.
- */
 public class DeviceContextMenu extends CustomContextMenu {
     private final Equipment equipement;
     private MenuItem editItem;

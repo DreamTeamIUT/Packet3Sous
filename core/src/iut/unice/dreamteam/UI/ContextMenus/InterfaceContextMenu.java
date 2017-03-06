@@ -12,9 +12,6 @@ import javafx.scene.ImageCursor;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 
-/**
- * Created by Guillaume on 24/02/2017.
- */
 public class InterfaceContextMenu extends CustomContextMenu {
     private final Equipment equipement;
     private final OnUpdateListener listener;
