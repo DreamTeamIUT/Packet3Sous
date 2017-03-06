@@ -128,7 +128,6 @@ public class CanvasDrawer {
                                 }
                         }
                     }
-
                 }
             }
         }, 0, timeRender);
