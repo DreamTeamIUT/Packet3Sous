@@ -29,8 +29,6 @@ public abstract class Equipment {
 
     private Boolean multipleRoutes;
 
-    //private HashMap<Integer, TransportProtocol> usedPorts;
-
     public Equipment(String name){
         this.name = name;
 
@@ -44,12 +42,6 @@ public abstract class Equipment {
         this.arpAssociation = new HashMap<>();
 
         this.multipleRoutes = false;
-
-
-
-        //usedPorts = new HashMap<>();
-
-        //startService("ARP", true);
     }
 
     public Interface getInterface(int i){
@@ -63,6 +55,15 @@ public abstract class Equipment {
         }
 
         return getDefaultGateway();
+    }
+
+    public Boolean existInterface(String ip) {
+        for (Interface i : interfaces) {
+            if (Network.isInSameNetwork(i.getIp(), ip, i.getMask()))
+                return true;
+        }
+
+        return getDefaultGateway() != null;
     }
 
     public void removeInterface(Interface i){
@@ -237,6 +238,10 @@ public abstract class Equipment {
         return defaultGateway;
     }
 
+    public Boolean hasDefaultGateway() {
+        return defaultGateway != null;
+    }
+
     public void setDefaultGateway(Interface defaultGateway) {
         this.defaultGateway = defaultGateway;
     }
@@ -284,6 +289,9 @@ public abstract class Equipment {
     }
 
     public boolean addInterface(Interface i) {
+        if (hasDefaultGateway())
+            setDefaultGateway(i);
+
         return getInterfaces().add(i);
     }
 

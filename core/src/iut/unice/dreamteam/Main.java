@@ -26,6 +26,9 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.json.JSONObject;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class Main extends Application {
 
     @Override
@@ -49,20 +52,20 @@ public class Main extends Application {
         computer1.getInterface(0).setMask("255.255.255.0");
         computer1.getInterface(0).setGateway("192.168.0.254");
 
-        computer1.setDefaultGateway(computer1.getInterface(0));
+        //computer1.setDefaultGateway(computer1.getInterface(0));
 
-        computer1.startService("ICMP", true);
-        computer1.startService("ICMP");
+        //computer1.startService("ICMP", true);
+        //computer1.startService("ICMP");
 
         Equipment computer2 = new Computer("PC 02");
         computer2.getInterface(0).setIp("192.168.10.5");
         computer2.getInterface(0).setMask("255.255.255.0");
         computer2.getInterface(0).setGateway("192.168.10.254");
 
-        computer2.setDefaultGateway(computer2.getInterface(0));
+        //computer2.setDefaultGateway(computer2.getInterface(0));
 
-        computer2.startService("ICMP", true);
-        computer2.startService("ICMP");
+        //computer2.startService("ICMP", true);
+        //computer2.startService("ICMP");
 
 
         Router router1 = new Router("Router 01");
@@ -83,19 +86,18 @@ public class Main extends Application {
 
         router2.addRoute("192.168.0.0", "255.255.255.0", "192.168.2.254");
 
-        Switch switchEquipment = new Switch("Switch 01");
+        //Switch switchEquipment = new Switch("Switch 01");
 
         n.addEquipment(router1);
         n.addEquipment(router2);
         n.addEquipment(computer1);
         n.addEquipment(computer2);
 
-
-
         Network.linkInterfaces(computer1.getInterface(0), router1.getInterface(0));
         Network.linkInterfaces(router1.getInterface(1), router2.getInterface(0));
         Network.linkInterfaces(router2.getInterface(1), computer2.getInterface(0));
 
+        /*
         Packet p = new Packet();
 
         p.setTransportLayer(new TransportLayer(new TCP()));
@@ -116,22 +118,30 @@ public class Main extends Application {
 
         Packet packet = new ICMP().initiate(computer1.getInterface(0), new JSONObject().put("ip-address", computer2.getInterface(0).getIp()));
 
-        //computer1.sendPacket(packet);
+        computer1.sendPacket(packet);
+        */
 
         Debug.log("exist ICMP service : " + computer1.existService("icmp-client"));
 
+        /*
         if (computer1.existService("icmp-client")) {
             computer1.getService("icmp-client").initiateProtocol(computer1, computer1.getInterface(0), new JSONObject().put("ip-address", computer2.getInterface(0).getIp()));
         }
+        */
 
+        Debug.log("exist ICMP service : " + router1.existService("icmp-client"));
 
-     /*   new Timer().scheduleAtFixedRate(new TimerTask() {
+        if (router1.existService("icmp-client")) {
+            router1.getService("icmp-client").initiateProtocol(router1, router1.getInterface(1), new JSONObject().put("ip-address", router2.getInterface(0).getIp()));
+        }
+
+        new Timer().scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 Debug.log("loop");
                 n.updateEquipments();
             }
-        }, 0, 100);*/
+        }, 0, 100);
     }
 }
 

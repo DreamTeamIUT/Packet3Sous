@@ -26,6 +26,8 @@ public class ApplicationService {
         setName(applicationProtocol.getName().toLowerCase() + "-" + (isServer ? "server" : "client"));
         setApplicationProtocol(applicationProtocol);
 
+        applicationProtocol.setUsedAsServer(isServer);
+
         this.isServer = isServer;
         this.usedPort = (isServer && TransportProtocol.validPort(wantedPort)) ? wantedPort : getNewPort(equipment);
 

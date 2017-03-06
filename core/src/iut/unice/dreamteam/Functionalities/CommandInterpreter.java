@@ -46,19 +46,25 @@ public class CommandInterpreter {
         if (ApplicationProtocols.getInstance().existCommand(command)) {
             Debug.log("exist command : " + command);
 
+            /*
             ApplicationProtocol applicationProtocol = ApplicationProtocols.getInstance().getProtocolFromCommand(command);
 
             executionId = applicationProtocol.getExecutionId();
 
             applicationProtocol.setCommandInterpreter(this);
             applicationProtocol.executeCommand(equipment, command, arguments);
+            */
+
+            executionId = ApplicationProtocols.getInstance().getProtocolFromCommand(command).executeCommand(equipment, command, arguments, this);
+
+            Debug.log("executionId: " + executionId);
         }
     }
 
     public void resultFromCommand(ApplicationProtocol applicationProtocol, String text) {
-        Debug.log("resultFromCommand : " + text);
+        Debug.log("resultFromCommand : " + text + " " + applicationProtocol.getExecutionId());
 
-        if (!applicationProtocol.getExecutionId().equals(executionId))
+        if (!applicationProtocol.getExecutionId().equals(executionId) && !applicationProtocol.usedAsServer())
             return;
 
         Debug.log("result from command : " + text);
@@ -69,7 +75,7 @@ public class CommandInterpreter {
     }
 
     public interface CommandExecution {
-        Boolean execute(Equipment equipment, String command, ArrayList<String> arguments);
+        String execute(Equipment equipment, String command, ArrayList<String> arguments, CommandInterpreter commandInterpreter);
     }
 
     public interface ResultCommandListener {
