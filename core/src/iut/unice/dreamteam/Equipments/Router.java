@@ -6,6 +6,7 @@ import iut.unice.dreamteam.NetworkLayers.MacLayer;
 import iut.unice.dreamteam.Utils.Debug;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 
@@ -20,6 +21,11 @@ public class Router extends Equipment implements IncomingPacketInterface {
         initialize(2, WiredInterface.class, this);
         setIncomingPacketInterface(this);
         setMultipleRoutes(true);
+
+        addProtocols(new ArrayList<>(Arrays.asList("ICMP")));
+
+        startService("ICMP");
+        startService("ICMP", true);
     }
 
     @Override

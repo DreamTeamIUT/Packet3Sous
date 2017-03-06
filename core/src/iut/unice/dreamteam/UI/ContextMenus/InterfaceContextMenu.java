@@ -4,7 +4,7 @@ import iut.unice.dreamteam.ApplicationStates;
 import iut.unice.dreamteam.Equipments.Equipment;
 import iut.unice.dreamteam.Interfaces.Interface;
 import iut.unice.dreamteam.Network;
-import iut.unice.dreamteam.UI.CanvasDrawer;
+import iut.unice.dreamteam.UI.Listeners.OnUpdateListener;
 import iut.unice.dreamteam.Utils.Debug;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -17,12 +17,12 @@ import javafx.scene.image.Image;
  */
 public class InterfaceContextMenu extends CustomContextMenu {
     private final Equipment equipement;
-    private final CanvasDrawer canvas;
+    private final OnUpdateListener listener;
 
-    public InterfaceContextMenu(Equipment e, CanvasDrawer canvasDrawer) {
+    public InterfaceContextMenu(Equipment e, OnUpdateListener listener) {
         super("Interfaces");
 
-        this.canvas = canvasDrawer;
+        this.listener = listener;
         getScene().setCursor(new ImageCursor(new Image(this.getClass().getResource("/cursors/connect.png").toExternalForm())));
 
         this.equipement = e;
@@ -66,7 +66,7 @@ public class InterfaceContextMenu extends CustomContextMenu {
                             Network.linkInterfaces((Interface) ApplicationStates.getInstance().getData(), equipement.getInterface(finalI));
                             Debug.log("linked !");
                             ApplicationStates.getInstance().setState(ApplicationStates.NONE);
-                            canvas.update();
+                            listener.onUpdate();
                         }
                         else {
                             ApplicationStates.getInstance().setData(equipement.getInterface(finalI));

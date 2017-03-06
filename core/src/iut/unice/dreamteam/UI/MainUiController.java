@@ -3,7 +3,9 @@ package iut.unice.dreamteam.UI;
 import iut.unice.dreamteam.ApplicationStates;
 import iut.unice.dreamteam.Equipments.Equipment;
 import iut.unice.dreamteam.Network;
-import iut.unice.dreamteam.UI.Dialogs.NewEquipmentDialog;
+import iut.unice.dreamteam.UI.Dialogs.EquipmentDialog;
+import iut.unice.dreamteam.UI.Listeners.OnActionListener;
+import iut.unice.dreamteam.UI.Listeners.OnUpdateListener;
 import iut.unice.dreamteam.Utils.Debug;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -60,10 +62,12 @@ public class MainUiController implements Initializable {
             public void stateChanged(int newState) {
                 switch (newState) {
                     case ApplicationStates.CONNECT:
+                        connectEquipment.setSelected(true);
                         connectEquipment.setText("Cancel");
                         canvasPane.setCursor(new ImageCursor(new Image(getClass().getResource("/cursors/connect.png").toExternalForm())));
                         break;
                     case ApplicationStates.NONE:
+                        connectEquipment.setSelected(false);
                         connectEquipment.setText("Connect");
                         canvasPane.setCursor(Cursor.DEFAULT);
                         break;
@@ -97,18 +101,12 @@ public class MainUiController implements Initializable {
                     Debug.log(db.getString());
                     event.setDropCompleted(true);
 
-                    NewEquipmentDialog dialog = new NewEquipmentDialog(db.getString());
+                    EquipmentDialog dialog = new EquipmentDialog(db.getString());
                     dialog.showAndWait();
 
                     Equipment result = dialog.getResult();
                     if (result != null) {
-                        Debug.log("Added new Equipment drawable");
-                        network.addEquipment(result);
-                        drawableEquipments.add(new DrawableEquipment(result)
-                                .setX((float) event.getX())
-                                .setY((float) event.getY())
-                        );
-                        canvasDrawer.update();
+                        addEquipmentToUI(result, (float) event.getX(), (float) event.getY());
                     }
 
 
@@ -116,6 +114,39 @@ public class MainUiController implements Initializable {
                 event.setDropCompleted(false);
             }
         });
+    }
+
+    private void addEquipmentToUI(Equipment result, float x, float y) {
+        Debug.log("Added new Equipment drawable");
+        network.addEquipment(result);
+        drawableEquipments.add(new DrawableEquipment(result)
+                .setX(x)
+                .setY(y)
+                .setUpdateListener(new OnUpdateListener() {
+                    @Override
+                    public void onUpdate() {
+                        canvasDrawer.update();
+                    }
+                })
+                .setActionsListener(new OnActionListener() {
+                    @Override
+                    public void onDelete(DrawableEquipment drawableEquipment) {
+                        drawableEquipments.remove(drawableEquipment);
+                        network.removeEquipment(drawableEquipment.getEquipment());
+                        canvasPane.getChildren().remove(drawableEquipment);
+                        canvasDrawer.update();
+                    }
+
+                    @Override
+                    public void onDuplicate(DrawableEquipment drawableEquipment) {
+                        Equipment e = Equipment.clone(drawableEquipment.getEquipment());
+                        if (e != null)
+                            addEquipmentToUI(e, (float) drawableEquipment.getX() + 2 * (float) drawableEquipment.getEquipmentDrawable().getWidth(),
+                                    (float) drawableEquipment.getY() + 2 * (float) drawableEquipment.getEquipmentDrawable().getHeight());
+                    }
+                })
+        );
+        canvasDrawer.update();
     }
 
     private void addItemToListView() {

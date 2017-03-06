@@ -1,6 +1,6 @@
 package iut.unice.dreamteam;
 
-import iut.unice.dreamteam.Equipments.*;
+import iut.unice.dreamteam.Equipments.Equipment;
 import iut.unice.dreamteam.Interfaces.Interface;
 import iut.unice.dreamteam.Interfaces.InterfaceLink;
 
@@ -76,19 +76,12 @@ public class Network {
         return Pattern.compile(IPADDRESS_PATTERN).matcher(ip).matches();
     }
 
-    public static Equipment getEquipmentFromString(String name) {
-        switch (name) {
-            case "Router":
-                return new Router("");
-            case "Switch":
-                return new Switch("");
-            case "Hub":
-                return new Hub("");
-            case "Computer":
-                return new Computer("");
-            case "Access Point":
-                return new AccessPoint("");
+    public void removeEquipment(Equipment equipment) {
+        for (Interface i : equipment.getInterfaces()){
+            if (i.getLink() != null )
+                i.getLink().brakeLink();
         }
-        return null;
+
+        this.equipments.remove(equipment);
     }
 }

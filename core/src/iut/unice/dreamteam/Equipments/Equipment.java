@@ -8,10 +8,9 @@ import iut.unice.dreamteam.NetworkLayers.MacLayer;
 import iut.unice.dreamteam.Protocols.ApplicationProtocol;
 import iut.unice.dreamteam.Protocols.ApplicationProtocols;
 import iut.unice.dreamteam.Protocols.ApplicationService;
-import iut.unice.dreamteam.Protocols.TransportProtocol;
 import iut.unice.dreamteam.Utils.Debug;
-import org.json.JSONObject;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -41,11 +40,12 @@ public abstract class Equipment {
         this.supportedProtocols.add("ARP");
 
         this.applicationServices = new ArrayList<>();
-        //this.applicationServices.add(new ApplicationService());
 
         this.arpAssociation = new HashMap<>();
 
         this.multipleRoutes = false;
+
+
 
         //usedPorts = new HashMap<>();
 
@@ -65,8 +65,18 @@ public abstract class Equipment {
         return getDefaultGateway();
     }
 
-    public void initialize(int size, Class< ? extends Interface> p, Equipment equipment, Boolean passiveInterfaces){
-        for (int i=0;i<size;i++){
+    public void removeInterface(Interface i){
+        if (i == null)
+            return;
+
+        if (i.getLink() != null)
+            i.getLink().brakeLink();
+
+        interfaces.remove(i);
+    }
+
+    public void initialize(int size, Class<? extends Interface> p, Equipment equipment, Boolean passiveInterfaces) {
+        for (int i = 0; i < size; i++) {
             try {
                 Interface equipmentInterface = p.newInstance();
                 equipmentInterface.setEquipment(equipment);
@@ -273,7 +283,53 @@ public abstract class Equipment {
         interfaces.clear();
     }
 
-    public boolean addInterface(Interface i){
+    public boolean addInterface(Interface i) {
         return getInterfaces().add(i);
+    }
+
+    public static Equipment clone(Equipment e) {
+        Equipment equipment;
+        try {
+            equipment = e.getClass().getDeclaredConstructor(String.class).newInstance(e.getName() + " cpy");
+
+
+            equipment.getInterfaces().clear();
+
+            for (Interface i : e.getInterfaces()) {
+                Debug.log("Clone iface");
+                Interface toAdd = Interface.clone(i);
+                toAdd.setEquipment(equipment);
+                equipment.addInterface(toAdd);
+
+                if (e.getInterfaces().indexOf(e.getDefaultGateway()) == equipment.getInterfaces().size() - 1)
+                {
+                    Debug.log("Set Gateway !");
+                    equipment.setDefaultGateway(toAdd);
+                }
+            }
+
+            return equipment;
+
+        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e1) {
+            e1.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public static Equipment fromString(String name) {
+        switch (name) {
+            case "Router":
+                return new Router("");
+            case "Switch":
+                return new Switch("");
+            case "Hub":
+                return new Hub("");
+            case "Computer":
+                return new Computer("");
+            case "Access Point":
+                return new AccessPoint("");
+        }
+        return null;
     }
 }

@@ -23,9 +23,8 @@ import java.util.ResourceBundle;
 /**
  * Created by Guillaume on 13/02/2017.
  */
-public class NewInterfaceDialog extends Stage implements Initializable {
+public class EditInterfaceDialog extends Stage implements Initializable {
 
-    private int currentInterfaceNumber;
     private TableInterface item;
     @FXML
     TextField ip;
@@ -40,10 +39,6 @@ public class NewInterfaceDialog extends Stage implements Initializable {
     @FXML
     Button cancelButton;
     @FXML
-    TextField numberRepeat;
-    @FXML
-    CheckBox repeat;
-    @FXML
     CheckBox passiveInt;
     @FXML
     GridPane basicInfo;
@@ -51,12 +46,13 @@ public class NewInterfaceDialog extends Stage implements Initializable {
 
     private ArrayList<TableInterface> tableInterfaces;
 
-    public NewInterfaceDialog(int currentInterfaceNumber) {
-        setTitle("Add a new interface");
-        this.currentInterfaceNumber = currentInterfaceNumber;
+    public EditInterfaceDialog(TableInterface tableInterface) {
+        setTitle("Edit an interface");
+        this.item = tableInterface;
+
         this.tableInterfaces = new ArrayList<>();
 
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/newInterfaceDialog.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/interfaceDialog.fxml"));
         fxmlLoader.setController(this);
 
         try {
@@ -70,55 +66,26 @@ public class NewInterfaceDialog extends Stage implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        name.setText("eth" + this.currentInterfaceNumber);
+        setupCheckbox();
+
+        name.setText(item.getName());
+
+        ip.setText(item.getIp());
+        mask.setText(item.getMask());
+
+        passiveInt.setSelected(item.isPassive());
 
         types.setItems(FXCollections.observableList(new ArrayList<String>() {{
             add(Interface.INTERFACE_TYPE_WIRED);
             add(Interface.INTERFACE_TYPE_WIRELESS);
         }}));
 
-        types.getSelectionModel().select(0);
+        types.getSelectionModel().select(item.getType().equals(Interface.INTERFACE_TYPE_WIRED) ? 0 : 1);
 
-        setupCheckbox();
-        setupNumberTextField();
 
-    }
-
-    private void setupNumberTextField() {
-        numberRepeat.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if (!newValue.matches("\\d*")) {
-                    numberRepeat.setText(newValue.replaceAll("[^\\d]", ""));
-                }
-            }
-        });
-
-        numberRepeat.setDisable(true);
     }
 
     private void setupCheckbox() {
-        repeat.selectedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                repeat.setSelected(newValue);
-                if (newValue) {
-                    ip.setText("");
-                    ip.setDisable(true);
-                    mask.setDisable(true);
-                    mask.setText("");
-                    numberRepeat.setDisable(false);
-
-                } else {
-                    ip.setText("");
-                    ip.setDisable(false);
-                    mask.setDisable(false);
-                    mask.setText("");
-                    numberRepeat.setDisable(true);
-                    numberRepeat.setText("1");
-                }
-            }
-        });
 
         passiveInt.selectedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
@@ -129,28 +96,27 @@ public class NewInterfaceDialog extends Stage implements Initializable {
                     ip.setDisable(true);
                     mask.setDisable(true);
                     mask.setText("");
-                    numberRepeat.setText("1");
 
                 } else {
-                    numberRepeat.setDisable(true);
                     ip.setText("");
                     ip.setDisable(false);
                     mask.setDisable(false);
                     mask.setText("");
-                    numberRepeat.setText("1");
                 }
             }
         });
 
         passiveInt.setSelected(false);
-        repeat.setSelected(false);
     }
 
     public void validateDialog() {
         if ((ip.getText().equals("") || Network.isValidIpFormat(ip.getText())) && (mask.getText().equals("") || Network.isValidIpFormat(mask.getText()))) {
-            for (int i = 0; i < Integer.parseInt(numberRepeat.getText()); i++) {
-                tableInterfaces.add(new TableInterface(ip.getText(), mask.getText(), types.getValue(), "eth" + (this.currentInterfaceNumber + i), passiveInt.isSelected()));
-            }
+
+            this.item.setIp(ip.getText());
+            this.item.setMask(mask.getText());
+            this.item.setPassive(passiveInt.isSelected());
+            this.item.setType(types.getSelectionModel().getSelectedItem());
+
             this.close();
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);

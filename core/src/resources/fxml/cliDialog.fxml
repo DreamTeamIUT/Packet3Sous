@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.*?>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox layoutX="-4.0" prefHeight="282.0" prefWidth="610.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <TextArea fx:id="result" editable="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="200.0" prefWidth="200.0" style=": 0;" styleClass="text-area" stylesheets="@../css/cliDesign.css" text="Router&gt;&#10;Router&gt;" VBox.vgrow="ALWAYS" />
+            <HBox prefHeight="26.0" prefWidth="600.0">
+               <children>
+                  <TextField fx:id="prompt" alignment="TOP_LEFT" editable="false" style="-fx-background-color: #000; -fx-border-color: #000; -fx-text-fill: #fff;" text="Router&gt;" />
+                  <TextField fx:id="command" alignment="TOP_LEFT" style="-fx-background-color: #000; -fx-border-color: #000; -fx-text-fill: #fff;" text="Your command" HBox.hgrow="ALWAYS" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

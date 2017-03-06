@@ -26,9 +26,6 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.json.JSONObject;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 public class Main extends Application {
 
     @Override
@@ -42,7 +39,7 @@ public class Main extends Application {
 
 
     public static void main(String[] args) {
-        //launch(args);
+        launch(args);
 
         final Network n = new Network();
 
@@ -128,13 +125,13 @@ public class Main extends Application {
         }
 
 
-        new Timer().scheduleAtFixedRate(new TimerTask() {
+     /*   new Timer().scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 Debug.log("loop");
                 n.updateEquipments();
             }
-        }, 0, 5000);
+        }, 0, 100);*/
     }
 }
 

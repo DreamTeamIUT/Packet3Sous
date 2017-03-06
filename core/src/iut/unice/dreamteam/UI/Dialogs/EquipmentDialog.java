@@ -2,13 +2,13 @@ package iut.unice.dreamteam.UI.Dialogs;
 
 import iut.unice.dreamteam.Equipments.Equipment;
 import iut.unice.dreamteam.Interfaces.Interface;
-import iut.unice.dreamteam.Network;
 import iut.unice.dreamteam.UI.Adapaters.TableInterface;
 import iut.unice.dreamteam.Utils.Debug;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -18,6 +18,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -30,7 +31,7 @@ import java.util.regex.Pattern;
 /**
  * Created by Guillaume on 13/02/2017.
  */
-public class NewEquipmentDialog extends Stage implements Initializable {
+public class EquipmentDialog extends Stage implements Initializable {
 
     private String equipmentName;
     private ObservableList observableInterfacesList;
@@ -61,14 +62,19 @@ public class NewEquipmentDialog extends Stage implements Initializable {
     @FXML
     TableColumn maskC;
 
-    public NewEquipmentDialog(String equipement) {
-        setTitle("Add a new " + equipement);
+    private ArrayList<Interface> toAdd;
+    private ArrayList<Interface> toRemove;
 
-        this.equipmentName = equipement;
+
+    {
         this.list = new ArrayList<>();
+        this.toAdd = new ArrayList<>();
+        this.toRemove = new ArrayList<>();
+    }
 
+    private void init() {
 
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/newEquimentDialog.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/equimentDialog.fxml"));
         fxmlLoader.setController(this);
 
         try {
@@ -78,16 +84,58 @@ public class NewEquipmentDialog extends Stage implements Initializable {
         }
     }
 
+    public EquipmentDialog(String equipement) {
+        setTitle("Add a new " + equipement);
+        this.equipmentName = equipement;
+
+        init();
+
+    }
+
+    public EquipmentDialog(Equipment e) {
+
+        if (e != null) {
+
+            setTitle("Edit " + e.getName());
+            this.result = e;
+
+            for (Interface i : e.getInterfaces())
+                list.add(new TableInterface(i, e.getInterfaces().indexOf(i)));
+
+        }
+
+        init();
+    }
+
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+
+
         try {
             equipmentImage.setImage(new Image(getClass().getResource("/devices/" + this.equipmentName + ".png").toString()));
         } catch (Exception e) {
             Debug.log("IMAGE CANNOT BE ADDED ... ");
         }
 
+
+        if (this.result != null)
+            okButton.setText("Save");
+        else {
+            this.result = Equipment.fromString(this.equipmentName);
+            this.result.clearInterfaces();
+        }
+
+
+
         configEquipmentName.setPromptText("" + equipmentName + " 01");
+        if (result != null)
+            configEquipmentName.setText(result.getName());
+
         delInterface.setDisable(true);
+        if (result != null && result.getInterfaces().size() > 0)
+            delInterface.setDisable(false);
 
         setupInterfaceTable();
 
@@ -116,12 +164,28 @@ public class NewEquipmentDialog extends Stage implements Initializable {
             }
         });
 
+        interfaceTable.setOnMousePressed(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
+                    Debug.log("Ok open interface editor !");
+                    EditInterfaceDialog dialog = new EditInterfaceDialog(interfaceTable.getSelectionModel().getSelectedItem());
+                    dialog.show();
+                }
+            }
+        });
+
 
         updateTable();
     }
 
     public void delInterface() {
         Debug.log("Del Clicked !");
+        if (toAdd.contains(interfaceTable.getSelectionModel().getSelectedItem().getInterface()))
+            toAdd.remove(interfaceTable.getSelectionModel().getSelectedItem().getInterface());
+        else
+            toRemove.add(interfaceTable.getSelectionModel().getSelectedItem().getInterface());
+
         list.remove(interfaceTable.getSelectionModel().getSelectedItem());
         updateTable();
     }
@@ -133,8 +197,15 @@ public class NewEquipmentDialog extends Stage implements Initializable {
         dialog.showAndWait();
 
         ArrayList<TableInterface> interfaceToInsert = dialog.getResult();
-        if (interfaceToInsert != null)
-            list.addAll(interfaceToInsert);
+        if (interfaceToInsert != null){
+            for (TableInterface tableInterface : interfaceToInsert)
+            {
+                list.add(tableInterface);
+                tableInterface.getInterface().setEquipment(this.result);
+                toAdd.add(tableInterface.getInterface());
+            }
+        }
+
 
         updateTable();
     }
@@ -145,8 +216,7 @@ public class NewEquipmentDialog extends Stage implements Initializable {
     }
 
     public void validateDialog() {
-        if (!Pattern.compile("\\w{3,}").matcher(configEquipmentName.getText().replace(" ", "")).matches())
-        {
+        if (!Pattern.compile("\\w{3,}").matcher(configEquipmentName.getText().replace(" ", "")).matches()) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error !");
             alert.setHeaderText(null);
@@ -156,14 +226,13 @@ public class NewEquipmentDialog extends Stage implements Initializable {
             return;
         }
 
-        this.result = Network.getEquipmentFromString(this.equipmentName);
         this.result.setName(configEquipmentName.getText());
-        this.result.clearInterfaces();
-        for (TableInterface i: list){
-            Interface iface = TableInterface.convertToInterface(i);
-            iface.setEquipment(this.result);
-            this.result.addInterface(iface);
-        }
+
+        for (Interface r : toRemove)
+            this.result.removeInterface(r);
+
+        for (Interface i : toAdd)
+            this.result.addInterface(i);
 
         this.close();
     }
@@ -175,7 +244,6 @@ public class NewEquipmentDialog extends Stage implements Initializable {
     private void updateTable() {
         for (int i = 0; i < list.size(); i++)
             list.get(i).setName("eth" + i);
-
 
         observableInterfacesList = FXCollections.observableList(list);
         interfaceTable.setItems(observableInterfacesList);
