@@ -12,9 +12,13 @@ public class CommandInterpreter {
     private Equipment equipment;
     private String executionId;
 
-    public CommandInterpreter(Equipment equipment) {
+    private ResultCommandListener resultCommandListener;
+
+    public CommandInterpreter(Equipment equipment, ResultCommandListener resultCommandListener) {
         this.equipment = equipment;
         this.executionId = null;
+
+        this.resultCommandListener = resultCommandListener;
     }
 
     public void executeCommand(String enteredCommand) {
@@ -43,20 +47,32 @@ public class CommandInterpreter {
             Debug.log("exist command : " + command);
 
             ApplicationProtocol applicationProtocol = ApplicationProtocols.getInstance().getProtocolFromCommand(command);
+
+            executionId = applicationProtocol.getExecutionId();
+
+            applicationProtocol.setCommandInterpreter(this);
             applicationProtocol.executeCommand(equipment, command, arguments);
         }
     }
 
     public void resultFromCommand(ApplicationProtocol applicationProtocol, String text) {
+        Debug.log("resultFromCommand : " + text);
+
         if (!applicationProtocol.getExecutionId().equals(executionId))
             return;
 
         Debug.log("result from command : " + text);
+
+        resultCommandListener.onMessage(text);
 
         //DISPLAY TEXT
     }
 
     public interface CommandExecution {
         Boolean execute(Equipment equipment, String command, ArrayList<String> arguments);
+    }
+
+    public interface ResultCommandListener {
+        void onMessage(String text);
     }
 }

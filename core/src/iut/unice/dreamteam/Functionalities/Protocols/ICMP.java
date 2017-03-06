@@ -29,10 +29,9 @@ public class ICMP extends ApplicationProtocol {
                 }
 
                 if (equipment.existService("icmp-client")) {
-                    if(haveCommandInterpreter())
-                        getCommandInterpreter().resultFromCommand(ICMP.this, "Sending ICMP packet to " + arguments.get(0));
-
                     Interface sourceInterface = (arguments.size() == 2 && arguments.get(1).contains("eth")) ? equipment.getInterface(arguments.get(1).substring(3, 1)) : equipment.getDefaultGateway();
+
+                    Debug.log("source ip : " + sourceInterface.getIp());
 
                     equipment.getService("icmp-client").initiateProtocol(equipment, sourceInterface, new JSONObject().put("ip-address", arguments.get(0)));
                 }
@@ -57,6 +56,9 @@ public class ICMP extends ApplicationProtocol {
         p.setApplicationLayer(new ApplicationLayer(answer));
         p.setIpLayer(new IpLayer(i.getIp(), parameters.getString("ip-address")));
 
+        if(haveCommandInterpreter())
+            getCommandInterpreter().resultFromCommand(ICMP.this, "Sending ICMP packet to " + parameters.getString("ip-address"));
+
         return p;
     }
 
@@ -80,6 +82,12 @@ public class ICMP extends ApplicationProtocol {
             backPacket.setApplicationLayer(new ApplicationLayer(answer));
             backPacket.setIpLayer(new IpLayer(i.getIp(), p.getIpLayer().getSource()));
             return backPacket;
+        }
+        else if(protocol.getString("message").equals("ECHO-REPLY")) {
+            Debug.log("reply ping");
+
+            if(haveCommandInterpreter())
+                getCommandInterpreter().resultFromCommand(ICMP.this, "Reply from " + p.getIpLayer().getSource() + " in 1ms");
         }
         return null;
     }
