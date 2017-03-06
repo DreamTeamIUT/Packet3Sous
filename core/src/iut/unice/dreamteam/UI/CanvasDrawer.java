@@ -110,6 +110,10 @@ public class CanvasDrawer {
         }, 0, timeRender);
     }
 
+    public Boolean startedRender() {
+        return networkTimer != null;
+    }
+
     public Network getNetwork() {
         return network;
     }

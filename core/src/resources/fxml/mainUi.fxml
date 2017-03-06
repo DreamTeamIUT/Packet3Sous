@@ -10,6 +10,7 @@
               <menus>
                 <Menu mnemonicParsing="false" text="File">
                   <items>
+                    <MenuItem mnemonicParsing="false" text="Save project" onAction="#saveProject" />
                     <MenuItem mnemonicParsing="false" text="Close" />
                   </items>
                 </Menu>
@@ -39,9 +40,8 @@
                               <ToolBar prefHeight="30.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                                  <items>
                                     <Button fx:id="startBtn" mnemonicParsing="false" onAction="#startRender" text="Start" />
-                                    <Button fx:id="stopBtn" mnemonicParsing="false" onAction="#stopRender" text="Stop" />
                                     <Button mnemonicParsing="false" text="&lt;" />
-                                    <Slider />
+                                    <Slider fx:id="renderSlider" />
                                     <Button mnemonicParsing="false" text="&gt;" />
                                     <ToggleButton fx:id="connectEquipment" mnemonicParsing="false" onAction="#makeLink" text="Connect" />
                                  </items>

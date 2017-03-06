@@ -2,11 +2,15 @@ package iut.unice.dreamteam.UI;
 
 import iut.unice.dreamteam.ApplicationStates;
 import iut.unice.dreamteam.Equipments.Equipment;
+import iut.unice.dreamteam.Main;
 import iut.unice.dreamteam.Network;
+import iut.unice.dreamteam.UI.Dialogs.DirectorySelector;
 import iut.unice.dreamteam.UI.Dialogs.EquipmentDialog;
 import iut.unice.dreamteam.UI.Listeners.OnActionListener;
 import iut.unice.dreamteam.UI.Listeners.OnUpdateListener;
 import iut.unice.dreamteam.Utils.Debug;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -14,16 +18,15 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
 import javafx.scene.ImageCursor;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.ToggleButton;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.DirectoryChooser;
 import javafx.util.Callback;
 
 import java.net.URL;
+import java.nio.file.DirectoryIteratorException;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
@@ -42,7 +45,7 @@ public class MainUiController implements Initializable {
     @FXML
     private Button startBtn;
     @FXML
-    private Button stopBtn;
+    private Slider renderSlider;
 
     private CanvasDrawer canvasDrawer;
     private Network network;
@@ -77,6 +80,16 @@ public class MainUiController implements Initializable {
         addItemToListView();
         enableDragAndDrop();
 
+        renderSlider.setMin(5000);
+        renderSlider.setMax(500);
+        renderSlider.setBlockIncrement(500);
+
+        renderSlider.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                Debug.log("update slider");
+            }
+        });
     }
 
     private void enableDragAndDrop() {
@@ -181,11 +194,14 @@ public class MainUiController implements Initializable {
     }
 
     public void startRender() {
-        canvasDrawer.startRender();
-    }
-
-    public void stopRender() {
-        canvasDrawer.stopRender();
+        if (startBtn.getText().equals("Start")) {
+            canvasDrawer.startRender();
+            startBtn.setText("Stop");
+        }
+        else {
+            canvasDrawer.stopRender();
+            startBtn.setText("Start");
+        }
     }
 
     public void makeLink() {
@@ -194,5 +210,14 @@ public class MainUiController implements Initializable {
         else
             ApplicationStates.getInstance().setState(ApplicationStates.NONE);
 
+    }
+
+    public void saveProject() {
+        new DirectorySelector(new DirectorySelector.DirectorySelection() {
+            @Override
+            public void onSelect(String filePath) {
+                Debug.log("file path : " + filePath);
+            }
+        });
     }
 }

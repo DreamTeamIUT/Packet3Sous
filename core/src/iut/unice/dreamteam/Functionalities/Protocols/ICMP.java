@@ -10,6 +10,7 @@ import iut.unice.dreamteam.Utils.Debug;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.StringJoiner;
 
 public class ICMP extends ApplicationProtocol {
@@ -91,7 +92,7 @@ public class ICMP extends ApplicationProtocol {
             Debug.log("reply ping");
 
             if(haveCommandInterpreter())
-                getCommandInterpreter().resultFromCommand(ICMP.this, "Reply from " + p.getIpLayer().getSource() + " in 1ms");
+                getCommandInterpreter().resultFromCommand(ICMP.this, "Reply from " + p.getIpLayer().getSource() + " in " + new Random().nextInt(5) + "ms");
         }
         return null;
     }
