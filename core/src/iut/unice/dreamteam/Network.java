@@ -19,8 +19,7 @@ public class Network {
 
     private ArrayList<Equipment> equipments;
 
-    public Network() {
-        equipments = new ArrayList<>();
+    public Network() {equipments = new ArrayList<>();
     }
 
     public static Boolean isInSameNetwork(String ipSource, String ipDest, String mask) {
@@ -82,5 +81,27 @@ public class Network {
         }
 
         this.equipments.remove(equipment);
+    }
+
+    public ArrayList getEquipmentByType(Class aClass) {
+        ArrayList <Equipment> sameType = new ArrayList<>();
+       for(Equipment equipment : equipments){
+           if (equipment.getClass().equals(aClass)){
+               sameType.add(equipment);
+           }
+       }
+        return sameType;
+    }
+
+    public static String getNaturalMask(String text) {
+        String tab[] = text.split(Pattern.quote("."));
+        int firstByte = Integer.parseInt(tab[0]);
+        if(firstByte <= 127) {
+        return "255.0.0.0";
+        }else if(firstByte >= 128 && firstByte <= 191){
+            return "255.255.0.0";
+        }else{
+            return "255.255.255.0";
+        }
     }
 }

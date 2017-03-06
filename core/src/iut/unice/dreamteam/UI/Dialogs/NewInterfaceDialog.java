@@ -1,8 +1,12 @@
 package iut.unice.dreamteam.UI.Dialogs;
 
+import iut.unice.dreamteam.Equipments.Equipment;
+import iut.unice.dreamteam.Equipments.Hub;
+import iut.unice.dreamteam.Equipments.Switch;
 import iut.unice.dreamteam.Interfaces.Interface;
 import iut.unice.dreamteam.Network;
 import iut.unice.dreamteam.UI.Adapaters.TableInterface;
+import iut.unice.dreamteam.Utils.Debug;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -45,14 +49,15 @@ public class NewInterfaceDialog extends Stage implements Initializable {
     @FXML
     GridPane basicInfo;
 
-
+    private boolean natMask = false;
+    private Equipment equipment;
     private ArrayList<TableInterface> tableInterfaces;
 
-    public NewInterfaceDialog(int currentInterfaceNumber) {
+    public NewInterfaceDialog(int currentInterfaceNumber, Equipment equipment) {
         setTitle("Add a new interface");
         this.currentInterfaceNumber = currentInterfaceNumber;
         this.tableInterfaces = new ArrayList<>();
-
+        this.equipment =  equipment;
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/newInterfaceDialog.fxml"));
         fxmlLoader.setController(this);
 
@@ -79,6 +84,11 @@ public class NewInterfaceDialog extends Stage implements Initializable {
         setupCheckbox();
         setupNumberTextField();
 
+        if (this.equipment instanceof Switch || this.equipment instanceof Hub) {
+            passiveInt.setSelected(true);
+            passiveInt.setDisable(true);
+        }
+        naturalMask();
     }
 
     private void setupNumberTextField() {
@@ -166,5 +176,17 @@ public class NewInterfaceDialog extends Stage implements Initializable {
 
     public void cancelDialog() {
         this.close();
+    }
+
+    public void naturalMask(){
+        ip.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (newValue == false && natMask == false){
+                    mask.setText(Network.getNaturalMask(ip.getText()));
+                    natMask = true;
+                }
+            }
+        });
     }
 }

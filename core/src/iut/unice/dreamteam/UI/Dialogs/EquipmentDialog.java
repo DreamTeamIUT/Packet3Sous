@@ -61,7 +61,7 @@ public class EquipmentDialog extends Stage implements Initializable {
 
     private ArrayList<Interface> toAdd;
     private ArrayList<Interface> toRemove;
-
+    private int numberEquipment;
 
     {
         this.list = new ArrayList<>();
@@ -81,7 +81,8 @@ public class EquipmentDialog extends Stage implements Initializable {
         }
     }
 
-    public EquipmentDialog(String equipement) {
+    public EquipmentDialog(String equipement, int numberEquipment) {
+        this.numberEquipment = numberEquipment;
         setTitle("Add a new " + equipement);
         this.equipmentName = equipement;
 
@@ -117,22 +118,20 @@ public class EquipmentDialog extends Stage implements Initializable {
         }
 
 
-        if (this.result != null)
-            okButton.setText("Save");
-        else {
-            this.result = Equipment.fromString(this.equipmentName);
-            this.result.clearInterfaces();
-        }
-
-
-
-        configEquipmentName.setPromptText("" + equipmentName + " 01");
+        configEquipmentName.setText("" + equipmentName + " " + String.valueOf(numberEquipment));
         if (result != null)
             configEquipmentName.setText(result.getName());
 
         delInterface.setDisable(true);
         if (result != null && result.getInterfaces().size() > 0)
             delInterface.setDisable(false);
+
+        if (this.result != null)
+            okButton.setText("Save");
+        else {
+            this.result = Equipment.fromString(this.equipmentName);
+            this.result.clearInterfaces();
+        }
 
         setupInterfaceTable();
 
@@ -190,7 +189,7 @@ public class EquipmentDialog extends Stage implements Initializable {
     public void addInterface() {
         Debug.log("addClicked");
 
-        NewInterfaceDialog dialog = new NewInterfaceDialog(list.size());
+        NewInterfaceDialog dialog = new NewInterfaceDialog(list.size(),result);
         dialog.showAndWait();
 
         ArrayList<TableInterface> interfaceToInsert = dialog.getResult();

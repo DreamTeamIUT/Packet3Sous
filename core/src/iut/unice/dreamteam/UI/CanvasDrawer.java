@@ -3,9 +3,12 @@ package iut.unice.dreamteam.UI;
 import iut.unice.dreamteam.ApplicationStates;
 import iut.unice.dreamteam.Equipments.Equipment;
 import iut.unice.dreamteam.Interfaces.Interface;
+import iut.unice.dreamteam.Interfaces.Packet;
+import iut.unice.dreamteam.Interfaces.PacketOnEquipment;
 import iut.unice.dreamteam.Network;
 import iut.unice.dreamteam.Utils.Debug;
 import javafx.animation.AnimationTimer;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -106,6 +109,26 @@ public class CanvasDrawer {
             public void run() {
                 Debug.log("loop");
                 network.updateEquipments();
+
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        update();
+                    }
+                });
+
+                int l;
+                for (DrawableEquipment d : elementsToDraw) {
+                    for (DrawablePacket dp : d.getDrawablePackets()) {
+                        for (Interface i : d.getEquipment().getInterfaces()){
+                                if(i.getLink() != null) {
+                                    int index = equipments.indexOf(i.getLink().getOpositInterface(i).getEquipment());
+                                    DrawableEquipment nextHop = elementsToDraw.get(index);
+                                    dp.setTo((float)(nextHop.getX()),(float) (nextHop.getY()));
+                                }
+                        }
+                    }
+                }
             }
         }, 0, timeRender);
     }
