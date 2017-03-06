@@ -44,4 +44,8 @@ public class ApplicationProtocols {
 
         return null;
     }
+
+    public ArrayList<ApplicationProtocol> getProtocols() {
+        return this.applicationProtocolArrayList;
+    }
 }

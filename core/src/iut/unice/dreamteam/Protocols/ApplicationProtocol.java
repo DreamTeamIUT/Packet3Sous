@@ -1,14 +1,20 @@
 package iut.unice.dreamteam.Protocols;
 
 
+import iut.unice.dreamteam.Equipments.Equipment;
 import iut.unice.dreamteam.Interfaces.Interface;
 import iut.unice.dreamteam.Interfaces.Packet;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 
 public abstract class ApplicationProtocol {
     private String name;
     private TransportProtocol transportProtocol;
+
+    private HashMap<String, CommandInterpreter.CommandExecution> commands;
 
     public ApplicationProtocol(String name) {
         setName(name);
@@ -49,5 +55,20 @@ public abstract class ApplicationProtocol {
 
     public void setUDP(int defaultPort) {
         setTransportProtocol(new UDP(defaultPort));
+    }
+
+    void addCommand(String command, CommandInterpreter.CommandExecution commandExecution) {
+        this.commands.put(command, commandExecution);
+    }
+
+    public Boolean hasCommand(String command) {
+        return this.commands.containsKey(command);
+    }
+
+    public Boolean executeCommand(Equipment equipment, String command, ArrayList<String> arguments) {
+        if (!hasCommand(command))
+            return false;
+
+        return this.commands.get(command).execute(equipment, command, arguments);
     }
 }

@@ -1,5 +1,6 @@
 package iut.unice.dreamteam.Protocols;
 
+import iut.unice.dreamteam.Equipments.Equipment;
 import iut.unice.dreamteam.Interfaces.Interface;
 import iut.unice.dreamteam.Interfaces.Packet;
 import iut.unice.dreamteam.Interfaces.PacketOnEquipment;
@@ -10,16 +11,32 @@ import iut.unice.dreamteam.NetworkLayers.MacLayer;
 import iut.unice.dreamteam.Utils.Debug;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 /**
  * Created by Romain on 13/02/2017.
  */
 public class ICMP extends ApplicationProtocol {
 
-
     public ICMP() {
         super("ICMP");
 
         setUDP(501);
+
+        addCommand("ping", new CommandInterpreter.CommandExecution() {
+            @Override
+            public Boolean execute(Equipment equipment, String command, ArrayList<String> arguments) {
+                if (arguments.size() < 1)
+                    return false;
+
+                Interface sourceInterface = (arguments.size() == 2 && arguments.get(1).contains("eth")) ? equipment.getInterface(arguments.get(1).substring(3, 1)) : equipment.getDefaultGateway();
+
+                equipment.sendPacket(new ICMP().initiate(sourceInterface, new JSONObject().put("ip-address", arguments.get(0))));
+
+                return true;
+            }
+        });
     }
 
     @Override
@@ -63,5 +80,4 @@ public class ICMP extends ApplicationProtocol {
         }
         return null;
     }
-
 }
