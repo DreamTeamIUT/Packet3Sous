@@ -31,7 +31,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/mainUi.fxml"));
-        primaryStage.setTitle("Hello World");
+        primaryStage.setTitle("Packet3Sous");
         primaryStage.setScene(new Scene(root, 300, 275));
         primaryStage.getScene().getStylesheets().add(getClass().getResource("/css/titleMenuItem.css").toExternalForm());
         primaryStage.show();

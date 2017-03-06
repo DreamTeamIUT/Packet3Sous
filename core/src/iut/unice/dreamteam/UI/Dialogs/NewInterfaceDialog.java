@@ -1,5 +1,8 @@
 package iut.unice.dreamteam.UI.Dialogs;
 
+import iut.unice.dreamteam.Equipments.Equipment;
+import iut.unice.dreamteam.Equipments.Hub;
+import iut.unice.dreamteam.Equipments.Switch;
 import iut.unice.dreamteam.Interfaces.Interface;
 import iut.unice.dreamteam.Network;
 import iut.unice.dreamteam.UI.Adapaters.TableInterface;
@@ -45,14 +48,14 @@ public class NewInterfaceDialog extends Stage implements Initializable {
     @FXML
     GridPane basicInfo;
 
-
+    private Equipment equipment;
     private ArrayList<TableInterface> tableInterfaces;
 
-    public NewInterfaceDialog(int currentInterfaceNumber) {
+    public NewInterfaceDialog(int currentInterfaceNumber, Equipment equipment) {
         setTitle("Add a new interface");
         this.currentInterfaceNumber = currentInterfaceNumber;
         this.tableInterfaces = new ArrayList<>();
-
+        this.equipment =  equipment;
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/newInterfaceDialog.fxml"));
         fxmlLoader.setController(this);
 
@@ -79,6 +82,10 @@ public class NewInterfaceDialog extends Stage implements Initializable {
         setupCheckbox();
         setupNumberTextField();
 
+        if (this.equipment instanceof Switch || this.equipment instanceof Hub) {
+            passiveInt.setSelected(true);
+            passiveInt.setDisable(true);
+        }
     }
 
     private void setupNumberTextField() {

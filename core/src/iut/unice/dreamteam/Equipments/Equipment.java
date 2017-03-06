@@ -332,4 +332,20 @@ public abstract class Equipment {
         }
         return null;
     }
+
+    public static Class typeFromString(String string) {
+        switch (string) {
+            case "Router":
+                return Router.class;
+            case "Switch":
+                return Switch.class;
+            case "Hub":
+                return Hub.class;
+            case "Computer":
+                return Computer.class;
+            case "Access Point":
+                return AccessPoint.class;
+        }
+        return null;
+    }
 }
