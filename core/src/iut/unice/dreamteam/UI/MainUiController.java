@@ -2,6 +2,7 @@ package iut.unice.dreamteam.UI;
 
 import iut.unice.dreamteam.ApplicationStates;
 import iut.unice.dreamteam.Equipments.Equipment;
+import iut.unice.dreamteam.Equipments.Switch;
 import iut.unice.dreamteam.Network;
 import iut.unice.dreamteam.UI.Dialogs.EquipmentDialog;
 import iut.unice.dreamteam.UI.Listeners.OnActionListener;
@@ -94,13 +95,13 @@ public class MainUiController implements Initializable {
             @Override
             public void handle(DragEvent event) {
                 Dragboard db = event.getDragboard();
-                Debug.log("droped on x:" + event.getSceneX() + " y:" + event.getSceneY());
+                Debug.log("dropped on x:" + event.getSceneX() + " y:" + event.getSceneY());
 
                 if (db.hasString()) {
                     Debug.log(db.getString());
                     event.setDropCompleted(true);
 
-                    EquipmentDialog dialog = new EquipmentDialog(db.getString());
+                    EquipmentDialog dialog = new EquipmentDialog(db.getString(), network.getEquipmentByType(Equipment.typeFromString(db.getString())).size());
                     dialog.showAndWait();
 
                     Equipment result = dialog.getResult();

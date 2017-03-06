@@ -19,8 +19,7 @@ public class Network {
 
     private ArrayList<Equipment> equipments;
 
-    public Network() {
-        equipments = new ArrayList<>();
+    public Network() {equipments = new ArrayList<>();
     }
 
     public static Boolean isInSameNetwork(String ipSource, String ipDest, String mask) {
@@ -82,5 +81,15 @@ public class Network {
         }
 
         this.equipments.remove(equipment);
+    }
+
+    public ArrayList getEquipmentByType(Class aClass) {
+        ArrayList <Equipment> sameType = new ArrayList<>();
+       for(Equipment equipment : equipments){
+           if (equipment.getClass().equals(aClass)){
+               sameType.add(equipment);
+           }
+       }
+        return sameType;
     }
 }
