@@ -44,7 +44,12 @@ public class EquipmentCliDialog extends Stage implements Initializable {
         this.history = new ArrayList<>();
         this.equipment = e;
 
-        this.commandInterpreter = new CommandInterpreter(e);
+        this.commandInterpreter = new CommandInterpreter(e, new CommandInterpreter.ResultCommandListener() {
+            @Override
+            public void onMessage(String text) {
+                EquipmentCliDialog.this.result.appendText("\n " + text);
+            }
+        });
 
         setTitle("Command line interface for " + e.getName());
 

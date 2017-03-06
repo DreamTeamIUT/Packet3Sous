@@ -19,6 +19,9 @@ public class Computer extends Equipment implements IncomingPacketInterface {
         setIncomingPacketInterface(this);
 
         addProtocols(new ArrayList<>(Arrays.asList("FTP", "HTTP", "ICMP")));
+
+        startService("ICMP");
+        startService("ICMP", true);
     }
 
     @Override

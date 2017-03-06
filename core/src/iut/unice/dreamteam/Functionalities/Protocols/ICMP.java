@@ -10,6 +10,7 @@ import iut.unice.dreamteam.Utils.Debug;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.StringJoiner;
 
 public class ICMP extends ApplicationProtocol {
 
@@ -20,24 +21,26 @@ public class ICMP extends ApplicationProtocol {
 
         addCommand("ping", new CommandInterpreter.CommandExecution() {
             @Override
-            public Boolean execute(Equipment equipment, String command, ArrayList<String> arguments) {
+            public String execute(Equipment equipment, String command, ArrayList<String> arguments, CommandInterpreter commandInterpreter) {
                 if (arguments.size() < 1) {
                     if(haveCommandInterpreter())
                         getCommandInterpreter().resultFromCommand(ICMP.this, "Missing ip address");
 
-                    return false;
+                    return null;
                 }
 
                 if (equipment.existService("icmp-client")) {
-                    if(haveCommandInterpreter())
-                        getCommandInterpreter().resultFromCommand(ICMP.this, "Sending ICMP packet to " + arguments.get(0));
-
                     Interface sourceInterface = (arguments.size() == 2 && arguments.get(1).contains("eth")) ? equipment.getInterface(arguments.get(1).substring(3, 1)) : equipment.getDefaultGateway();
 
+                    Debug.log("source ip : " + sourceInterface.getIp() + " " + sourceInterface.getMask());
+
+                    equipment.getService("icmp-client").getApplicationProtocol().setCommandInterpreter(commandInterpreter);
                     equipment.getService("icmp-client").initiateProtocol(equipment, sourceInterface, new JSONObject().put("ip-address", arguments.get(0)));
+
+                    return equipment.getService("icmp-client").getApplicationProtocol().getExecutionId();
                 }
 
-                return true;
+                return null;
             }
         });
     }
@@ -56,6 +59,9 @@ public class ICMP extends ApplicationProtocol {
 
         p.setApplicationLayer(new ApplicationLayer(answer));
         p.setIpLayer(new IpLayer(i.getIp(), parameters.getString("ip-address")));
+
+        if(haveCommandInterpreter())
+            getCommandInterpreter().resultFromCommand(ICMP.this, "Sending ICMP packet to " + parameters.getString("ip-address"));
 
         return p;
     }
@@ -80,6 +86,12 @@ public class ICMP extends ApplicationProtocol {
             backPacket.setApplicationLayer(new ApplicationLayer(answer));
             backPacket.setIpLayer(new IpLayer(i.getIp(), p.getIpLayer().getSource()));
             return backPacket;
+        }
+        else if(protocol.getString("message").equals("ECHO-REPLY")) {
+            Debug.log("reply ping");
+
+            if(haveCommandInterpreter())
+                getCommandInterpreter().resultFromCommand(ICMP.this, "Reply from " + p.getIpLayer().getSource() + " in 1ms");
         }
         return null;
     }

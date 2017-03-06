@@ -12,6 +12,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Line;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class CanvasDrawer {
     private final ArrayList<DrawableEquipment> elementsToDraw;
@@ -24,6 +26,9 @@ public class CanvasDrawer {
     private Line tempLine;
     private ArrayList<Line> links;
 
+    private Timer networkTimer;
+    private int timeRender;
+
     public CanvasDrawer(final AnchorPane mainPane, ArrayList<DrawableEquipment> n, Network network) {
         this.network = network;
         this.elementsToDraw = n;
@@ -35,6 +40,9 @@ public class CanvasDrawer {
         tempLine = new Line();
         tempLine.setVisible(false);
         tempLine.setStrokeWidth(1.5);
+
+        timeRender = 2000;
+
         mainPane.getChildren().add(tempLine);
 
         update();
@@ -64,21 +72,42 @@ public class CanvasDrawer {
     }
 
     public void stopRender() {
+        /*
         if (timer != null) {
             timer.stop();
         }
+        */
+
+        if(networkTimer != null)
+            networkTimer.cancel();
     }
 
     public void startRender() {
+        /*
         startNanoTime = System.nanoTime();
         timer = new AnimationTimer() {
             public void handle(long currentNanoTime) {
                 double t = (currentNanoTime - startNanoTime) / 1000000000.0;
 
                 //draw();
+
+                network.updateEquipments();
             }
         };
         timer.start();
+        */
+
+        stopRender();
+
+        networkTimer = new Timer();
+
+        networkTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                Debug.log("loop");
+                network.updateEquipments();
+            }
+        }, 0, timeRender);
     }
 
     public Network getNetwork() {

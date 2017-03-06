@@ -4,6 +4,7 @@ import iut.unice.dreamteam.Interfaces.*;
 import iut.unice.dreamteam.Network;
 import iut.unice.dreamteam.NetworkLayers.MacLayer;
 import iut.unice.dreamteam.Utils.Debug;
+import sun.nio.ch.Net;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,7 +36,9 @@ public class Router extends Equipment implements IncomingPacketInterface {
 
     @Override
     public void onUnicast(Interface i, Packet p) {
+        Debug.log("unicast");
 
+        analyzeProtocol(i, p);
     }
 
     @Override
@@ -58,7 +61,11 @@ public class Router extends Equipment implements IncomingPacketInterface {
 
     @Override
     public void sendPacket(Packet packet) {
-        getInterface(packet.getIpLayer().getDestination()).sendPacket(packet);
+        if (existInterface(packet.getIpLayer().getDestination()))
+            getInterface(packet.getIpLayer().getDestination()).sendPacket(packet);
+        else {
+            Debug.log("not exist path for this ip destination : " + packet.getIpLayer().getDestination());
+        }
     }
 
     @Override
@@ -72,6 +79,20 @@ public class Router extends Equipment implements IncomingPacketInterface {
             }
 
             return null;
+        }
+    }
+
+    @Override
+    public Boolean existInterface(String ip) {
+        if (directlyConnected(ip))
+            return super.existInterface(ip);
+        else {
+            for (Route route : routes) {
+                if (Network.isInSameNetwork(route.getNetwork(), ip, route.getMask()))
+                    return true;
+            }
+
+            return false;
         }
     }
 

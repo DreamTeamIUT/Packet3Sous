@@ -12,9 +12,13 @@ public class CommandInterpreter {
     private Equipment equipment;
     private String executionId;
 
-    public CommandInterpreter(Equipment equipment) {
+    private ResultCommandListener resultCommandListener;
+
+    public CommandInterpreter(Equipment equipment, ResultCommandListener resultCommandListener) {
         this.equipment = equipment;
         this.executionId = null;
+
+        this.resultCommandListener = resultCommandListener;
     }
 
     public void executeCommand(String enteredCommand) {
@@ -42,21 +46,39 @@ public class CommandInterpreter {
         if (ApplicationProtocols.getInstance().existCommand(command)) {
             Debug.log("exist command : " + command);
 
+            /*
             ApplicationProtocol applicationProtocol = ApplicationProtocols.getInstance().getProtocolFromCommand(command);
+
+            executionId = applicationProtocol.getExecutionId();
+
+            applicationProtocol.setCommandInterpreter(this);
             applicationProtocol.executeCommand(equipment, command, arguments);
+            */
+
+            executionId = ApplicationProtocols.getInstance().getProtocolFromCommand(command).executeCommand(equipment, command, arguments, this);
+
+            Debug.log("executionId: " + executionId);
         }
     }
 
     public void resultFromCommand(ApplicationProtocol applicationProtocol, String text) {
-        if (!applicationProtocol.getExecutionId().equals(executionId))
+        Debug.log("resultFromCommand : " + text + " " + applicationProtocol.getExecutionId());
+
+        if (!applicationProtocol.getExecutionId().equals(executionId) && !applicationProtocol.usedAsServer())
             return;
 
         Debug.log("result from command : " + text);
+
+        resultCommandListener.onMessage(text);
 
         //DISPLAY TEXT
     }
 
     public interface CommandExecution {
-        Boolean execute(Equipment equipment, String command, ArrayList<String> arguments);
+        String execute(Equipment equipment, String command, ArrayList<String> arguments, CommandInterpreter commandInterpreter);
+    }
+
+    public interface ResultCommandListener {
+        void onMessage(String text);
     }
 }

@@ -16,6 +16,8 @@ public abstract class ApplicationProtocol {
     private String name;
     private TransportProtocol transportProtocol;
 
+    private Boolean usedAsServer;
+
     private HashMap<String, CommandInterpreter.CommandExecution> commands;
 
     private CommandInterpreter commandInterpreter;
@@ -24,6 +26,7 @@ public abstract class ApplicationProtocol {
         setExecutionId(UUID.randomUUID().toString());
         setName(name);
         setUDP();
+        setUsedAsServer(false);
 
         commands = new HashMap<>();
     }
@@ -80,11 +83,11 @@ public abstract class ApplicationProtocol {
         return this.commands.containsKey(command);
     }
 
-    public Boolean executeCommand(Equipment equipment, String command, ArrayList<String> arguments) {
+    public String executeCommand(Equipment equipment, String command, ArrayList<String> arguments, CommandInterpreter commandInterpreter) {
         if (!hasCommand(command))
-            return false;
+            return null;
 
-        return this.commands.get(command).execute(equipment, command, arguments);
+        return this.commands.get(command).execute(equipment, command, arguments, commandInterpreter);
     }
 
     CommandInterpreter getCommandInterpreter() {
@@ -97,5 +100,13 @@ public abstract class ApplicationProtocol {
 
     public void setCommandInterpreter(CommandInterpreter commandInterpreter) {
         this.commandInterpreter = commandInterpreter;
+    }
+
+    public Boolean usedAsServer() {
+        return usedAsServer;
+    }
+
+    public void setUsedAsServer(Boolean usedAsServer) {
+        this.usedAsServer = usedAsServer;
     }
 }
