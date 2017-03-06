@@ -92,4 +92,16 @@ public class Network {
        }
         return sameType;
     }
+
+    public static String getNaturalMask(String text) {
+        String tab[] = text.split(Pattern.quote("."));
+        int firstByte = Integer.parseInt(tab[0]);
+        if(firstByte <= 127) {
+        return "255.0.0.0";
+        }else if(firstByte >= 128 && firstByte <= 191){
+            return "255.255.0.0";
+        }else{
+            return "255.255.255.0";
+        }
+    }
 }

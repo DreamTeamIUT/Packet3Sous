@@ -6,6 +6,7 @@ import iut.unice.dreamteam.Equipments.Switch;
 import iut.unice.dreamteam.Interfaces.Interface;
 import iut.unice.dreamteam.Network;
 import iut.unice.dreamteam.UI.Adapaters.TableInterface;
+import iut.unice.dreamteam.Utils.Debug;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -48,6 +49,7 @@ public class NewInterfaceDialog extends Stage implements Initializable {
     @FXML
     GridPane basicInfo;
 
+    private boolean natMask = false;
     private Equipment equipment;
     private ArrayList<TableInterface> tableInterfaces;
 
@@ -86,6 +88,7 @@ public class NewInterfaceDialog extends Stage implements Initializable {
             passiveInt.setSelected(true);
             passiveInt.setDisable(true);
         }
+        naturalMask();
     }
 
     private void setupNumberTextField() {
@@ -173,5 +176,17 @@ public class NewInterfaceDialog extends Stage implements Initializable {
 
     public void cancelDialog() {
         this.close();
+    }
+
+    public void naturalMask(){
+        ip.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (newValue == false && natMask == false){
+                    mask.setText(Network.getNaturalMask(ip.getText()));
+                    natMask = true;
+                }
+            }
+        });
     }
 }
