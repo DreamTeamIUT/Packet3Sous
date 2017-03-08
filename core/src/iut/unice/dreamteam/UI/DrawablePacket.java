@@ -15,17 +15,17 @@ public class DrawablePacket extends ImageView {
         super();
         setPreserveRatio(true);
         setImage(new Image(getClass().getResource("/packet/frame.png").toExternalForm()));
-
+        this.packet = packet;
         Lighting lighting = new Lighting();
         lighting.setDiffuseConstant(1.0);
         lighting.setSpecularConstant(0.0);
         lighting.setSpecularExponent(0.0);
         lighting.setSurfaceScale(0.0);
-        lighting.setLight(new Light.Distant(45, 45, ColorUtils.getRandomColor()));
+        lighting.setLight(new Light.Distant(45, 45, ColorUtils.getColor(packet.getPacketId())));
 
         setEffect(lighting);
 
-        this.packet = packet;
+
     }
 
     public DrawablePacket setX(float x) {
