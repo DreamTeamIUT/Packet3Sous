@@ -14,4 +14,7 @@ public class ColorUtils {
 
         return Color.color(r,g,b);
     }
+    public static Color getColor(String id){
+        return Color.web("#" + id.substring(0,6));
+    }
 }
