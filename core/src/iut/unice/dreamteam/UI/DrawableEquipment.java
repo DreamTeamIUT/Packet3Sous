@@ -20,11 +20,11 @@ import javafx.scene.layout.AnchorPane;
 
 import java.util.ArrayList;
 
-public class DrawableEquipment extends ImageView {
+public class DrawableEquipment extends ImageView implements OnUpdateListener {
 
 
     private Equipment equipment;
-    private OnUpdateListener updateListenner;
+    private OnUpdateListener onUpdateListener;
     private double mouseX;
     private double mouseY;
     private OnActionListener actionsListener;
@@ -33,7 +33,9 @@ public class DrawableEquipment extends ImageView {
 
     public DrawableEquipment(Equipment e) {
         super(DrawableLoader.getInstance().getEquipmentDrawable(e));
+
         this.equipment = e;
+        this.equipment.setInterfaceUpdater(this);
 
         packets = new ArrayList<>();
 
@@ -47,8 +49,8 @@ public class DrawableEquipment extends ImageView {
                     InterfaceContextMenu menu = new InterfaceContextMenu(equipment, new OnUpdateListener() {
                         @Override
                         public void onUpdate() {
-                            if (updateListenner != null)
-                                updateListenner.onUpdate();
+                            if (onUpdateListener != null)
+                                onUpdateListener.onUpdate();
                         }
                     });
                     menu.show(DrawableEquipment.this, event.getScreenX(), event.getScreenY());
@@ -62,7 +64,7 @@ public class DrawableEquipment extends ImageView {
             @Override
             public void handle(ContextMenuEvent event) {
                 DeviceContextMenu menu = new DeviceContextMenu(getEquipment());
-                menu.setUpdateListenner(updateListenner);
+                menu.setUpdateListenner(onUpdateListener);
                 menu.setDeleteAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
@@ -109,24 +111,43 @@ public class DrawableEquipment extends ImageView {
                 mouseX = event.getSceneX();
                 mouseY = event.getSceneY();
 
-                updateListenner.onUpdate();
+                onUpdateListener.onUpdate();
             }
         });
 
     }
 
     public void update() {
+        Debug.log("UPDATING PACKETS ON " + equipment.getName());
+
         packets.clear();
+
         for (Interface element : equipment.getInterfaces()) {
             for (PacketOnEquipment packetOnEquipment : element.getPacketsManager().getPackets()) {
-                DrawablePacket drawablePacket = new DrawablePacket(packetOnEquipment.getPacket());
-                drawablePacket.setTo((float) this.getX(), (float) this.getY());
-                packets.add(drawablePacket);
+                if (!packetOnEquipment.getPacketProperties().isSent()) {
+                    Debug.log("PACKET WAITING FOR SEND ON " + equipment.getName());
+
+                    DrawablePacket drawablePacket = new DrawablePacket(packetOnEquipment.getPacket());
+                    drawablePacket.setTo((float) this.getX(), (float) this.getY());
+                    packets.add(drawablePacket);
+                }
+            }
+
+            for (PacketOnEquipment packetOnEquipment : element.getPacketsManager().getReceivedPackets()) {
+                if (!packetOnEquipment.getPacketProperties().isDisplayed()) {
+                    Debug.log("PACKET RECEIVED ON " + equipment.getName());
+
+                    packetOnEquipment.getPacketProperties().setDisplayed();
+
+                    DrawablePacket drawablePacket = new DrawablePacket(packetOnEquipment.getPacket());
+                    drawablePacket.setTo((float) this.getX(), (float) this.getY());
+                    packets.add(drawablePacket);
+                }
             }
         }
     }
 
-    public  ArrayList<DrawablePacket> getDrawablePackets(){
+    public ArrayList<DrawablePacket> getDrawablePackets(){
         return packets;
     }
 
@@ -157,8 +178,13 @@ public class DrawableEquipment extends ImageView {
         return this.getImage();
     }
 
-    public DrawableEquipment setUpdateListener(OnUpdateListener listener) {
-        this.updateListenner = listener;
+    public void updateListener() {
+        if (this.onUpdateListener != null)
+            this.onUpdateListener.onUpdate();
+    }
+
+    public DrawableEquipment setOnUpdateListener(OnUpdateListener listener) {
+        this.onUpdateListener = listener;
         return this;
     }
 
@@ -173,5 +199,13 @@ public class DrawableEquipment extends ImageView {
     public DrawableEquipment setActionsListener(OnActionListener actionsListener) {
         this.actionsListener = actionsListener;
         return this;
+    }
+
+    @Override
+    public void onUpdate() {
+        Debug.log("on update drawable equipment");
+
+        update();
+        updateListener();
     }
 }

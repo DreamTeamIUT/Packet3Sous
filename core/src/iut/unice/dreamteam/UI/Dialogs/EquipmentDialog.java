@@ -87,7 +87,7 @@ public class EquipmentDialog extends Stage implements Initializable {
         this.equipmentName = equipement;
 
         init();
-
+        addInterface();
     }
 
     public EquipmentDialog(Equipment e) {

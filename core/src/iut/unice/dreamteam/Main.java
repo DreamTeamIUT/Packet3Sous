@@ -44,6 +44,7 @@ public class Main extends Application {
     public static void main(String[] args) {
         launch(args);
 
+        /*
         final Network n = new Network();
 
         Equipment computer1 = new Computer("PC 01");
@@ -121,7 +122,7 @@ public class Main extends Application {
         computer1.sendPacket(packet);
         */
 
-        Debug.log("exist ICMP service : " + computer1.existService("icmp-client"));
+        //Debug.log("exist ICMP service : " + computer1.existService("icmp-client"));
 
         /*
         if (computer1.existService("icmp-client")) {
@@ -129,6 +130,7 @@ public class Main extends Application {
         }
         */
 
+        /*
         Debug.log("exist ICMP service : " + router1.existService("icmp-client"));
 
         if (router1.existService("icmp-client")) {
@@ -142,6 +144,7 @@ public class Main extends Application {
                 n.updateEquipments();
             }
         }, 0, 100);
+        */
     }
 }
 

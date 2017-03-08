@@ -5,13 +5,19 @@ import java.util.ArrayList;
 
 public class PacketsManager {
     private ArrayList<PacketOnEquipment> packets;
+    private ArrayList<PacketOnEquipment> receivedPackets;
 
     public PacketsManager() {
         this.packets = new ArrayList<>();
+        this.receivedPackets = new ArrayList<>();
     }
 
     public ArrayList<PacketOnEquipment> getPackets() {
-        return packets;
+        return this.packets;
+    }
+
+    public ArrayList<PacketOnEquipment> getReceivedPackets() {
+        return this.receivedPackets;
     }
 
     public void addPacket(Packet packet) {

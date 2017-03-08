@@ -89,6 +89,8 @@ public class ApplicationService {
         packet.setTransportLayer(new TransportLayer(getApplicationProtocol().getTransportProtocol(), usedPort, (TransportProtocol.validPort(wantedDestinationPort) ? wantedDestinationPort : getApplicationProtocol().getTransportProtocol().getPort())));
 
         equipment.sendPacket(packet);
+        Debug.log("yessssssss");
+        equipment.updateInterface();
     }
 
     public void initiateProtocol(Equipment equipment, Interface i, JSONObject jsonObject) {

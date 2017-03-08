@@ -8,6 +8,7 @@ import iut.unice.dreamteam.NetworkLayers.MacLayer;
 import iut.unice.dreamteam.Functionalities.Protocols.ApplicationProtocol;
 import iut.unice.dreamteam.Functionalities.Protocols.ApplicationProtocols;
 import iut.unice.dreamteam.Functionalities.Protocols.ApplicationService;
+import iut.unice.dreamteam.UI.Listeners.OnUpdateListener;
 import iut.unice.dreamteam.Utils.Debug;
 
 import java.lang.reflect.InvocationTargetException;
@@ -29,7 +30,9 @@ public abstract class Equipment {
 
     private Boolean multipleRoutes;
 
-    public Equipment(String name){
+    private OnUpdateListener onUpdateListener;
+
+    public Equipment(String name) {
         this.name = name;
 
         this.interfaces = new ArrayList<>();
@@ -355,5 +358,14 @@ public abstract class Equipment {
                 return AccessPoint.class;
         }
         return null;
+    }
+
+    public void setInterfaceUpdater(OnUpdateListener onUpdateListener) {
+        this.onUpdateListener = onUpdateListener;
+    }
+
+    public void updateInterface() {
+        if(this.onUpdateListener != null)
+            this.onUpdateListener.onUpdate();
     }
 }

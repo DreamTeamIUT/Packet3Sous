@@ -2,8 +2,6 @@ package iut.unice.dreamteam.UI;
 
 import iut.unice.dreamteam.ApplicationStates;
 import iut.unice.dreamteam.Equipments.Equipment;
-import iut.unice.dreamteam.Main;
-import iut.unice.dreamteam.Equipments.Switch;
 import iut.unice.dreamteam.Network;
 import iut.unice.dreamteam.UI.Dialogs.DirectorySelector;
 import iut.unice.dreamteam.UI.Dialogs.EquipmentDialog;
@@ -23,11 +21,9 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.DirectoryChooser;
 import javafx.util.Callback;
 
 import java.net.URL;
-import java.nio.file.DirectoryIteratorException;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
@@ -118,11 +114,10 @@ public class MainUiController implements Initializable {
                     dialog.showAndWait();
 
                     Equipment result = dialog.getResult();
+
                     if (result != null) {
                         addEquipmentToUI(result, (float) event.getX(), (float) event.getY());
                     }
-
-
                 }
                 event.setDropCompleted(false);
             }
@@ -135,7 +130,7 @@ public class MainUiController implements Initializable {
         drawableEquipments.add(new DrawableEquipment(result)
                 .setX(x)
                 .setY(y)
-                .setUpdateListener(new OnUpdateListener() {
+                .setOnUpdateListener(new OnUpdateListener() {
                     @Override
                     public void onUpdate() {
                         canvasDrawer.update();

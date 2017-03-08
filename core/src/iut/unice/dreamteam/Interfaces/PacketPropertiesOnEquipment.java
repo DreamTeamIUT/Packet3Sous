@@ -5,9 +5,11 @@ public class PacketPropertiesOnEquipment {
     private String waitingId;
 
     private Boolean sent;
+    private Boolean displayed;
 
     public PacketPropertiesOnEquipment() {
         this.sent = false;
+        this.displayed = false;
     }
 
     public String getWaitingId() {
@@ -28,5 +30,13 @@ public class PacketPropertiesOnEquipment {
 
     public void setSent() {
         this.sent = true;
+    }
+
+    public Boolean isDisplayed() {
+        return displayed;
+    }
+
+    public void setDisplayed() {
+        this.displayed = true;
     }
 }

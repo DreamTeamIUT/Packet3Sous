@@ -115,6 +115,8 @@ public class Interface {
     public void receivePacket(Packet p) {
         Debug.equipment(getEquipment(), "receive packet " + p.getPacketId());
 
+        getPacketsManager().getReceivedPackets().add(new PacketOnEquipment(p));
+
         if(arp.isProtocol(p) && !isPassive()) {
             Packet packet = arp.processPacket(this, p);
 

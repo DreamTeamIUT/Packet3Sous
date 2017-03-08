@@ -3,8 +3,6 @@ package iut.unice.dreamteam.UI;
 import iut.unice.dreamteam.ApplicationStates;
 import iut.unice.dreamteam.Equipments.Equipment;
 import iut.unice.dreamteam.Interfaces.Interface;
-import iut.unice.dreamteam.Interfaces.Packet;
-import iut.unice.dreamteam.Interfaces.PacketOnEquipment;
 import iut.unice.dreamteam.Network;
 import iut.unice.dreamteam.Utils.Debug;
 import javafx.animation.AnimationTimer;
@@ -113,22 +111,22 @@ public class CanvasDrawer {
                 Platform.runLater(new Runnable() {
                     @Override
                     public void run() {
-                        update();
+                        drawEquipments();
+                        /*
+                        for (DrawableEquipment d : elementsToDraw) {
+                            for (DrawablePacket dp : d.getDrawablePackets()) {
+                                for (Interface i : d.getEquipment().getInterfaces()){
+                                    if(i.getLink() != null) {
+                                        int index = equipments.indexOf(i.getLink().getOpositInterface(i).getEquipment());
+                                        DrawableEquipment nextHop = elementsToDraw.get(index);
+                                        dp.setTo((float)(nextHop.getX()),(float) (nextHop.getY()));
+                                    }
+                                }
+                            }
+                        }
+                        */
                     }
                 });
-
-                int l;
-                for (DrawableEquipment d : elementsToDraw) {
-                    for (DrawablePacket dp : d.getDrawablePackets()) {
-                        for (Interface i : d.getEquipment().getInterfaces()){
-                                if(i.getLink() != null) {
-                                    int index = equipments.indexOf(i.getLink().getOpositInterface(i).getEquipment());
-                                    DrawableEquipment nextHop = elementsToDraw.get(index);
-                                    dp.setTo((float)(nextHop.getX()),(float) (nextHop.getY()));
-                                }
-                        }
-                    }
-                }
             }
         }, 0, timeRender);
     }
@@ -150,6 +148,7 @@ public class CanvasDrawer {
         Debug.log("UPDATE ! ");
 
         equipments.clear();
+
         for (DrawableEquipment drawableEquipment : elementsToDraw)
             equipments.add(drawableEquipment.getEquipment());
 
@@ -162,23 +161,22 @@ public class CanvasDrawer {
 
     public void draw() {
         drawLinks();
-        drawEquipements();
+        drawEquipments();
     }
 
-    private void drawEquipements() {
+    private void drawEquipments() {
         for (final DrawableEquipment e : elementsToDraw) {
-            if (!mainPane.getChildren().contains(e)){
+            if (!mainPane.getChildren().contains(e)) {
                 mainPane.getChildren().add(e);
             }
 
             e.toFront();
 
             drawPackets(e);
-
         }
     }
 
-    private void drawPackets(DrawableEquipment e){
+    private void drawPackets(DrawableEquipment e) {
         for (DrawablePacket drawablePacket : e.getDrawablePackets()){
             mainPane.getChildren().remove(drawablePacket);
         }
