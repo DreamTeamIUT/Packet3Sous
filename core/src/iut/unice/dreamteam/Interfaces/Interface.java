@@ -5,8 +5,10 @@ import iut.unice.dreamteam.Network;
 import iut.unice.dreamteam.NetworkLayers.MacLayer;
 import iut.unice.dreamteam.Functionalities.Protocols.ARP;
 import iut.unice.dreamteam.Utils.Debug;
+import javafx.application.Platform;
 import org.json.JSONObject;
 
+import java.lang.management.PlatformLoggingMXBean;
 import java.util.Random;
 
 
@@ -117,6 +119,8 @@ public class Interface {
 
         getPacketsManager().getReceivedPackets().add(new PacketOnEquipment(p));
 
+        //getEquipment().updateInterface();
+
         if(arp.isProtocol(p) && !isPassive()) {
             Packet packet = arp.processPacket(this, p);
 
@@ -168,6 +172,8 @@ public class Interface {
             }
         }
 
+        //getEquipment().updateInterface();
+
         //launchQueue();
     }
 
@@ -209,18 +215,23 @@ public class Interface {
 
     public void launchQueue() {
         for (PacketOnEquipment packetOnEquipment : packetsManager.getPackets()) {
-            //Debug.equipment(getEquipment(), "queuing");
-            //Debug.log(packetOnEquipment.getPacket().getApplicationLayer().getContent() + " " + packetOnEquipment.getPacketProperties().isSent() + " " + packetOnEquipment.getPacketProperties().isWaiting());
+            if(packetOnEquipment.getPacketProperties().isJustCreated()) {
+                packetOnEquipment.getPacketProperties().setNotJustCreated();
+            }
+            else {
+                //Debug.equipment(getEquipment(), "queuing");
+                //Debug.log(packetOnEquipment.getPacket().getApplicationLayer().getContent() + " " + packetOnEquipment.getPacketProperties().isSent() + " " + packetOnEquipment.getPacketProperties().isWaiting());
 
-            if (!packetOnEquipment.getPacketProperties().isSent() && !packetOnEquipment.getPacketProperties().isWaiting()) {
-                Debug.equipment(getEquipment(), "send packet " + packetOnEquipment.getPacket().getPacketId());
+                if (!packetOnEquipment.getPacketProperties().isSent() && !packetOnEquipment.getPacketProperties().isWaiting()) {
+                    Debug.equipment(getEquipment(), "send packet " + packetOnEquipment.getPacket().getPacketId());
 
-                packetOnEquipment.getPacketProperties().setSent();
+                    packetOnEquipment.getPacketProperties().setSent();
 
-                if(isUp() && isConnected())
-                    link.sendPacket(this, packetOnEquipment.getPacket());
+                    if (isUp() && isConnected())
+                        link.sendPacket(this, packetOnEquipment.getPacket());
 
-                return;
+                    return;
+                }
             }
         }
     }

@@ -22,6 +22,8 @@ import java.util.ArrayList;
 
 public class DrawableEquipment extends ImageView implements OnUpdateListener {
 
+    private final int SHIFT_PACKET = 20;
+    private final int SHIFT_NEW_PACKET = 15;
 
     private Equipment equipment;
     private OnUpdateListener onUpdateListener;
@@ -30,6 +32,7 @@ public class DrawableEquipment extends ImageView implements OnUpdateListener {
     private OnActionListener actionsListener;
 
     private ArrayList<DrawablePacket> packets;
+    private int shiftQueue;
 
     public DrawableEquipment(Equipment e) {
         super(DrawableLoader.getInstance().getEquipmentDrawable(e));
@@ -38,6 +41,8 @@ public class DrawableEquipment extends ImageView implements OnUpdateListener {
         this.equipment.setInterfaceUpdater(this);
 
         packets = new ArrayList<>();
+
+        shiftQueue = 0;
 
         setPreserveRatio(true);
 
@@ -121,15 +126,18 @@ public class DrawableEquipment extends ImageView implements OnUpdateListener {
         Debug.log("UPDATING PACKETS ON " + equipment.getName());
 
         packets.clear();
+        shiftQueue = 0;
 
         for (Interface element : equipment.getInterfaces()) {
             for (PacketOnEquipment packetOnEquipment : element.getPacketsManager().getPackets()) {
                 if (!packetOnEquipment.getPacketProperties().isSent()) {
                     Debug.log("PACKET WAITING FOR SEND ON " + equipment.getName());
 
-                    DrawablePacket drawablePacket = new DrawablePacket(packetOnEquipment.getPacket());
-                    drawablePacket.setTo((float) this.getX(), (float) this.getY());
-                    packets.add(drawablePacket);
+                    DrawablePacket dp = new DrawablePacket(packetOnEquipment.getPacket());
+                    dp.setTo((float) this.getX(), (float) this.getY() - SHIFT_PACKET - shiftQueue);
+                    packets.add(dp);
+
+                    shiftQueue += SHIFT_NEW_PACKET;
                 }
             }
 
@@ -139,9 +147,11 @@ public class DrawableEquipment extends ImageView implements OnUpdateListener {
 
                     packetOnEquipment.getPacketProperties().setDisplayed();
 
-                    DrawablePacket drawablePacket = new DrawablePacket(packetOnEquipment.getPacket());
-                    drawablePacket.setTo((float) this.getX(), (float) this.getY());
-                    packets.add(drawablePacket);
+                    DrawablePacket dp = new DrawablePacket(packetOnEquipment.getPacket());
+                    dp.setTo((float) this.getX(), (float) this.getY() - SHIFT_PACKET - shiftQueue);
+                    packets.add(dp);
+
+                    shiftQueue += SHIFT_NEW_PACKET;
                 }
             }
         }

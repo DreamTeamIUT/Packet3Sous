@@ -4,6 +4,7 @@ import iut.unice.dreamteam.ApplicationStates;
 import iut.unice.dreamteam.Equipments.Equipment;
 import iut.unice.dreamteam.Interfaces.Interface;
 import iut.unice.dreamteam.Network;
+import iut.unice.dreamteam.UI.Listeners.OnDeviceResultListenner;
 import iut.unice.dreamteam.Utils.Debug;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
@@ -30,6 +31,9 @@ public class CanvasDrawer {
     private Timer networkTimer;
     private int timeRender;
 
+    private Timer interfaceTimer;
+    private int timeInterface;
+
     public CanvasDrawer(final AnchorPane mainPane, ArrayList<DrawableEquipment> n, Network network) {
         this.network = network;
         this.elementsToDraw = n;
@@ -43,6 +47,7 @@ public class CanvasDrawer {
         tempLine.setStrokeWidth(1.5);
 
         timeRender = 2000;
+        timeInterface = 500;
 
         mainPane.getChildren().add(tempLine);
 
@@ -81,6 +86,9 @@ public class CanvasDrawer {
 
         if(networkTimer != null)
             networkTimer.cancel();
+
+        if(interfaceTimer != null)
+            interfaceTimer.cancel();
     }
 
     public void startRender() {
@@ -108,10 +116,12 @@ public class CanvasDrawer {
                 Debug.log("loop");
                 network.updateEquipments();
 
+                /*
                 Platform.runLater(new Runnable() {
                     @Override
                     public void run() {
-                        drawEquipments();
+                        //drawEquipments();
+
                         /*
                         for (DrawableEquipment d : elementsToDraw) {
                             for (DrawablePacket dp : d.getDrawablePackets()) {
@@ -125,10 +135,26 @@ public class CanvasDrawer {
                             }
                         }
                         */
+                /*
+                    }
+                });
+        */
+            }
+        }, 0, timeRender);
+
+        interfaceTimer = new Timer();
+
+        interfaceTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        drawEquipments();
                     }
                 });
             }
-        }, 0, timeRender);
+        }, 0, timeInterface);
     }
 
     public Boolean startedRender() {
@@ -144,7 +170,6 @@ public class CanvasDrawer {
     }
 
     public void update() {
-
         Debug.log("UPDATE ! ");
 
         equipments.clear();
@@ -225,4 +250,3 @@ public class CanvasDrawer {
     }
 
 }
-

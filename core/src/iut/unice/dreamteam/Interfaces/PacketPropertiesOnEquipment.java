@@ -5,11 +5,14 @@ public class PacketPropertiesOnEquipment {
     private String waitingId;
 
     private Boolean sent;
+    private Boolean justCreated;
     private Boolean displayed;
 
     public PacketPropertiesOnEquipment() {
         this.sent = false;
         this.displayed = false;
+
+        this.justCreated = true;
     }
 
     public String getWaitingId() {
@@ -38,5 +41,13 @@ public class PacketPropertiesOnEquipment {
 
     public void setDisplayed() {
         this.displayed = true;
+    }
+
+    public Boolean isJustCreated() {
+        return justCreated;
+    }
+
+    public void setNotJustCreated() {
+        this.justCreated = false;
     }
 }
