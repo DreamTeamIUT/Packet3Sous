@@ -149,8 +149,8 @@ public class MainUiController implements Initializable {
                     public void onDuplicate(DrawableEquipment drawableEquipment) {
                         Equipment e = Equipment.clone(drawableEquipment.getEquipment());
                         if (e != null)
-                            addEquipmentToUI(e, (float) drawableEquipment.getX() + 2 * (float) drawableEquipment.getEquipmentDrawable().getWidth(),
-                                    (float) drawableEquipment.getY() + 2 * (float) drawableEquipment.getEquipmentDrawable().getHeight());
+                            addEquipmentToUI(e, (float) drawableEquipment.getLayoutX() + 2 * (float) drawableEquipment.getEquipmentDrawable().getWidth(),
+                                    (float) drawableEquipment.getLayoutY() + 2 * (float) drawableEquipment.getEquipmentDrawable().getHeight());
                     }
                 })
         );

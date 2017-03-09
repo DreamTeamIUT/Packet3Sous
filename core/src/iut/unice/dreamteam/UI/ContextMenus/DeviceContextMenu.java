@@ -51,6 +51,8 @@ public class DeviceContextMenu extends CustomContextMenu {
                 EquipmentDialog dialog  = new EquipmentDialog(equipement);
 
                 dialog.showAndWait();
+
+                updateListenner.onUpdate();
             }
         });
 
