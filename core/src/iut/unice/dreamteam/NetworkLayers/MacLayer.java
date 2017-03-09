@@ -38,7 +38,7 @@ public class MacLayer extends GenericLayer {
         this.destination = destination;
     }
 
-    public int getLenght() {
+    public int getLength() {
         return lenght;
     }
 

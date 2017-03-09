@@ -109,7 +109,7 @@ public abstract class Equipment {
         System.out.println("--------");
         System.out.println(getName() + " : receive packet\n" + p);
 
-        if (MacLayer.isBroadcastAddress(p.getMacLayer().getSource())) {
+        if (MacLayer.isBroadcastAddress(p.getMacLayer().getDestination())) {
             System.out.println("broadcast packet");
 
             if(this.incomingPacketInterface != null)

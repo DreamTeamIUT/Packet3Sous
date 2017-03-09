@@ -25,7 +25,12 @@ public class Switch extends Equipment implements IncomingPacketInterface {
 
     @Override
     public void onBroadcast(Interface i, Packet p) {
+        Debug.log("on broadcast");
 
+        for (Interface iface : getInterfaces()){
+            if (!iface.getMacAddress().equals(i.getMacAddress()))
+                iface.sendPacket(p);
+        }
     }
 
     @Override
@@ -52,7 +57,6 @@ public class Switch extends Equipment implements IncomingPacketInterface {
                     iface.sendPacket(p);
             }
         }
-
     }
 
     private void updateTable(Interface i, Packet p) {
