@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="136.0" prefWidth="266.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox prefHeight="366.0" prefWidth="246.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <GridPane fx:id="basicInfo" prefHeight="201.0" prefWidth="246.0">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="140.0" minWidth="10.0" prefWidth="114.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="132.0" minWidth="10.0" prefWidth="132.0" />
+              </columnConstraints>
+              <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Label text="Mask" GridPane.rowIndex="1" />
+                  <Label text="Network" />
+                  <TextField fx:id="network" promptText="192.168.0.3" GridPane.columnIndex="1" />
+                  <TextField fx:id="mask" promptText="255.255.255.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Label text="Next Hop" GridPane.rowIndex="2" />
+                  <TextField fx:id="nexthop" promptText="192.168.0.254" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+               </children>
+            </GridPane>
+            <HBox maxHeight="-Infinity" maxWidth="+Infinity" minHeight="-Infinity" minWidth="-Infinity">
+               <children>
+                  <Pane maxWidth="+Infinity" HBox.hgrow="ALWAYS" />
+                  <Button fx:id="cancelButton" cancelButton="true" minWidth="80.0" mnemonicParsing="false" onAction="#cancelDialog" text="Cancel" HBox.hgrow="NEVER">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </Button>
+                  <HBox fx:id="okParent" alignment="CENTER">
+                     <children>
+                        <Button fx:id="okButton" minWidth="80.0" mnemonicParsing="false" onAction="#validateDialog" text="Add" HBox.hgrow="NEVER">
+                           <HBox.margin>
+                              <Insets left="14.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                  </HBox>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

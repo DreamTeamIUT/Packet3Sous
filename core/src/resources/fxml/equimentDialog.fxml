@@ -70,9 +70,23 @@
                         </AnchorPane>
                   </content>
                 </Tab>
-                <Tab text="Untitled Tab 2">
+                <Tab fx:id="routesTab" disable="true" text="Routes">
                   <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <TableView fx:id="routesTables" editable="true" prefHeight="272.0" prefWidth="600.0">
+                                 <columns>
+                                    <TableColumn fx:id="routeNetwork" editable="false" prefWidth="75.0" text="Network" />
+                                    <TableColumn fx:id="routeMask" editable="false" prefWidth="75.0" text="Mask" />
+                                    <TableColumn fx:id="routeNextHop" editable="false" prefWidth="75.0" text="Next Hop" />
+                                 </columns>
+                                 <columnResizePolicy>
+                                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                 </columnResizePolicy>
+                              </TableView>
+                              <Button fx:id="addRoute" alignment="CENTER" mnemonicParsing="false" onAction="#addRoute" text="+" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                              <Button fx:id="delRoute" alignment="CENTER" disable="true" layoutX="2.0" layoutY="2.0" mnemonicParsing="false" onAction="#delRoute" text="-" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="40.0" />
+                           </children></AnchorPane>
                   </content>
                 </Tab>
               </tabs>

@@ -2,13 +2,10 @@ package iut.unice.dreamteam.Equipments;
 
 import iut.unice.dreamteam.Interfaces.*;
 import iut.unice.dreamteam.Network;
-import iut.unice.dreamteam.NetworkLayers.MacLayer;
 import iut.unice.dreamteam.Utils.Debug;
-import sun.nio.ch.Net;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 
 
 public class Router extends Equipment implements IncomingPacketInterface {
@@ -54,8 +51,7 @@ public class Router extends Equipment implements IncomingPacketInterface {
             packet.setIpLayer(p.getIpLayer());
 
             sendPacket(packet);
-        }
-        else
+        } else
             Debug.log("can't find destination");
     }
 
@@ -70,11 +66,11 @@ public class Router extends Equipment implements IncomingPacketInterface {
 
     @Override
     public Interface getInterface(String ip) {
-        if(directlyConnected(ip))
+        if (directlyConnected(ip))
             return super.getInterface(ip);
         else {
             for (Route route : routes) {
-                if(Network.isInSameNetwork(route.getNetwork(), ip, route.getMask()))
+                if (Network.isInSameNetwork(route.getNetwork(), ip, route.getMask()))
                     return super.getInterface(route.getNextHop());
             }
 
@@ -103,12 +99,12 @@ public class Router extends Equipment implements IncomingPacketInterface {
 
     public Boolean knowDestination(Packet packet) {
         for (Interface i : getInterfaces()) {
-            if(Network.isInSameNetwork(i.getIp(), packet.getIpLayer().getDestination(), i.getMask()))
+            if (Network.isInSameNetwork(i.getIp(), packet.getIpLayer().getDestination(), i.getMask()))
                 return true;
         }
 
         for (Route route : routes) {
-            if(Network.isInSameNetwork(route.getNetwork(), packet.getIpLayer().getDestination(), route.getMask()))
+            if (Network.isInSameNetwork(route.getNetwork(), packet.getIpLayer().getDestination(), route.getMask()))
                 return true;
         }
 
@@ -117,7 +113,7 @@ public class Router extends Equipment implements IncomingPacketInterface {
 
     public Boolean directlyConnected(String ipDestination) {
         for (Interface i : getInterfaces()) {
-            if(Network.isInSameNetwork(i.getIp(), ipDestination, i.getMask()))
+            if (Network.isInSameNetwork(i.getIp(), ipDestination, i.getMask()))
                 return true;
         }
 
@@ -126,13 +122,20 @@ public class Router extends Equipment implements IncomingPacketInterface {
 
     public void addRoute(String network, String mask, String nextHop) {
         routes.add(new Route(network, mask, nextHop));
+        Debug.log("Add route");
+    }
+
+    public void addRoute(Route route) {
+        if (route != null)
+            routes.add(route);
+        Debug.log("Add route");
     }
 
     public void deleteRoute(String network) {
         ArrayList<Route> routesRemove = new ArrayList<>();
 
         for (Route route : routes) {
-            if(route.getNetwork().equals(network))
+            if (route.getNetwork().equals(network))
                 routesRemove.add(route);
         }
 
@@ -140,13 +143,23 @@ public class Router extends Equipment implements IncomingPacketInterface {
             routes.remove(route);
     }
 
+    public void deleteRoute(Route r) {
+        if (routes.contains(r)) {
+            routes.remove(r);
+        }
+    }
+
     @Override
     public String gatewayByRoutes(Interface i) {
         for (Route route : routes) {
-            if(Network.isInSameNetwork(route.getNextHop(), i.getIp(), route.getMask()))
+            if (Network.isInSameNetwork(route.getNextHop(), i.getIp(), route.getMask()))
                 return route.getNextHop();
         }
 
         return null;
+    }
+
+    public ArrayList<Route> getRoutes() {
+        return routes;
     }
 }

@@ -195,7 +195,7 @@ public class NewInterfaceDialog extends Stage implements Initializable {
         ip.focusedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                if (newValue == false && natMask == false && !ip.getText().equals("")) {
+                if (!newValue && !natMask && !ip.getText().equals("")) {
                     mask.setText(Network.getNaturalMask(ip.getText()));
                     natMask = true;
                 }

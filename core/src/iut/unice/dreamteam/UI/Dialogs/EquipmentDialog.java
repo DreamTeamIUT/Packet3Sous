@@ -1,8 +1,11 @@
 package iut.unice.dreamteam.UI.Dialogs;
 
 import iut.unice.dreamteam.Equipments.Equipment;
+import iut.unice.dreamteam.Equipments.Router;
 import iut.unice.dreamteam.Interfaces.Interface;
+import iut.unice.dreamteam.Interfaces.Route;
 import iut.unice.dreamteam.UI.Adapaters.TableInterface;
+import iut.unice.dreamteam.UI.Adapaters.TableRoute;
 import iut.unice.dreamteam.Utils.Debug;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -31,48 +34,51 @@ import java.util.regex.Pattern;
 public class EquipmentDialog extends Stage implements Initializable {
 
     private String equipmentName;
-    private ObservableList observableInterfacesList;
-    private List<TableInterface> list;
+    private List<TableInterface> interfaceList;
+    private List<TableRoute> routeList;
+
     private Equipment result;
+
     @FXML
-    private
     ImageView equipmentImage;
     @FXML
-    private
     TextField configEquipmentName;
     @FXML
-    Button addInterface;
+    Button addInterface, delInterface;
+
     @FXML
-    Button delInterface;
-    @FXML
-    Button okButton;
-    @FXML
-    Button cancelButton;
+    Button okButton, cancelButton;
+
     @FXML
     TableView<TableInterface> interfaceTable;
     @FXML
-    TableColumn interfaceC;
-    @FXML
-    TableColumn ipC;
-    @FXML
-    TableColumn typeC;
-    @FXML
-    TableColumn maskC;
-    @FXML
-    TableColumn passiveC;
-    @FXML
-    TableColumn gatewayC;
-    @FXML
-    TableColumn defaultC;
+    TableColumn interfaceC, ipC, typeC, maskC, passiveC, gatewayC, defaultC;
 
-    private ArrayList<Interface> toAdd;
-    private ArrayList<Interface> toRemove;
+
+    @FXML
+    TableView<TableRoute> routesTables;
+    @FXML
+    TableColumn routeNextHop, routeNetwork, routeMask;
+    @FXML
+    Tab routesTab;
+
+
+    private ArrayList<Interface> interfaceToAdd;
+    private ArrayList<Interface> interfaceToRemove;
+
+    private ArrayList<Route> routeToAdd;
+    private ArrayList<Route> routeToRemove;
+
     private int numberEquipment;
 
     {
-        this.list = new ArrayList<>();
-        this.toAdd = new ArrayList<>();
-        this.toRemove = new ArrayList<>();
+        this.interfaceList = new ArrayList<>();
+        this.interfaceToAdd = new ArrayList<>();
+        this.interfaceToRemove = new ArrayList<>();
+
+        this.routeList = new ArrayList<>();
+        this.routeToAdd = new ArrayList<>();
+        this.routeToRemove = new ArrayList<>();
     }
 
     private void init() {
@@ -108,7 +114,16 @@ public class EquipmentDialog extends Stage implements Initializable {
                 if (e.getDefaultGateway().equals(i))
                     tableInterface.setDefault(true);
 
-                list.add(tableInterface);
+                interfaceList.add(tableInterface);
+            }
+
+            if (e instanceof Router){
+                Debug.log("This is a router ! ");
+                Router tmp = (Router)e;
+                for (Route r : tmp.getRoutes()){
+                    TableRoute tableRoute = new TableRoute(r);
+                    routeList.add(tableRoute);
+                }
             }
 
         }
@@ -143,8 +158,48 @@ public class EquipmentDialog extends Stage implements Initializable {
             this.result.clearInterfaces();
         }
 
-        setupInterfaceTable();
+        if (this.result instanceof Router)
+            routesTab.setDisable(false);
 
+        setupInterfaceTable();
+        setupRouteTable();
+
+
+    }
+
+    private void setupRouteTable() {
+        routeNetwork.setCellValueFactory(new PropertyValueFactory<TableInterface, String>("network"));
+        routeMask.setCellValueFactory(new PropertyValueFactory<TableInterface, String>("mask"));
+        routeNextHop.setCellValueFactory(new PropertyValueFactory<TableInterface, String>("nextHop"));
+
+
+        routesTables.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+
+                int ix = newValue.intValue();
+                if ((ix < 0) || (ix >= interfaceList.size()))
+                    return; // invalid data
+                delInterface.setDisable(false);
+
+            }
+        });
+
+        routesTables.setOnMousePressed(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
+                    Debug.log("Ok open route editor !");
+                    RouteDialog dialog = new RouteDialog(routesTables.getSelectionModel().getSelectedItem());
+                    dialog.showAndWait();
+
+                    updateRouteTable();
+                }
+            }
+        });
+
+        updateRouteTable();
     }
 
     private void setupInterfaceTable() {
@@ -166,7 +221,7 @@ public class EquipmentDialog extends Stage implements Initializable {
 
                 int ix = newValue.intValue();
 
-                if ((ix < 0) || (ix >= list.size())) {
+                if ((ix < 0) || (ix >= interfaceList.size())) {
 
                     return; // invalid data
                 }
@@ -184,46 +239,74 @@ public class EquipmentDialog extends Stage implements Initializable {
                     EditInterfaceDialog dialog = new EditInterfaceDialog(interfaceTable.getSelectionModel().getSelectedItem());
                     dialog.showAndWait();
 
-                    updateTable();
+                    updateInterfaceTable();
                 }
             }
         });
 
 
-        updateTable();
+        updateInterfaceTable();
     }
 
     public void delInterface() {
         Debug.log("Del Clicked !");
-        if (toAdd.contains(interfaceTable.getSelectionModel().getSelectedItem().getInterface()))
-            toAdd.remove(interfaceTable.getSelectionModel().getSelectedItem().getInterface());
+        if (interfaceToAdd.contains(interfaceTable.getSelectionModel().getSelectedItem().getInterface()))
+            interfaceToAdd.remove(interfaceTable.getSelectionModel().getSelectedItem().getInterface());
         else
-            toRemove.add(interfaceTable.getSelectionModel().getSelectedItem().getInterface());
+            interfaceToRemove.add(interfaceTable.getSelectionModel().getSelectedItem().getInterface());
 
-        list.remove(interfaceTable.getSelectionModel().getSelectedItem());
-        updateTable();
+        interfaceList.remove(interfaceTable.getSelectionModel().getSelectedItem());
+        updateInterfaceTable();
     }
 
     public void addInterface() {
         Debug.log("addClicked");
 
-        NewInterfaceDialog dialog = new NewInterfaceDialog(list.size(), result);
+        NewInterfaceDialog dialog = new NewInterfaceDialog(interfaceList.size(), result);
         dialog.showAndWait();
 
         ArrayList<TableInterface> interfaceToInsert = dialog.getResult();
         if (interfaceToInsert != null) {
             for (TableInterface tableInterface : interfaceToInsert) {
-                list.add(tableInterface);
+                interfaceList.add(tableInterface);
                 tableInterface.getInterface().setEquipment(this.result);
                 tableInterface.setUpdateListenner(this);
                 tableInterface.setDefault(true);
-                toAdd.add(tableInterface.getInterface());
+                interfaceToAdd.add(tableInterface.getInterface());
             }
         }
 
 
-        updateTable();
+        updateInterfaceTable();
     }
+
+    public void addRoute() {
+        Debug.log("Add route clicked");
+
+        RouteDialog dialog = new RouteDialog();
+        dialog.showAndWait();
+
+        TableRoute tableRoute = dialog.getResult();
+        if (tableRoute != null) {
+            routeList.add(tableRoute);
+            routeToAdd.add(tableRoute.getRoute());
+        }
+
+        updateRouteTable();
+    }
+
+    public void delRoute() {
+        Debug.log("Del route clicked");
+
+        if (routeToAdd.contains(routesTables.getSelectionModel().getSelectedItem().getRoute()))
+            routeToAdd.remove(routesTables.getSelectionModel().getSelectedItem().getRoute());
+        else
+            routeToRemove.add(routesTables.getSelectionModel().getSelectedItem().getRoute());
+
+        routeList.remove(routesTables.getSelectionModel().getSelectedItem());
+        updateRouteTable();
+    }
+
 
     public void cancelDialog() {
         this.result = null;
@@ -243,14 +326,24 @@ public class EquipmentDialog extends Stage implements Initializable {
 
         this.result.setName(configEquipmentName.getText());
 
-        for (Interface r : toRemove)
+        for (Interface r : interfaceToRemove)
             this.result.removeInterface(r);
 
-        for (Interface i : toAdd) {
+        for (Interface i : interfaceToAdd) {
             this.result.addInterface(i);
         }
 
-        for (TableInterface i : list) {
+        if (result instanceof Router) {
+            Router tmp = (Router) result;
+            for (Route r : routeToRemove)
+                tmp.deleteRoute(r);
+
+            for (Route i : routeToAdd)
+                tmp.addRoute(i);
+        }
+
+
+        for (TableInterface i : interfaceList) {
             if (i.isDefault())
                 this.result.setDefaultGateway(i.getInterface());
         }
@@ -262,18 +355,25 @@ public class EquipmentDialog extends Stage implements Initializable {
         return this.result;
     }
 
-    private void updateTable() {
+    private void updateInterfaceTable() {
         Debug.log("update !");
-        for (int i = 0; i < list.size(); i++)
-            list.get(i).setName("eth" + i);
+        for (int i = 0; i < interfaceList.size(); i++)
+            interfaceList.get(i).setName("eth" + i);
 
-        observableInterfacesList = FXCollections.observableList(list);
+        ObservableList<TableInterface> observableInterfacesList = FXCollections.observableList(interfaceList);
         interfaceTable.setItems(observableInterfacesList);
+    }
+
+    private void updateRouteTable() {
+        Debug.log("update route !");
+
+        ObservableList<TableRoute> observableRouteList = FXCollections.observableList(routeList);
+        routesTables.setItems(observableRouteList);
     }
 
     public void checkboxUpdate(TableInterface i) {
         Debug.log("Chekbox update");
-        for (TableInterface tab : list) {
+        for (TableInterface tab : interfaceList) {
             if (!tab.equals(i)) {
                 tab.setDefault(false);
             }

@@ -71,7 +71,7 @@ public class Network {
     }
 
     public static Boolean isValidIpFormat(String ip) {
-        return Pattern.compile(IPADDRESS_PATTERN).matcher(ip).matches();
+        return !ip.equals("") && Pattern.compile(IPADDRESS_PATTERN).matcher(ip).matches();
     }
 
     public void removeEquipment(Equipment equipment) {
