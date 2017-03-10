@@ -176,8 +176,6 @@ public class CanvasDrawer {
         for (DrawableEquipment drawableEquipment : elementsToDraw)
             equipments.add(drawableEquipment.getEquipment());
 
-
-
         updateLinks();
 
         draw();
@@ -194,6 +192,7 @@ public class CanvasDrawer {
                 mainPane.getChildren().add(e);
             }
 
+            e.setLabel(e.getEquipment().getName());
             e.toFront();
 
             drawPackets(e);

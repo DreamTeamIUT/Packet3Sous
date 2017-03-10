@@ -11,16 +11,20 @@ import iut.unice.dreamteam.UI.Listeners.OnUpdateListener;
 import iut.unice.dreamteam.Utils.Debug;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 
 import java.util.ArrayList;
 
-public class DrawableEquipment extends ImageView implements OnUpdateListener {
+public class DrawableEquipment extends Pane implements OnUpdateListener {
+
+    private final int SHIFT_LABEL_Y = 31;
 
     private final int SHIFT_PACKET = 20;
     private final int SHIFT_NEW_PACKET = 15;
@@ -31,20 +35,29 @@ public class DrawableEquipment extends ImageView implements OnUpdateListener {
     private double mouseY;
     private OnActionListener actionsListener;
 
+    private ImageView imageView;
+    private Label label;
+
     private ArrayList<DrawablePacket> packets;
     private int shiftQueue;
 
     public DrawableEquipment(Equipment e) {
-        super(DrawableLoader.getInstance().getEquipmentDrawable(e));
+        super();
 
         this.equipment = e;
         this.equipment.setInterfaceUpdater(this);
 
-        packets = new ArrayList<>();
+        this.packets = new ArrayList<>();
+        this.shiftQueue = 0;
 
-        shiftQueue = 0;
+        loadGraphics();
+        setLabel(e.getName());
+    }
 
-        setPreserveRatio(true);
+    private void loadGraphics() {
+        this.imageView = new ImageView();
+        this.imageView.setPreserveRatio(true);
+        this.imageView.setImage(DrawableLoader.getInstance().getEquipmentDrawable(this.equipment));
 
         setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
@@ -105,8 +118,8 @@ public class DrawableEquipment extends ImageView implements OnUpdateListener {
                 double deltaX = event.getSceneX() - mouseX;
                 double deltaY = event.getSceneY() - mouseY;
 
-                double nx = getX() + deltaX;
-                double ny = getY() + deltaY;
+                double nx = getLayoutX() + deltaX;
+                double ny = getLayoutY() + deltaY;
 
                 if (nx <= 0 || ny<= 0 )
                     return;
@@ -120,6 +133,11 @@ public class DrawableEquipment extends ImageView implements OnUpdateListener {
             }
         });
 
+        this.label = new Label();
+        this.label.setLayoutY(SHIFT_LABEL_Y);
+
+        getChildren().add(this.imageView);
+        getChildren().add(this.label);
     }
 
     public void update() {
@@ -134,7 +152,7 @@ public class DrawableEquipment extends ImageView implements OnUpdateListener {
                     Debug.log("PACKET WAITING FOR SEND ON " + equipment.getName());
 
                     DrawablePacket dp = new DrawablePacket(packetOnEquipment.getPacket());
-                    dp.setTo((float) this.getX(), (float) this.getY() - SHIFT_PACKET - shiftQueue);
+                    dp.setTo((float) this.getLayoutX(), (float) this.getLayoutY() - SHIFT_PACKET - shiftQueue);
                     packets.add(dp);
 
                     shiftQueue += SHIFT_NEW_PACKET;
@@ -148,13 +166,17 @@ public class DrawableEquipment extends ImageView implements OnUpdateListener {
                     packetOnEquipment.getPacketProperties().setDisplayed();
 
                     DrawablePacket dp = new DrawablePacket(packetOnEquipment.getPacket());
-                    dp.setTo((float) this.getX(), (float) this.getY() - SHIFT_PACKET - shiftQueue);
+                    dp.setTo((float) this.getLayoutX(), (float) this.getLayoutY() - SHIFT_PACKET - shiftQueue);
                     packets.add(dp);
 
                     shiftQueue += SHIFT_NEW_PACKET;
                 }
             }
         }
+    }
+
+    public void setLabel(String label) {
+        this.label.setText(label);
     }
 
     public ArrayList<DrawablePacket> getDrawablePackets(){
@@ -167,25 +189,27 @@ public class DrawableEquipment extends ImageView implements OnUpdateListener {
 
 
     public DrawableEquipment setX(float x) {
-        super.setX(x);
+        super.setLayoutX(x);
+
         return this;
     }
 
     public DrawableEquipment setY(float y) {
-        super.setY(y);
+        super.setLayoutY(y);
+
         return this;
     }
 
     public double getCenterPointX() {
-        return (float) ((getEquipmentDrawable().getWidth() / 2) + getX());
+        return (float) ((getEquipmentDrawable().getWidth() / 2) + getLayoutX());
     }
 
     public double getCenterPointY() {
-        return (float) ((getEquipmentDrawable().getHeight() / 2) + getY());
+        return (float) ((getEquipmentDrawable().getHeight() / 2) + getLayoutY());
     }
 
     public Image getEquipmentDrawable() {
-        return this.getImage();
+        return this.imageView.getImage();
     }
 
     public void updateListener() {
