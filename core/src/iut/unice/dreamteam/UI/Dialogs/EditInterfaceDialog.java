@@ -39,15 +39,13 @@ public class EditInterfaceDialog extends Stage implements Initializable {
     CheckBox passiveInt;
     @FXML
     GridPane basicInfo;
+    @FXML
+    TextField gateway;
 
-
-    private ArrayList<TableInterface> tableInterfaces;
 
     public EditInterfaceDialog(TableInterface tableInterface) {
         setTitle("Edit an interface");
         this.item = tableInterface;
-
-        this.tableInterfaces = new ArrayList<>();
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/interfaceDialog.fxml"));
         fxmlLoader.setController(this);
@@ -69,6 +67,7 @@ public class EditInterfaceDialog extends Stage implements Initializable {
 
         ip.setText(item.getIp());
         mask.setText(item.getMask());
+        gateway.setText(item.getGateway());
 
         passiveInt.setSelected(item.isPassive());
 
@@ -93,11 +92,15 @@ public class EditInterfaceDialog extends Stage implements Initializable {
                     ip.setDisable(true);
                     mask.setDisable(true);
                     mask.setText("");
+                    gateway.setDisable(true);
+                    gateway.setText("");
 
                 } else {
                     ip.setText("");
                     ip.setDisable(false);
                     mask.setDisable(false);
+                    gateway.setDisable(false);
+                    gateway.setText("");
                     mask.setText("");
                 }
             }
@@ -107,12 +110,15 @@ public class EditInterfaceDialog extends Stage implements Initializable {
     }
 
     public void validateDialog() {
-        if ((ip.getText().equals("") || Network.isValidIpFormat(ip.getText())) && (mask.getText().equals("") || Network.isValidIpFormat(mask.getText()))) {
+        if ((ip.getText().equals("") || Network.isValidIpFormat(ip.getText()))
+                && (mask.getText().equals("") || Network.isValidIpFormat(mask.getText()))
+                && (gateway.getText().equals("") || Network.isValidIpFormat(gateway.getText()))) {
 
             this.item.setIp(ip.getText());
             this.item.setMask(mask.getText());
             this.item.setPassive(passiveInt.isSelected());
             this.item.setType(types.getSelectionModel().getSelectedItem());
+            this.item.setGateway(gateway.getText());
 
             this.close();
         } else {
@@ -124,10 +130,6 @@ public class EditInterfaceDialog extends Stage implements Initializable {
             alert.showAndWait();
         }
 
-    }
-
-    public ArrayList<TableInterface> getResult() {
-        return this.tableInterfaces;
     }
 
     public void cancelDialog() {

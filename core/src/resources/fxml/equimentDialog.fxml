@@ -56,7 +56,9 @@
                                   <TableColumn fx:id="typeC" editable="false" prefWidth="75.0" text="Type" />
                                     <TableColumn fx:id="ipC" editable="false" prefWidth="75.0" text="Ip Address" />
                                     <TableColumn fx:id="maskC" editable="false" prefWidth="75.0" text="Mask" />
-                                    <TableColumn editable="false" prefWidth="75.0" text="Passive Interface" />
+                                    <TableColumn fx:id="gatewayC" editable="false" prefWidth="75.0" text="Gateway" />
+                                    <TableColumn fx:id="defaultC" prefWidth="66.0" text="Default" />
+                                    <TableColumn fx:id="passiveC" editable="false" prefWidth="105.0" text="Passive Interface" />
                                 </columns>
                                  <columnResizePolicy>
                                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

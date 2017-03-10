@@ -6,7 +6,6 @@ import iut.unice.dreamteam.Equipments.Switch;
 import iut.unice.dreamteam.Interfaces.Interface;
 import iut.unice.dreamteam.Network;
 import iut.unice.dreamteam.UI.Adapaters.TableInterface;
-import iut.unice.dreamteam.Utils.Debug;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -48,6 +47,8 @@ public class NewInterfaceDialog extends Stage implements Initializable {
     CheckBox passiveInt;
     @FXML
     GridPane basicInfo;
+    @FXML
+    TextField gateway;
 
     private boolean natMask = false;
     private Equipment equipment;
@@ -57,7 +58,7 @@ public class NewInterfaceDialog extends Stage implements Initializable {
         setTitle("Add a new interface");
         this.currentInterfaceNumber = currentInterfaceNumber;
         this.tableInterfaces = new ArrayList<>();
-        this.equipment =  equipment;
+        this.equipment = equipment;
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/newInterfaceDialog.fxml"));
         fxmlLoader.setController(this);
 
@@ -114,6 +115,8 @@ public class NewInterfaceDialog extends Stage implements Initializable {
                     ip.setDisable(true);
                     mask.setDisable(true);
                     mask.setText("");
+                    gateway.setDisable(true);
+                    gateway.setText("");
                     numberRepeat.setDisable(false);
 
                 } else {
@@ -121,6 +124,8 @@ public class NewInterfaceDialog extends Stage implements Initializable {
                     ip.setDisable(false);
                     mask.setDisable(false);
                     mask.setText("");
+                    gateway.setDisable(false);
+                    gateway.setText("");
                     numberRepeat.setDisable(true);
                     numberRepeat.setText("1");
                 }
@@ -137,6 +142,8 @@ public class NewInterfaceDialog extends Stage implements Initializable {
                     mask.setDisable(true);
                     mask.setText("");
                     numberRepeat.setText("1");
+                    gateway.setDisable(true);
+                    gateway.setText("");
 
                 } else {
                     numberRepeat.setDisable(true);
@@ -144,6 +151,8 @@ public class NewInterfaceDialog extends Stage implements Initializable {
                     ip.setDisable(false);
                     mask.setDisable(false);
                     mask.setText("");
+                    gateway.setDisable(false);
+                    gateway.setText("");
                     numberRepeat.setText("1");
                 }
             }
@@ -154,11 +163,15 @@ public class NewInterfaceDialog extends Stage implements Initializable {
     }
 
     public void validateDialog() {
-        if ((ip.getText().equals("") || Network.isValidIpFormat(ip.getText())) && (mask.getText().equals("") || Network.isValidIpFormat(mask.getText()))) {
+        if ((ip.getText().equals("") || Network.isValidIpFormat(ip.getText()))
+                && (mask.getText().equals("") || Network.isValidIpFormat(mask.getText()))
+                && (gateway.getText().equals("") || Network.isValidIpFormat(gateway.getText()))) {
+
             for (int i = 0; i < Integer.parseInt(numberRepeat.getText()); i++) {
-                tableInterfaces.add(new TableInterface(ip.getText(), mask.getText(), types.getValue(), "eth" + (this.currentInterfaceNumber + i), passiveInt.isSelected()));
+                tableInterfaces.add(new TableInterface(ip.getText(), mask.getText(), types.getValue(), "eth" + (this.currentInterfaceNumber + i), passiveInt.isSelected(), gateway.getText()));
             }
             this.close();
+
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error !");
@@ -178,11 +191,11 @@ public class NewInterfaceDialog extends Stage implements Initializable {
         this.close();
     }
 
-    public void naturalMask(){
+    public void naturalMask() {
         ip.focusedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                if (newValue == false && natMask == false){
+                if (newValue == false && natMask == false && !ip.getText().equals("")) {
                     mask.setText(Network.getNaturalMask(ip.getText()));
                     natMask = true;
                 }

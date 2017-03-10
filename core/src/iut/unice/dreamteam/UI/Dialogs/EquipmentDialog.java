@@ -58,6 +58,12 @@ public class EquipmentDialog extends Stage implements Initializable {
     TableColumn typeC;
     @FXML
     TableColumn maskC;
+    @FXML
+    TableColumn passiveC;
+    @FXML
+    TableColumn gatewayC;
+    @FXML
+    TableColumn defaultC;
 
     private ArrayList<Interface> toAdd;
     private ArrayList<Interface> toRemove;
@@ -97,8 +103,13 @@ public class EquipmentDialog extends Stage implements Initializable {
             setTitle("Edit " + e.getName());
             this.result = e;
 
-            for (Interface i : e.getInterfaces())
-                list.add(new TableInterface(i, e.getInterfaces().indexOf(i)));
+            for (Interface i : e.getInterfaces()) {
+                TableInterface tableInterface = new TableInterface(i, e.getInterfaces().indexOf(i));
+                if (e.getDefaultGateway().equals(i))
+                    tableInterface.setDefault(true);
+
+                list.add(tableInterface);
+            }
 
         }
 
@@ -108,7 +119,6 @@ public class EquipmentDialog extends Stage implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
 
 
         try {
@@ -138,13 +148,19 @@ public class EquipmentDialog extends Stage implements Initializable {
     }
 
     private void setupInterfaceTable() {
+
+
         interfaceC.setCellValueFactory(new PropertyValueFactory<TableInterface, String>("name"));
         ipC.setCellValueFactory(new PropertyValueFactory<TableInterface, String>("ip"));
         maskC.setCellValueFactory(new PropertyValueFactory<TableInterface, String>("mask"));
         typeC.setCellValueFactory(new PropertyValueFactory<TableInterface, String>("type"));
+        passiveC.setCellValueFactory(new PropertyValueFactory<TableInterface, CheckBox>("passive"));
+        defaultC.setCellValueFactory(new PropertyValueFactory<TableInterface, CheckBox>("default"));
+        gatewayC.setCellValueFactory(new PropertyValueFactory<TableInterface, String>("gateway"));
 
 
         interfaceTable.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 
@@ -166,7 +182,9 @@ public class EquipmentDialog extends Stage implements Initializable {
                 if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
                     Debug.log("Ok open interface editor !");
                     EditInterfaceDialog dialog = new EditInterfaceDialog(interfaceTable.getSelectionModel().getSelectedItem());
-                    dialog.show();
+                    dialog.showAndWait();
+
+                    updateTable();
                 }
             }
         });
@@ -189,15 +207,16 @@ public class EquipmentDialog extends Stage implements Initializable {
     public void addInterface() {
         Debug.log("addClicked");
 
-        NewInterfaceDialog dialog = new NewInterfaceDialog(list.size(),result);
+        NewInterfaceDialog dialog = new NewInterfaceDialog(list.size(), result);
         dialog.showAndWait();
 
         ArrayList<TableInterface> interfaceToInsert = dialog.getResult();
-        if (interfaceToInsert != null){
-            for (TableInterface tableInterface : interfaceToInsert)
-            {
+        if (interfaceToInsert != null) {
+            for (TableInterface tableInterface : interfaceToInsert) {
                 list.add(tableInterface);
                 tableInterface.getInterface().setEquipment(this.result);
+                tableInterface.setUpdateListenner(this);
+                tableInterface.setDefault(true);
                 toAdd.add(tableInterface.getInterface());
             }
         }
@@ -227,8 +246,14 @@ public class EquipmentDialog extends Stage implements Initializable {
         for (Interface r : toRemove)
             this.result.removeInterface(r);
 
-        for (Interface i : toAdd)
+        for (Interface i : toAdd) {
             this.result.addInterface(i);
+        }
+
+        for (TableInterface i : list) {
+            if (i.isDefault())
+                this.result.setDefaultGateway(i.getInterface());
+        }
 
         this.close();
     }
@@ -238,10 +263,20 @@ public class EquipmentDialog extends Stage implements Initializable {
     }
 
     private void updateTable() {
+        Debug.log("update !");
         for (int i = 0; i < list.size(); i++)
             list.get(i).setName("eth" + i);
 
         observableInterfacesList = FXCollections.observableList(list);
         interfaceTable.setItems(observableInterfacesList);
+    }
+
+    public void checkboxUpdate(TableInterface i) {
+        Debug.log("Chekbox update");
+        for (TableInterface tab : list) {
+            if (!tab.equals(i)) {
+                tab.setDefault(false);
+            }
+        }
     }
 }

@@ -4,7 +4,6 @@ import iut.unice.dreamteam.ApplicationStates;
 import iut.unice.dreamteam.Equipments.Equipment;
 import iut.unice.dreamteam.Interfaces.Interface;
 import iut.unice.dreamteam.Network;
-import iut.unice.dreamteam.UI.Listeners.OnDeviceResultListenner;
 import iut.unice.dreamteam.Utils.Debug;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;

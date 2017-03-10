@@ -49,8 +49,8 @@ public class DeviceContextMenu extends CustomContextMenu {
             public void handle(ActionEvent event) {
                 Debug.log("Edit " + equipement.getName());
                 EquipmentDialog dialog  = new EquipmentDialog(equipement);
-
                 dialog.showAndWait();
+
             }
         });
 
