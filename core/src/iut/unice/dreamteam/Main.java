@@ -8,26 +8,11 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 */
 
-import iut.unice.dreamteam.Equipments.Computer;
-import iut.unice.dreamteam.Equipments.Equipment;
-import iut.unice.dreamteam.Equipments.Router;
-import iut.unice.dreamteam.Equipments.Switch;
-import iut.unice.dreamteam.Interfaces.Packet;
-import iut.unice.dreamteam.NetworkLayers.ApplicationLayer;
-import iut.unice.dreamteam.NetworkLayers.IpLayer;
-import iut.unice.dreamteam.NetworkLayers.TransportLayer;
-import iut.unice.dreamteam.Functionalities.Protocols.ICMP;
-import iut.unice.dreamteam.Functionalities.Protocols.TCP;
-import iut.unice.dreamteam.Utils.Debug;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.json.JSONObject;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class Main extends Application {
 
@@ -42,6 +27,7 @@ public class Main extends Application {
 
 
     public static void main(String[] args) {
+
         launch(args);
 
         /*
