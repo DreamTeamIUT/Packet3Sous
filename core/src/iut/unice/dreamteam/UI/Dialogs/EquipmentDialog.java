@@ -53,6 +53,8 @@ public class EquipmentDialog extends Stage implements Initializable {
     TableView<TableInterface> interfaceTable;
     @FXML
     TableColumn interfaceC, ipC, typeC, maskC, passiveC, gatewayC, defaultC;
+    @FXML
+    Button delRoute, addRoute;
 
 
     @FXML
@@ -179,9 +181,9 @@ public class EquipmentDialog extends Stage implements Initializable {
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 
                 int ix = newValue.intValue();
-                if ((ix < 0) || (ix >= interfaceList.size()))
+                if ((ix < 0) || (ix >= routeList.size()))
                     return; // invalid data
-                delInterface.setDisable(false);
+                delRoute.setDisable(false);
 
             }
         });
@@ -366,6 +368,10 @@ public class EquipmentDialog extends Stage implements Initializable {
 
     private void updateRouteTable() {
         Debug.log("update route !");
+
+        if (routeList.size() > 0){
+
+        }
 
         ObservableList<TableRoute> observableRouteList = FXCollections.observableList(routeList);
         routesTables.setItems(observableRouteList);
