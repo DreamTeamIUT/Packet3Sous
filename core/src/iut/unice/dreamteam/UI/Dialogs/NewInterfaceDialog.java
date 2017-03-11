@@ -120,14 +120,18 @@ public class NewInterfaceDialog extends Stage implements Initializable {
                     numberRepeat.setDisable(false);
 
                 } else {
-                    ip.setText("");
-                    ip.setDisable(false);
-                    mask.setDisable(false);
-                    mask.setText("");
-                    gateway.setDisable(false);
-                    gateway.setText("");
+                    if (!passiveInt.selectedProperty().getValue()){
+                        ip.setText("");
+                        ip.setDisable(false);
+                        mask.setDisable(false);
+                        mask.setText("");
+                        gateway.setDisable(false);
+                        gateway.setText("");
+                    }
+
                     numberRepeat.setDisable(true);
                     numberRepeat.setText("1");
+
                 }
             }
         });
@@ -137,23 +141,28 @@ public class NewInterfaceDialog extends Stage implements Initializable {
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                 passiveInt.setSelected(newValue);
                 if (newValue) {
+                    if (!repeat.selectedProperty().getValue()){
+                        numberRepeat.setText("1");
+                    }
+
                     ip.setText("");
                     ip.setDisable(true);
                     mask.setDisable(true);
                     mask.setText("");
-                    numberRepeat.setText("1");
                     gateway.setDisable(true);
                     gateway.setText("");
 
                 } else {
-                    numberRepeat.setDisable(true);
-                    ip.setText("");
-                    ip.setDisable(false);
-                    mask.setDisable(false);
-                    mask.setText("");
-                    gateway.setDisable(false);
-                    gateway.setText("");
-                    numberRepeat.setText("1");
+
+                    if (!repeat.selectedProperty().getValue()){
+                        ip.setText("");
+                        ip.setDisable(false);
+                        mask.setDisable(false);
+                        mask.setText("");
+                        gateway.setDisable(false);
+                        gateway.setText("");
+                    }
+
                 }
             }
         });

@@ -1,6 +1,3 @@
-default gateway
-default interface
-add route
+file saving
 manage services
-equipment's name
 interfaces's name
