@@ -2,5 +2,7 @@ default gateway
 default interface
 add route
 manage services
-equipment's name
 interfaces's name
+can delete links
+global ping
+mask on routes
