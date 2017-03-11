@@ -2,6 +2,8 @@ package iut.unice.dreamteam.UI.Dialogs;
 
 import iut.unice.dreamteam.Network;
 import iut.unice.dreamteam.UI.Adapaters.TableRoute;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -24,6 +26,7 @@ public class RouteDialog extends Stage implements Initializable {
 
     @FXML
     TextField nexthop, mask, network;
+    private boolean natMask = false;
 
 
     public RouteDialog() {
@@ -58,6 +61,8 @@ public class RouteDialog extends Stage implements Initializable {
         } else {
             result = new TableRoute();
         }
+
+        naturalMask();
     }
 
     @Override
@@ -89,5 +94,17 @@ public class RouteDialog extends Stage implements Initializable {
 
     public TableRoute getResult() {
         return result;
+    }
+
+    public void naturalMask() {
+        network.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (!newValue && !natMask && !network.getText().equals("")) {
+                    mask.setText(Network.getNaturalMask(network.getText()));
+                    natMask = true;
+                }
+            }
+        });
     }
 }
