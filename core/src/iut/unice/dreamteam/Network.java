@@ -76,7 +76,7 @@ public class Network {
 
             if (binMask.contains("0"))
             {
-                return binIp.substring(binMask.indexOf("0")).contains("1");
+                return !binIp.substring(binMask.indexOf("0")).contains("1");
             }
             return true;
         }

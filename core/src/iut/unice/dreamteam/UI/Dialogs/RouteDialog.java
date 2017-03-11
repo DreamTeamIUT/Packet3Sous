@@ -70,9 +70,9 @@ public class RouteDialog extends Stage implements Initializable {
     }
 
     public void validateDialog() {
-        if (Network.isValidIpFormat(network.getText())
-                && Network.isValidIpFormat(mask.getText())
+        if (Network.isValidMask(mask.getText())
                 && Network.isValidIpFormat(nexthop.getText())
+                && Network.isNetworkAddress(network.getText(), mask.getText())
                 ) {
             result.setNetwork(network.getText());
             result.setMask(mask.getText());

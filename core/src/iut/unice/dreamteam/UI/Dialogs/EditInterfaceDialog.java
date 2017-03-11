@@ -111,7 +111,7 @@ public class EditInterfaceDialog extends Stage implements Initializable {
 
     public void validateDialog() {
         if ((ip.getText().equals("") || Network.isValidIpFormat(ip.getText()))
-                && (mask.getText().equals("") || Network.isValidIpFormat(mask.getText()))
+                && (mask.getText().equals("") || Network.isValidMask(mask.getText()))
                 && (gateway.getText().equals("") || Network.isValidIpFormat(gateway.getText()))) {
 
             this.item.setIp(ip.getText());
