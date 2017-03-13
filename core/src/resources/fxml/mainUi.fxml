@@ -2,7 +2,7 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="iut.unice.dreamteam.UI.MainUiController">
+<AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="iut.unice.dreamteam.UI.MainUiController">
    <children>
       <VBox prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -10,7 +10,7 @@
               <menus>
                 <Menu mnemonicParsing="false" text="File">
                   <items>
-                    <MenuItem mnemonicParsing="false" text="Save project" onAction="#saveProject" />
+                    <MenuItem mnemonicParsing="false" onAction="#saveProject" text="Save project" />
                     <MenuItem mnemonicParsing="false" text="Close" />
                   </items>
                 </Menu>
@@ -44,6 +44,7 @@
                                     <Slider fx:id="renderSlider" />
                                     <Button mnemonicParsing="false" text="&gt;" />
                                     <ToggleButton fx:id="connectEquipment" mnemonicParsing="false" onAction="#makeLink" text="Connect" />
+                                    <ToggleButton fx:id="disconnectEquipment" layoutX="257.0" layoutY="10.0" mnemonicParsing="false" onAction="#breakLink" text="Disconnect" />
                                  </items>
                               </ToolBar>
                               <AnchorPane fx:id="canvasPane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #fff;" VBox.vgrow="ALWAYS" />

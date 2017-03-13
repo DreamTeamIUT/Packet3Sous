@@ -1,5 +1,0 @@
-file saving
-manage services
-interfaces's name
-can delete links
-global ping

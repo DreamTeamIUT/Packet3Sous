@@ -226,7 +226,7 @@ public class CanvasDrawer {
         links.clear();
 
         for (Equipment e : equipments) {
-            for (Interface i : e.getInterfaces()) {
+            for (final Interface i : e.getInterfaces()) {
                 if (i.getLink() != null) {
                     Interface op = i.getLink().getOpositInterface(i);
                     int posEa = equipments.indexOf(e);
@@ -235,10 +235,21 @@ public class CanvasDrawer {
                     DrawableEquipment dEa = elementsToDraw.get(posEa);
                     DrawableEquipment dEb = elementsToDraw.get(posEb);
 
+
                     //LinkPoint point = dEa.getLinkPointForInterface(i);
 
                     Line link = new Line(dEa.getCenterPointX(), dEa.getCenterPointY(), dEb.getCenterPointX(), dEb.getCenterPointY());
                     link.setStrokeWidth(1.5);
+
+                    link.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                        @Override
+                        public void handle(MouseEvent event) {
+                            if (ApplicationStates.getInstance().is(ApplicationStates.DELETE)){
+                                i.getLink().brakeLink();
+                            }
+                            update();
+                        }
+                    });
 
                     this.links.add(link);
                 }

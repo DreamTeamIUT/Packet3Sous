@@ -8,8 +8,6 @@ import iut.unice.dreamteam.UI.Dialogs.EquipmentDialog;
 import iut.unice.dreamteam.UI.Listeners.OnActionListener;
 import iut.unice.dreamteam.UI.Listeners.OnUpdateListener;
 import iut.unice.dreamteam.Utils.Debug;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -32,7 +30,7 @@ public class MainUiController implements Initializable {
     /* @FXML
      private Canvas mainCanvas;*/
     @FXML
-    private ToggleButton connectEquipment;
+    private ToggleButton connectEquipment, disconnectEquipment;
     @FXML
     private AnchorPane mainPane;
     @FXML
@@ -59,6 +57,7 @@ public class MainUiController implements Initializable {
         ApplicationStates.getInstance().addStateChangedListener(new ApplicationStates.StateChangeListener() {
             @Override
             public void stateChanged(int newState) {
+                Debug.log("Received" + newState);
                 switch (newState) {
                     case ApplicationStates.CONNECT:
                         connectEquipment.setSelected(true);
@@ -68,7 +67,15 @@ public class MainUiController implements Initializable {
                     case ApplicationStates.NONE:
                         connectEquipment.setSelected(false);
                         connectEquipment.setText("Connect");
+                        disconnectEquipment.setSelected(false);
+                        disconnectEquipment.setText("Disconnect");
                         canvasPane.setCursor(Cursor.DEFAULT);
+                        break;
+                    case ApplicationStates.DELETE:
+                        disconnectEquipment.setSelected(true);
+                        disconnectEquipment.setText("Cancel");
+                        Image imgDelete = new Image(getClass().getResource("/cursors/delete.png").toExternalForm());
+                        canvasPane.setCursor(new ImageCursor(imgDelete, imgDelete.getHeight()/2, imgDelete.getWidth()/2));
                         break;
                 }
             }
@@ -77,7 +84,7 @@ public class MainUiController implements Initializable {
         addItemToListView();
         enableDragAndDrop();
 
-        renderSlider.setMin(5000);
+     /*   renderSlider.setMin(5000);
         renderSlider.setMax(500);
         renderSlider.setBlockIncrement(500);
 
@@ -86,7 +93,7 @@ public class MainUiController implements Initializable {
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 Debug.log("update slider");
             }
-        });
+        });*/
     }
 
     private void enableDragAndDrop() {
@@ -206,6 +213,13 @@ public class MainUiController implements Initializable {
         else
             ApplicationStates.getInstance().setState(ApplicationStates.NONE);
 
+    }
+
+    public void breakLink(){
+        if (disconnectEquipment.isSelected())
+            ApplicationStates.getInstance().setState(ApplicationStates.DELETE);
+        else
+            ApplicationStates.getInstance().setState(ApplicationStates.NONE);
     }
 
     public void saveProject() {

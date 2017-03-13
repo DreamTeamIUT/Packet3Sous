@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class ApplicationStates {
     public static final int NONE = 93;
     public static final int CONNECT = 928;
+    public static final int DELETE = 657;
 
     private static ApplicationStates applicationStates;
     private int currentState;
@@ -24,9 +25,12 @@ public class ApplicationStates {
 
     public void setState(int state){
         data = null;
+
         this.currentState = state;
-        for (StateChangeListener l : stateChangeListeners)
+        for (StateChangeListener l : stateChangeListeners){
+            l.stateChanged(NONE);
             l.stateChanged(state);
+        }
     }
 
     public int getCurrentState() {
