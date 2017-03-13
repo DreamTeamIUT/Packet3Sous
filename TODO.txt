@@ -1,0 +1,4 @@
+file saving
+manage services
+interfaces's name
+global ping
