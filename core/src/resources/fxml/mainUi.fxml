@@ -2,59 +2,78 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="iut.unice.dreamteam.UI.MainUiController">
-   <children>
-      <VBox prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <children>
-            <MenuBar VBox.vgrow="ALWAYS">
-              <menus>
-                <Menu mnemonicParsing="false" text="File">
-                  <items>
-                    <MenuItem mnemonicParsing="false" onAction="#saveProject" text="Save project" />
-                    <MenuItem mnemonicParsing="false" text="Close" />
-                  </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Edit">
-                  <items>
-                    <MenuItem mnemonicParsing="false" text="Delete" />
-                  </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Help">
-                  <items>
-                    <MenuItem mnemonicParsing="false" text="About" />
-                  </items>
-                </Menu>
-              </menus>
-            </MenuBar>
-            <SplitPane dividerPositions="0.2" prefHeight="160.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
-              <items>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" SplitPane.resizableWithParent="false">
-                     <children>
-                        <ListView fx:id="deviceList" prefHeight="373.0" prefWidth="117.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                     </children>
-                  </AnchorPane>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
-                     <children>
-                        <VBox prefHeight="373.0" prefWidth="475.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                           <children>
-                              <ToolBar prefHeight="30.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
-                                 <items>
-                                    <Button fx:id="startBtn" mnemonicParsing="false" onAction="#startRender" text="Start" />
-                                    <Button mnemonicParsing="false" text="&lt;" />
-                                    <Slider fx:id="renderSlider" />
-                                    <Button mnemonicParsing="false" text="&gt;" />
-                                    <ToggleButton fx:id="connectEquipment" mnemonicParsing="false" onAction="#makeLink" text="Connect" />
-                                    <ToggleButton fx:id="disconnectEquipment" layoutX="257.0" layoutY="10.0" mnemonicParsing="false" onAction="#breakLink" text="Disconnect" />
-                                 </items>
-                              </ToolBar>
-                              <AnchorPane fx:id="canvasPane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #fff;" VBox.vgrow="ALWAYS" />
-                           </children>
-                        </VBox>
-                     </children>
-                  </AnchorPane>
-              </items>
-            </SplitPane>
-         </children>
-      </VBox>
-   </children>
+<AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.112"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="iut.unice.dreamteam.UI.MainUiController">
+    <children>
+        <VBox prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+              AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <MenuBar VBox.vgrow="ALWAYS">
+                    <menus>
+                        <Menu mnemonicParsing="false" text="Network">
+                            <items>
+                                <MenuItem fx:id="generalisedPing" mnemonicParsing="false" onAction="#analysedPing"
+                                          text="Ping Généralisé"/>
+                            </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="File">
+                            <items>
+                                <MenuItem mnemonicParsing="false" onAction="#saveProject" text="Save project"/>
+                                <MenuItem mnemonicParsing="false" text="Close"/>
+                            </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="Edit">
+                            <items>
+                                <MenuItem mnemonicParsing="false" text="Delete"/>
+                            </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="Help">
+                            <items>
+                                <MenuItem mnemonicParsing="false" text="About"/>
+                            </items>
+                        </Menu>
+                    </menus>
+                </MenuBar>
+                <SplitPane dividerPositions="0.2" prefHeight="160.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                    <items>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0"
+                                    SplitPane.resizableWithParent="false">
+                            <children>
+                                <ListView fx:id="deviceList" prefHeight="373.0" prefWidth="117.0"
+                                          AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                                          AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+                            </children>
+                        </AnchorPane>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                            <children>
+                                <VBox prefHeight="373.0" prefWidth="475.0" AnchorPane.bottomAnchor="0.0"
+                                      AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                                      AnchorPane.topAnchor="0.0">
+                                    <children>
+                                        <ToolBar prefHeight="30.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                                            <items>
+                                                <Button fx:id="startBtn" mnemonicParsing="false" onAction="#startRender"
+                                                        text="Start"/>
+                                                <Button mnemonicParsing="false" text="&lt;"/>
+                                                <Slider fx:id="renderSlider"/>
+                                                <Button mnemonicParsing="false" text="&gt;"/>
+                                                <ToggleButton fx:id="connectEquipment" mnemonicParsing="false"
+                                                              onAction="#makeLink" text="Connect"/>
+                                                <ToggleButton fx:id="disconnectEquipment" layoutX="257.0" layoutY="10.0"
+                                                              mnemonicParsing="false" onAction="#breakLink"
+                                                              text="Disconnect"/>
+                                            </items>
+                                        </ToolBar>
+                                        <AnchorPane fx:id="canvasPane" prefHeight="200.0" prefWidth="200.0"
+                                                    style="-fx-background-color: #fff;" VBox.vgrow="ALWAYS"/>
+                                    </children>
+                                </VBox>
+                            </children>
+                        </AnchorPane>
+                    </items>
+                </SplitPane>
+            </children>
+        </VBox>
+    </children>
 </AnchorPane>

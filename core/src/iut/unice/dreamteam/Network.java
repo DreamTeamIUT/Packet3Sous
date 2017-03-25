@@ -161,7 +161,7 @@ public class Network {
         return ip;
     }
 
-    private static String binaryToIp(String s) {
+    public static String binaryToIp(String s) {
         if (s.length() == 32){
             String a = s.substring(0,8);
             String b = s.substring(8,16);
