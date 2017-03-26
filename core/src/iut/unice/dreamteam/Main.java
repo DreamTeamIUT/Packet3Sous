@@ -8,13 +8,11 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 */
 
-import iut.unice.dreamteam.Utils.Debug;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import sun.nio.ch.Net;
 
 public class Main extends Application {
 
@@ -31,22 +29,6 @@ public class Main extends Application {
     public static void main(String[] args) {
 
         launch(args);
-
-        Debug.log(Network.ipToBinary("192.168.0.255"));
-        Debug.log(Network.ipToBinary("192.168.1.0"));
-
-        Debug.log(Network.binaryToIp("0011000000101010000000000100000010"));
-
-        //While (ipnew != broadcas)
-        // int a = 254 // 11111110 11001 + 00001 => 11010 =>
-        //faire + 1 sur le nombre puis binarytoINT.
-
-        // >> <<
-        // int a = 253+2 // 11111101 2 = 00000010 == 11111111
-        // caclcule ip+1
-        // if ping ip+1
-        //      recupérer equipement et afficher sur le screen
-
 
         /*
         final Network n = new Network();
